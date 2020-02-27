@@ -5,11 +5,13 @@
   "scripts": {
     "start": "elm-pages develop --debug",
     "serve": "npm run build && http-server ./dist -a localhost -p 3000 -c-1",
-    "build": "elm-pages build"
+    "build": "elm-pages build",
+    "analyse": "elm-analyse"
   },
   "author": "Dillon Kearns",
   "license": "BSD-3",
   "dependencies": {
+    "elm-analyse": "^0.16.5",
     "node-sass": "^4.12.0",
     "prismjs": "^1.19.0"
   },
