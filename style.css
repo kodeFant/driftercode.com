@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css?family=Merriweather:700|Open+Sans:400,400i,700&display=swap");
+.avatar img {
+  border-radius: 50%;
+}
+
+.logo:hover {
+  animation: 200ms linear forwards logoTransition;
+}
+
+@keyframes logoTransition {
+  0% {
+    filter: brightness(1);
+    filter: saturate(1);
+  }
+
+  100% {
+    filter: brightness(5);
+    filter: saturate(0);
+  }
+}
+
+* {
+  transition: transform 200ms ease-in-out, border-color 600ms ease-in-out;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+
+body::-webkit-scrollbar {
+  width: 16px;
+  background-color: #f5f5f5;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #f90;
+  background-image: -webkit-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+}
+
+@media (max-width: 576px) {
+  .responsive-medium {
+    display: none !important;
+  }
+  .responsive-large {
+    display: none !important;
+  }
+}
+@media (min-width: 576px) and (max-width: 768px) {
+  .responsive-mobile {
+    display: none !important;
+  }
+  .responsive-large {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) {
+  .responsive-mobile {
+    display: none !important;
+  }
+  .responsive-medium {
+    display: none !important;
+  }
+}

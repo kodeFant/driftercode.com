@@ -1,0 +1,6 @@
+{
+  "excludedPaths": ["gen/Pages.elm"],
+  "checks": {
+    "SingleFieldRecord": false
+  }
+}
