@@ -6,7 +6,7 @@
   "description": "Is there a cost to TypeScript in Functional Programming",
   "image": "/images/article-covers/illustration-coding.jpg",
   "published": "2020-03-17",
-  "draft": false,
+  "draft": true,
 }
 ---
 
