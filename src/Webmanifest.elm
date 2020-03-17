@@ -14,9 +14,9 @@ manifest =
     , orientation = Manifest.Portrait
     , description = "DrifterCode - The functional programming journey."
     , iarcRatingId = Nothing
-    , name = "kodefant"
+    , name = "driftercode"
     , themeColor = Just Color.white
     , startUrl = pages.index
-    , shortName = Just "kodefant"
+    , shortName = Just "driftercode"
     , sourceIcon = images.iconPng
     }
