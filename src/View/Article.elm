@@ -1,9 +1,12 @@
 module View.Article exposing (view)
 
 import Data.Author as Author
-import Element exposing (Element, centerX, column, el, paragraph, spacing, text)
+import Element exposing (Element, centerX, column, el, html, paragraph, spacing, text)
 import Element.Font as Font
 import Element.Region
+import Html
+import Html.Attributes
+import Json.Encode
 import Metadata exposing (ArticleMetadata, Metadata)
 import Pages
 import Pages.ImagePath as ImagePath exposing (ImagePath)
@@ -47,6 +50,7 @@ view count metadata page viewForPage =
                  ]
                     ++ viewForPage
                 )
+            , html (Html.node "comment-area" [ Html.Attributes.property "data-auto-init" (Json.Encode.bool True) ] [])
             ]
         ]
 

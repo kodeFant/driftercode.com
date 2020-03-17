@@ -58,7 +58,7 @@ That error could never reach production in Elm because of the strong type system
 
 ## Initial pain bearing sweet fruits
 
-I am convinced that the functional programming paradigm leads to reliable code that is easy to refactor. Every programmer wants that, but not every programmer seems to believe it's real. No wonder the the functional Javascript specification is called [Fantasyland]().
+I am convinced that the functional programming paradigm leads to reliable code that is easy to refactor. Every programmer wants that, but not every programmer seems to believe it's real. No wonder the the functional Javascript specification is called [Fantasyland](https://github.com/fantasyland/fantasy-land).
 
 There is a threshold to learning it. Not taking the leap of faith certainly feels like a safer choice.
 

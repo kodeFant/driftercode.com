@@ -66,7 +66,6 @@ view posts =
                     )
                 |> List.sortWith
                     (\( _, metaA ) ( _, metaB ) -> Date.compare metaA.published metaB.published)
-                |> List.reverse
                 |> List.map postSummary
     in
     Element.column [ Element.spacing 20, padding 10, width (fill |> maximum 900) ]

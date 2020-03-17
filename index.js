@@ -1,4 +1,5 @@
 import "./lib/code-editor.js";
+import "./lib/comment-area.js"
 import "./style.css";
 
 const { Elm } = require("./src/Main.elm");

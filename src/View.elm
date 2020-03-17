@@ -85,7 +85,7 @@ pageView _ siteMetadata page ( count, viewForPage ) =
             }
 
         Metadata.BlogIndex ->
-            { title = "driftercode.com - Blog"
+            { title = "DrifterCode - Blog"
             , body =
                 Element.column [ Element.width Element.fill ]
                     [ View.Header.view page.path
