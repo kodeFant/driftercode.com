@@ -1,5 +1,6 @@
 module View.Header exposing (view)
 
+import Design.Palette as Palette
 import Element exposing (Element, fill, height, paddingXY, rgba255, spaceEvenly, width)
 import Element.Background as Background
 import Element.Border as Border
@@ -7,7 +8,6 @@ import Element.Font as Font
 import Element.Region as Region
 import Pages
 import Pages.PagePath exposing (PagePath)
-import Palette
 import Types exposing (Msg)
 import View.Nav exposing (logo, navMenu)
 

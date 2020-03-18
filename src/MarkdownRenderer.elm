@@ -1,5 +1,7 @@
 module MarkdownRenderer exposing (Rendered, markdownView, pageRenderer)
 
+import Design.Palette as Palette
+import Design.Styles exposing (linkStyle)
 import Element
     exposing
         ( Element
@@ -31,7 +33,7 @@ import Json.Encode as Encode
 import Markdown.Html
 import Markdown.Parser exposing (Renderer)
 import Media.Svgs exposing (quoteSvg)
-import Palette
+import Pages
 
 
 type alias Rendered msg =
@@ -184,20 +186,20 @@ italic string =
 
 mdLink : { title : Maybe String, destination : String } -> List (Element msg) -> Result String (Element msg)
 mdLink link body =
-    -- Pages.isValidRoute link.destination
-    --     |> Result.map
-    --         (\() ->
-    Element.newTabLink
-        [ Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
-        , Font.color Palette.color.primary
-        ]
-        { url = link.destination
-        , label =
-            Element.paragraph
-                []
-                body
-        }
-        |> Ok
+    Pages.isValidRoute link.destination
+        |> Result.map
+            (\() ->
+                Element.newTabLink
+                    (Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
+                        :: linkStyle
+                    )
+                    { url = link.destination
+                    , label =
+                        Element.paragraph
+                            []
+                            body
+                    }
+            )
 
 
 image : { src : String } -> String -> Result String (Element msg)

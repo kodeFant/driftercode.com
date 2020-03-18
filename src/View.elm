@@ -2,6 +2,7 @@ module View exposing (view)
 
 import BlogIndex
 import Data.Author as Author
+import Design.Palette as Palette
 import Element
     exposing
         ( Element
@@ -22,7 +23,6 @@ import PageHead exposing (head)
 import Pages
 import Pages.PagePath exposing (PagePath)
 import Pages.StaticHttp as StaticHttp
-import Palette
 import Types exposing (Model, Msg)
 import View.Article
 import View.Header

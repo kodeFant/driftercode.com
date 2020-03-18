@@ -1,6 +1,7 @@
 module BlogIndex exposing (view)
 
 import Date
+import Design.Palette as Palette
 import Design.Responsive exposing (responsiveView)
 import Element
     exposing
@@ -33,7 +34,6 @@ import Metadata exposing (Metadata(..))
 import Pages
 import Pages.ImagePath as ImagePath
 import Pages.PagePath as PagePath exposing (PagePath)
-import Palette
 import Util.Date exposing (formatDate)
 
 

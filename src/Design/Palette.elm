@@ -1,4 +1,4 @@
-module Palette exposing (blogHeading, color, heading)
+module Design.Palette exposing (blogHeading, color, heading)
 
 import Element exposing (Color, Element, rgb255)
 import Element.Font as Font

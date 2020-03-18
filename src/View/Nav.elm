@@ -1,5 +1,6 @@
 module View.Nav exposing (logo, mobileMenu, navMenu)
 
+import Design.Palette as Palette
 import Design.Responsive exposing (responsiveFillScreen, responsiveView)
 import Element
     exposing
@@ -23,7 +24,6 @@ import Element.Font as Font
 import Html.Attributes exposing (class)
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
-import Palette
 import Types exposing (Msg(..))
 
 

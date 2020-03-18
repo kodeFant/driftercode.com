@@ -1,17 +1,16 @@
 module View.Article exposing (view)
 
 import Data.Author as Author
-import Element exposing (Element, centerX, column, el, html, paragraph, spacing, text)
+import Design.Palette as Palette
+import Design.Styles exposing (linkStyle)
+import Element exposing (Element, centerX, column, el, fill, html, link, newTabLink, none, padding, paragraph, rgb255, spacing, text, width)
+import Element.Border as Border
 import Element.Font as Font
 import Element.Region
-import Html
-import Html.Attributes
-import Json.Encode
 import Metadata exposing (ArticleMetadata, Metadata)
 import Pages
 import Pages.ImagePath as ImagePath exposing (ImagePath)
 import Pages.PagePath exposing (PagePath)
-import Palette
 import Types exposing (Msg)
 import Util.Date exposing (formatDate)
 import View.Header
@@ -50,6 +49,13 @@ view count metadata page viewForPage =
                  ]
                     ++ viewForPage
                 )
+            , paragraph [ width fill, Border.width 2, Border.color (rgb255 25 25 25), padding 10 ]
+                [ text "Any comments? "
+                , newTabLink linkStyle
+                    { label = text "Drop me a tweet 😀"
+                    , url = "https://twitter.com/intent/tweet?hashtags=DrifterCode&amp;original_referer=https%3A%2F%2Fdeveloper.twitter.com%2Fen%2Fdocs%2Ftwitter-for-websites%2Ftweet-button%2Foverview&amp;ref_src=twsrc%5Etfw&amp;related=twitterapi%2Ctwitter&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Fdriftercode.com;via=larsparsfromage"
+                    }
+                ]
             ]
         ]
 
