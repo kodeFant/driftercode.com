@@ -50,7 +50,6 @@ view count metadata page viewForPage =
                  ]
                     ++ viewForPage
                 )
-            , html (Html.node "comment-area" [ Html.Attributes.property "data-auto-init" (Json.Encode.bool True) ] [])
             ]
         ]
 
