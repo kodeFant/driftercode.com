@@ -1,15 +1,14 @@
 module View.Header exposing (view)
 
 import Design.Palette as Palette
-import Element exposing (Element, fill, height, paddingXY, rgba255, spaceEvenly, width)
+import Element exposing (Element, centerX, fill, paddingXY, px, rgba255, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
-import Element.Region as Region
+import Html.Attributes
 import Pages
 import Pages.PagePath exposing (PagePath)
 import Types exposing (Msg)
-import View.Nav exposing (logo, navMenu)
 
 
 view : PagePath Pages.PathKey -> Element Msg
@@ -17,18 +16,15 @@ view currentPath =
     Element.column [ width fill ]
         [ Element.row
             [ paddingXY 25 4
-            , spaceEvenly
             , width fill
-            , Region.navigation
-            , Border.widthEach { bottom = 1, left = 0, right = 0, top = 0 }
             , Border.color (rgba255 40 80 40 0.4)
             , Background.color Palette.color.darkestGray
-            , Font.color Palette.color.white
             , Element.paddingXY 48 16
             ]
             [ Element.link
                 [ Font.color Palette.color.primary
                 , Element.mouseOver [ Font.color Palette.color.white ]
+                , centerX
                 ]
                 { url = "/"
                 , label =
@@ -36,18 +32,10 @@ view currentPath =
                         [ logo
                         ]
                 }
-            , navMenu currentPath
             ]
-        , Element.el
-            [ Element.height (Element.px 4)
-            , Element.width Element.fill
-            , Background.gradient
-                { angle = 0.2
-                , steps =
-                    [ Palette.color.darkestGray
-                    , Palette.color.primary
-                    ]
-                }
-            ]
-            Element.none
         ]
+
+
+logo : Element msg
+logo =
+    Element.image [ Element.htmlAttribute (Html.Attributes.class "logo"), width (px 180) ] { src = "/images/logo.png", description = "" }

@@ -29,7 +29,7 @@ view count metadata page viewForPage =
             [ Element.padding 30
             , Element.spacing 40
             , Element.Region.mainContent
-            , Element.width (Element.fill |> Element.maximum 700)
+            , Element.width (Element.fill |> Element.maximum 750)
             , Element.centerX
             ]
             [ Element.textColumn [ Element.spacing 24, Element.width Element.fill ]

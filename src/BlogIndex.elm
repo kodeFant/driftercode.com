@@ -6,7 +6,6 @@ import Design.Responsive exposing (responsiveView)
 import Element
     exposing
         ( Element
-        , alpha
         , centerX
         , centerY
         , column
@@ -66,24 +65,25 @@ view posts =
                     )
                 |> List.sortWith
                     (\( _, metaA ) ( _, metaB ) -> Date.compare metaA.published metaB.published)
+                |> List.reverse
                 |> List.map postSummary
     in
     Element.column [ Element.spacing 20, padding 10, width (fill |> maximum 900) ]
         filteredPosts
 
 
-postPreview : Metadata.ArticleMetadata -> Element msg
-postPreview post =
+listView : Metadata.ArticleMetadata -> Element msg
+listView post =
     responsiveView
-        { mobile = smallScreenPreview post
+        { mobile = listViewMobile post
         , medium =
-            smallScreenPreview post
-        , large = largeScreenPreview post
+            listViewMobile post
+        , large = listViewLarge post
         }
 
 
-smallScreenPreview : Metadata.ArticleMetadata -> Element msg
-smallScreenPreview post =
+listViewMobile : Metadata.ArticleMetadata -> Element msg
+listViewMobile post =
     textColumn
         [ centerX
         , width fill
@@ -92,7 +92,7 @@ smallScreenPreview post =
         ]
         [ image [ height fill, width fill ]
             { src = ImagePath.toString post.image
-            , description = "Article cover photo"
+            , description = ""
             }
         , el [ Font.center ] (text (post.published |> formatDate))
         , title post.title
@@ -107,8 +107,8 @@ smallScreenPreview post =
         ]
 
 
-largeScreenPreview : Metadata.ArticleMetadata -> Element msg
-largeScreenPreview post =
+listViewLarge : Metadata.ArticleMetadata -> Element msg
+listViewLarge post =
     row [ spacing 16 ]
         [ column [ width (fillPortion 2) ]
             [ image [ centerY, width fill ]
@@ -124,7 +124,6 @@ largeScreenPreview post =
                     , Font.family [ Font.typeface "Open Sans" ]
                     , padding 20
                     ]
-            , readMoreLink
             ]
         , textColumn
             [ centerX
@@ -178,17 +177,4 @@ articleIndex metadata =
             , Border.glow Palette.color.primary 2
             ]
         ]
-        (postPreview metadata)
-
-
-readMoreLink : Element msg
-readMoreLink =
-    text "Read the article >>"
-        |> el
-            [ centerX
-            , Font.size 18
-            , alpha 0.6
-            , mouseOver [ alpha 1 ]
-            , Font.underline
-            , Font.center
-            ]
+        (listView metadata)

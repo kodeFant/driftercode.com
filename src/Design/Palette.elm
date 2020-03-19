@@ -18,13 +18,13 @@ type alias PaletteColors =
 
 color : PaletteColors
 color =
-    { primary = rgb255 255 165 0
-    , secondary = rgb255 0 242 96
-    , white = rgb255 255 255 255
-    , darkestGray = rgb255 51 51 51
-    , lightGray = rgb255 200 200 200
-    , lighterGray = rgb255 237 237 237
-    , black = rgb255 30 30 30
+    { primary = rgb255 255 165 0 -- rgb(255,165,0)
+    , secondary = rgb255 235 145 0 -- rgb(235,145,0)
+    , white = rgb255 255 255 255 -- rgb(255, 255, 255)
+    , darkestGray = rgb255 51 51 51 --rgb(51,51,51)
+    , lightGray = rgb255 200 200 200 --rgb(200,200,200)
+    , lighterGray = rgb255 237 237 237 --rgb(237,237,237)
+    , black = rgb255 30 30 30 --rgb(30,30,30)
     }
 
 

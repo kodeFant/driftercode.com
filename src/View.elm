@@ -26,7 +26,6 @@ import Pages.StaticHttp as StaticHttp
 import Types exposing (Model, Msg)
 import View.Article
 import View.Header
-import View.Nav exposing (mobileMenu)
 import View.Page
 
 
@@ -49,7 +48,7 @@ view siteMetadata page =
                     { title, body } =
                         pageView model siteMetadata page viewForPage
                 in
-                { title = title
+                { title = title ++ " | DrifterCode"
                 , body =
                     Element.layout
                         [ Element.width Element.fill
@@ -57,7 +56,6 @@ view siteMetadata page =
                         , Font.size 20
                         , Font.family [ Font.typeface "Open Sans", Font.sansSerif ]
                         , Font.color (Element.rgba255 0 0 0 0.8)
-                        , Element.inFront (mobileMenu model.mobileMenuVisible page.path)
                         ]
                         body
                 }
@@ -85,7 +83,7 @@ pageView _ siteMetadata page ( count, viewForPage ) =
             }
 
         Metadata.BlogIndex ->
-            { title = "DrifterCode - Blog"
+            { title = "Blog"
             , body =
                 Element.column [ Element.width Element.fill ]
                     [ View.Header.view page.path

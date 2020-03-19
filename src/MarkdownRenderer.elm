@@ -186,20 +186,21 @@ italic string =
 
 mdLink : { title : Maybe String, destination : String } -> List (Element msg) -> Result String (Element msg)
 mdLink link body =
-    Pages.isValidRoute link.destination
-        |> Result.map
-            (\() ->
-                Element.newTabLink
-                    (Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
-                        :: linkStyle
+    case List.head body of
+        Just element ->
+            Pages.isValidRoute link.destination
+                |> Result.map
+                    (\() ->
+                        Element.newTabLink
+                            linkStyle
+                            { url = link.destination
+                            , label =
+                                element
+                            }
                     )
-                    { url = link.destination
-                    , label =
-                        Element.paragraph
-                            []
-                            body
-                    }
-            )
+
+        Nothing ->
+            Ok none
 
 
 image : { src : String } -> String -> Result String (Element msg)

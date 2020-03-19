@@ -26,7 +26,7 @@ I had barely started getting to know types from TypeScript, but the type system 
 
 I couldn't do mutations. I felt caged in a sterile clean-room. I had to send a message to some massive update function thing and send my requested change into a modified copy of the state model.
 
-And if I did something wrong, or tried to force a `this.setState({loading: false})` the app wouldn't compile to sh\*t.
+And if I did something wrong, or tried to force a **this.setState({loading: false})** the app wouldn't even compile.
 
 **JavaScript didn't complain. And if it did complain, it did so silently, hidden away in the browser console. With webpack though, it screamed frantically with a cryptic stacktrace.**
 
