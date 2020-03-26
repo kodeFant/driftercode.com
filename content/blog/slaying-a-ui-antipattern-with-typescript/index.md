@@ -10,9 +10,9 @@
 }
 ---
 
-Kris Jenkins made this great library in Elm called [RemoteData](https://package.elm-lang.org/packages/krisajenkins/remotedata/latest/) which makes data fetching more predictable and maintainable.
+Kris Jenkins made a great library in Elm called [RemoteData](https://package.elm-lang.org/packages/krisajenkins/remotedata/latest/). It makes data fetching more predictable and maintainable.
 
-It is basically a data structure for external data that returns one of of the following values, here shown in the Elm version:
+RemoteData is a nice data structure for external data. It returns one of of the following values, here shown in the Elm version:
 
 ```elm
 type RemoteData err data
@@ -22,7 +22,7 @@ type RemoteData err data
     | Success data
 ```
 
-With a data formed like this stored in the state model, a developer is forced to make a view for each case.
+With data formed like this stored in the state model, a developer is forced to handle a view for every case.
 
 **There will be no more postponing the loading and error views for "later".**
 
@@ -115,7 +115,7 @@ The **E** (error) and **D** (data) types are generic types that will be specifie
 
 ## Fetch data
 
-Then create a function for fetching the data. No need to put it inside the React component. That would just make it harder to refactor.
+Then create a function for fetching the data. No need to put it inside the React component.
 
 ```tsx
 // Retrieve blog posts with the fetch returning a RemoteData value
@@ -163,7 +163,7 @@ function Main(): JSX.Element {
 
 The default value is the initial **NOT_ASKED** value.
 
-The **getPosts** function should instantly sets a loading state when initializing the data fetching. The fetchPosts function then decide the final state in the RemoteData lifecycle.
+The **getPosts** function should instantly set a loading state when initializing the data fetching. The fetchPosts function will then decide the final state in the RemoteData lifecycle.
 
 ## The view
 

@@ -55,7 +55,7 @@ view count metadata page viewForPage =
                     { label = text "Drop me a tweet 😀"
                     , url = "https://twitter.com/intent/tweet?text=Hey%2C%20%40larsparsfromage"
                     }
-                , el [] (text " I'll implement some comment system when I get time.")
+                , el [] (text " I'll implement some comment system when I have some spare time. Will probably avoid Disqus, so I am open for some good advice.")
                 ]
             ]
         ]
