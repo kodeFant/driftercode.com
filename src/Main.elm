@@ -71,7 +71,7 @@ markdownDocument =
         , metadata = Metadata.decoder
         , body =
             \markdownBody ->
-                MarkdownRenderer.markdownView markdownBody
+                MarkdownRenderer.wordCountMarkdownView markdownBody
         }
 
 

@@ -5,14 +5,14 @@
   "title": "Slaying a UI antipattern with TypeScript and React",
   "description": "Fetch data like a knight in functional armor using a powerful Elm pattern.",
   "image": "/images/article-covers/anti-pattern.jpg",
-  "published": "2020-03-19",
-  "draft": true,
+  "published": "2020-03-26",
+  "draft": false,
 }
 ---
 
 Kris Jenkins made this great library in Elm called [RemoteData](https://package.elm-lang.org/packages/krisajenkins/remotedata/latest/) which makes data fetching more predictable and maintainable.
 
-It basically creates a data structure for external data into four possible value types.
+It is basically a data structure for external data that returns one of of the following values, here shown in the Elm version:
 
 ```elm
 type RemoteData err data
@@ -22,9 +22,11 @@ type RemoteData err data
     | Success data
 ```
 
-When rendering the UI, the developer will have to specify a view for all of those four cases. This forces the developer not to postpone making all the necessary views, like a loading screen when no data is fetched.
+With a data formed like this stored in the state model, a developer is forced to make a view for each case.
 
-Here is a very simplified example of a view function returning something for every case.
+**There will be no more postponing the loading and error views for "later".**
+
+Here is an example of a view function in Elm returning something for every case. Ignoring any of them will prevent the app from compiling:
 
 ```elm
 view : Model -> Html msg
@@ -39,15 +41,13 @@ view model =
     Success blogPosts -> postList blogPosts
 ```
 
-Like what you see? Consider [trying out Elm](https://elm-lang.org/) on your next frontend project.
+Like many of us, you might be stuck with React and TypeScript at best in certain projects. Luckily, this pattern is just as easy to implement with TypeScript.
 
-Like many of us, you might be stuck with React and TypeScript at best in certain projects. Luckily, there are ways to utilize this pattern also in TypeScript.
-
-In this tutorial, we are doing it with nothing more than TypeScript and React, but I might revisit it with a library like [fp-ts](https://gcanti.github.io/fp-ts/) later.
+In this first tutorial about RemoteData, we are building it with no direct dependencies other than TypeScript and React.
 
 ## The antipattern
 
-[Kris Jenkins has written a great article](http://blog.jenkster.com/2016/06/how-elm-slays-a-ui-antipattern.html) explaining the antipattern we are "slaying".
+[Kris Jenkins wrote a great article](http://blog.jenkster.com/2016/06/how-elm-slays-a-ui-antipattern.html) explaining this antipattern of not handling views for every state of data fetching.
 
 Very shortly outlined from the article, this is the antipattern we want to handle:
 
@@ -58,13 +58,21 @@ var data = {
 };
 ```
 
-When the data is loading, the empty list shouldn't even be a possible state to access. [Impossible states should actually be impossible](https://www.youtube.com/watch?v=IcgmSRJHu_8).
+When the data is loading, the empty list of blogPosts shouldn't even be a possible state to access. [Impossible states should actually be impossible](https://www.youtube.com/watch?v=IcgmSRJHu_8).
 
 Free standing loading states could work fine in a very small app. As complexity grows, it will become a growing pain point.
 
+It will be just another switch to remember to turn on and off at the right time.
+
 ## Begin with the data structure
 
+Let's make it with a super simple example.
+
 Make a new React app with TypeScript and clear out the the entry file, which might be named **index.tsx**.
+
+We already know the general data structure of this app. It's just displaying a list of blog posts.
+
+We start with creating a **Post** type in addition to the **RemoteData** one.
 
 Make it look like this:
 
@@ -101,11 +109,13 @@ ReactDOM.render(
 );
 ```
 
-The interesting part is of course the RemoteData type. It should be returned from a fetch function and this whole value should go directly into the state. The **E** (error) and **D** (data) are generic types that will be more specific types when we implement it.
+The interesting part is of course the RemoteData type. It should be returned from a fetch function and this whole value should go directly into the state.
+
+The **E** (error) and **D** (data) types are generic types that will be specified as we implement it.
 
 ## Fetch data
 
-Then insert a fetch function:
+Then create a function for fetching the data. No need to put it inside the React component. That would just make it harder to refactor.
 
 ```tsx
 // Retrieve blog posts with the fetch returning a RemoteData value
@@ -120,21 +130,21 @@ async function fetchPosts(): Promise<RemoteData<Error, Post[]>> {
     return { type: "FAILURE", error: e };
   }
 }
-
-// Main Component
 ```
 
-Pay attention to the return type of the promise
+Throwing errors loose into the world is no good. It's better to catch them and return the data in an orderly fashion.
+
+Pay attention to the return type in the function above.
 
 ```tsx
 RemoteData<Error, Post[]>
 ```
 
-This sets the data structure on the data fetching, the error is an **Error** type and the expected data is an array of Post.
+The generic **E** and **A** types are now defined with specific types.
 
 ## The State
 
-To avoid introducing too many conepts, I'll just just the useState hook for setting the posts state.
+To avoid introducing too many conepts in this article, I'll just just the useState hook for setting the posts state. It's of course considered forbidden magic as it's not immutable.
 
 ```tsx
 function Main(): JSX.Element {
@@ -151,13 +161,13 @@ function Main(): JSX.Element {
 }
 ```
 
-I'm setting the same RemoteData type as in the fetch function, and the default value is the initial **NotAsked** value.
+The default value is the initial **NOT_ASKED** value.
 
-The getPosts function instantly sets a loading state, and then lets the fetchPosts decide the final state in the RemoteData lifecycle.
+The **getPosts** function should instantly sets a loading state when initializing the data fetching. The fetchPosts function then decide the final state in the RemoteData lifecycle.
 
 ## The view
 
-Now to the final part: To be able to show the blog posts in the view, you make a case for every patterns of the RemoteData type.
+Now to the final part: To be able to show the blog posts in the view, you make a case for every possible outcome of the RemoteData type.
 
 The main function will look like this:
 
@@ -206,6 +216,24 @@ function Main(): JSX.Element {
 }
 ```
 
-In cases where data is fetched automatically on page load, you can return the same view on both **LOADING** on **NOT_ASKED**.
+In cases where data is fetched automatically on page load, you can return the same view on both **LOADING** and **NOT_ASKED**.
 
 See the [CodeSandbox](https://codesandbox.io/s/remotedata-with-typescript-and-react-77dci) for a complete example.
+
+If you like this pattern, make it your own. Or if you are a regular JavaScript user, there are several resources showing you how to solve it without TypeScript. Here are some examples:
+
+- [Slaying a UI Antipattern in React](https://medium.com/javascript-inside/slaying-a-ui-antipattern-in-fantasyland-907cbc322d2a)
+- [Slaying a UI Antipattern with Flow](https://medium.com/@gcanti/slaying-a-ui-antipattern-with-flow-5eed0cfb627b)
+
+## Next up
+
+**In the next post, we are going to lay out the rendering of the RemoteData view more elegantly than the switch statement.**
+
+```tsx
+return foldRemoteData(
+  () => <FetchPosts getPosts={getPosts} />,
+  () => <Loading />,
+  (error: Error) => <Failure error={error} />,
+  (data: Post[]) => <BlogPosts data={data} />
+)(posts);
+```

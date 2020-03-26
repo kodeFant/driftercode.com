@@ -53,8 +53,9 @@ view count metadata page viewForPage =
                 [ text "Any comments? "
                 , newTabLink linkStyle
                     { label = text "Drop me a tweet 😀"
-                    , url = "https://twitter.com/intent/tweet?hashtags=DrifterCode&amp;original_referer=https%3A%2F%2Fdeveloper.twitter.com%2Fen%2Fdocs%2Ftwitter-for-websites%2Ftweet-button%2Foverview&amp;ref_src=twsrc%5Etfw&amp;related=twitterapi%2Ctwitter&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Fdriftercode.com;via=larsparsfromage"
+                    , url = "https://twitter.com/intent/tweet?text=Hey%2C%20%40larsparsfromage"
                     }
+                , el [] (text " I'll implement some comment system when I get time.")
                 ]
             ]
         ]

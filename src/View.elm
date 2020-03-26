@@ -91,7 +91,7 @@ pageView _ siteMetadata page ( count, viewForPage ) =
                         [ Element.centerX
                         , Element.paddingXY 0 50
                         ]
-                        [ BlogIndex.view siteMetadata ]
+                        [ BlogIndex.view siteMetadata viewForPage ]
                     ]
             }
 

@@ -2,7 +2,7 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "My first steps into functional programming",
+  "title": "Functional programming, hard to learn, easy to master",
   "description": "After my first encounter with functional programming, I first felt lost. Then extremely empowered.",
   "image": "/images/article-covers/illustration-coding.jpg",
   "published": "2020-02-27",

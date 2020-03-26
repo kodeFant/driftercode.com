@@ -1,4 +1,4 @@
-module MarkdownRenderer exposing (Rendered, markdownView, pageRenderer)
+module MarkdownRenderer exposing (Rendered, pageRenderer, wordCountMarkdownView)
 
 import Design.Palette as Palette
 import Design.Styles exposing (linkStyle)
@@ -21,6 +21,7 @@ import Element
         , row
         , spacing
         , text
+        , textColumn
         , width
         )
 import Element.Background as Background
@@ -40,8 +41,8 @@ type alias Rendered msg =
     ( Int, List (Element msg) )
 
 
-markdownView : String -> Result String ( Int, List (Element msg) )
-markdownView markdown =
+wordCountMarkdownView : String -> Result String ( Int, List (Element msg) )
+wordCountMarkdownView markdown =
     let
         wordCount =
             List.length (String.split " " markdown)
@@ -57,6 +58,21 @@ markdownView markdown =
 
         Err error ->
             Err (error |> List.map Markdown.Parser.deadEndToString |> String.join "\n")
+
+
+markdownViewElement : String -> Element msg
+markdownViewElement markdown =
+    case markdown |> Markdown.Parser.parse of
+        Ok okAst ->
+            case Markdown.Parser.render pageRenderer okAst of
+                Ok rendered ->
+                    textColumn [] rendered
+
+                Err errors ->
+                    el [] (text errors)
+
+        Err error ->
+            el [] (text (error |> List.map Markdown.Parser.deadEndToString |> String.join "\n"))
 
 
 pageRenderer : Renderer (Element msg)
