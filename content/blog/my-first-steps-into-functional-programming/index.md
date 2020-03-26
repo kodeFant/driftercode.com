@@ -2,9 +2,9 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "Functional programming, hard to learn, easy to master",
-  "description": "After my first encounter with functional programming, I first felt lost. Then extremely empowered.",
-  "image": "/images/article-covers/illustration-coding.jpg",
+  "title": "Learning functional programming requires a big leap of faith",
+  "description": "Not sure I would bother to learn it, had I not been thrown into it.",
+  "image": "/images/article-covers/leap-of-faith.jpg",
   "published": "2020-02-27",
   "draft": false,
 }
