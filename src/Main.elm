@@ -61,7 +61,7 @@ generateFiles siteMetadata =
 
 siteTagline : String
 siteTagline =
-    "DrifterCode - The functional programming journey"
+    "DrifterCode - The Great Functional Programming Journey"
 
 
 markdownDocument : ( String, Pages.Document.DocumentHandler Metadata (Rendered Msg) )

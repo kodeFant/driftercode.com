@@ -22,9 +22,9 @@ type RemoteData err data
     | Success data
 ```
 
-With data formed like this stored in the state model, a developer is forced to handle a view for every case.
+With data like this, a developer is forced to handle the view for every case.
 
-**There will be no more postponing the loading and error views for "later".**
+**No more postponing the loading and error views for "later".**
 
 Here is an example of a view function in Elm returning something for every case. Ignoring any of them will prevent the app from compiling:
 
@@ -115,7 +115,7 @@ The **E** (error) and **D** (data) types are generic types that will be specifie
 
 ## Fetch data
 
-Then create a function for fetching the data. No need to put it inside the React component.
+Then create a function for fetching the data.
 
 ```tsx
 // Retrieve blog posts with the fetch returning a RemoteData value
@@ -144,7 +144,7 @@ The generic **E** and **A** types are now defined with specific types.
 
 ## The State
 
-To avoid introducing too many conepts in this article, I'll just just the useState hook for setting the posts state. It's of course considered forbidden magic as it's not immutable.
+To avoid introducing too many conepts in this article, I'll just use the useState hook for setting the posts state. It's of course considered forbidden magic as it's not immutable.
 
 ```tsx
 function Main(): JSX.Element {
@@ -227,7 +227,7 @@ If you like this pattern, make it your own. Or if you are a regular JavaScript u
 
 ## Next up
 
-**In the next post, we are going to lay out the rendering of the RemoteData view more elegantly than the switch statement.**
+**In the next post, we are going to lay out the rendering of the RemoteData view a bit more elegantly than the switch statement.**
 
 ```tsx
 return foldRemoteData(

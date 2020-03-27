@@ -107,4 +107,4 @@ siteName =
 
 siteTagline : String
 siteTagline =
-    "The functional programming journey"
+    "The Great Functional Programming Journey"
