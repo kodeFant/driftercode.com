@@ -127,7 +127,7 @@ async function fetchPosts(): Promise<RemoteData<Error, Post[]>> {
     if (!response.ok) throw await response.json();
 
     const data = await response.json();
-    
+
     return { type: "SUCCESS", data: data };
   } catch (e) {
     return { type: "FAILURE", error: e };
@@ -143,7 +143,7 @@ Pay attention to the return type in the function above.
 RemoteData<Error, Post[]>
 ```
 
-The generic **E** and **A** types are now defined with specific types.
+The generic **E** and **D** types are now defined with specific types.
 
 ## The State
 
