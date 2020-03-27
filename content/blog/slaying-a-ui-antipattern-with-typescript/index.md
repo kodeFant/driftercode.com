@@ -121,10 +121,13 @@ Then create a function for fetching the data.
 // Retrieve blog posts with the fetch returning a RemoteData value
 
 async function fetchPosts(): Promise<RemoteData<Error, Post[]>> {
-  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
   try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+
     if (!response.ok) throw await response.json();
+
     const data = await response.json();
+    
     return { type: "SUCCESS", data: data };
   } catch (e) {
     return { type: "FAILURE", error: e };
