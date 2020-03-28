@@ -45,6 +45,8 @@ Like many of us, you might be stuck with React and TypeScript at best in certain
 
 In this first tutorial about RemoteData, we are building it with no direct dependencies other than TypeScript and React.
 
+**Throughout this series, we will make a TypeScript equivalent of this minimalistic [Elm blog fetcher](https://codesandbox.io/s/remotedata-elm-example-ktmt1).**
+
 ## The antipattern
 
 [Kris Jenkins wrote a great article](http://blog.jenkster.com/2016/06/how-elm-slays-a-ui-antipattern.html) explaining this antipattern of not handling views for every state of data fetching.
@@ -66,7 +68,8 @@ It will be just another switch to remember to turn on and off at the right time.
 
 ## Begin with the data structure
 
-Let's make it with a super simple example.
+Let's do a super simple example. 
+
 
 Make a new React app with TypeScript and clear out the the entry file, which might be named **index.tsx**.
 
@@ -221,16 +224,16 @@ function Main(): JSX.Element {
 
 In cases where data is fetched automatically on page load, you can return the same view on both **LOADING** and **NOT_ASKED**.
 
-See the [CodeSandbox](https://codesandbox.io/s/remotedata-with-typescript-and-react-77dci) for a complete example.
+- **See the [CodeSandbox](https://codesandbox.io/s/remotedata-with-typescript-and-react-77dci) for a complete example.**
 
-If you like this pattern, make it your own. Or if you are a regular JavaScript user, there are several resources showing you how to solve it without TypeScript. Here are some examples:
 
-- [Slaying a UI Antipattern in React](https://medium.com/javascript-inside/slaying-a-ui-antipattern-in-fantasyland-907cbc322d2a)
-- [Slaying a UI Antipattern with Flow](https://medium.com/@gcanti/slaying-a-ui-antipattern-with-flow-5eed0cfb627b)
+
 
 ## Next up
 
 **In the next post, we are going to lay out the rendering of the RemoteData view a bit more elegantly than the switch statement.**
+
+Here is a teaser:
 
 ```tsx
 return foldRemoteData(
@@ -240,3 +243,8 @@ return foldRemoteData(
   (data: Post[]) => <BlogPosts data={data} />
 )(posts);
 ```
+
+If you like this pattern, make it your own. Or if you are a regular JavaScript user, there are several resources showing you how to solve it without TypeScript. Here are some examples:
+
+- [Slaying a UI Antipattern in React](https://medium.com/javascript-inside/slaying-a-ui-antipattern-in-fantasyland-907cbc322d2a)
+- [Slaying a UI Antipattern with Flow](https://medium.com/@gcanti/slaying-a-ui-antipattern-with-flow-5eed0cfb627b)
