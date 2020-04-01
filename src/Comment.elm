@@ -66,7 +66,7 @@ commentFormView slug commentForm =
                         , placeholder = Nothing
                         , label = Input.labelAbove [] (text "Email")
                         }
-                    , paragraph [ Font.size 14, Font.italic ] [ text "Your email is only used for verification and will not be visible." ]
+                    
                     ]
                 , Input.multiline
                     [ width fill ]
@@ -88,6 +88,7 @@ commentFormView slug commentForm =
                     { onPress = Just (SubmitComment slug)
                     , label = text "Submit"
                     }
+                    , paragraph [ Font.size 14, Font.italic ] [ text "My comment system is pretty simple at this moment. If you wisht to delete a message, send me an email (available in the confirmation mail you will recieve)." ]
                 ]
 
         Loading ->

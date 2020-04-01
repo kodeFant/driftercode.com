@@ -52,14 +52,6 @@ view model count metadata comments page viewForPage =
                  ]
                     ++ viewForPage
                 )
-            , paragraph [ width fill, Border.width 2, Border.color (rgb255 25 25 25), padding 10 ]
-                [ text "Any comments? "
-                , newTabLink linkStyle
-                    { label = text "Drop me a tweet 😀"
-                    , url = "https://twitter.com/intent/tweet?text=Hey%2C%20%40larsparsfromage"
-                    }
-                , el [] (text " I'll implement some comment system when I have some spare time. Will probably avoid Disqus, so I am open for some good advice.")
-                ]
             , Comment.view metadata.slug model.commentForm comments
             ]
         ]
