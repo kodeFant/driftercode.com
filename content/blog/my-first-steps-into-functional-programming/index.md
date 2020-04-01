@@ -13,7 +13,7 @@
 
 I had been working in journalism and communications a couple of years before I discovered JavaScript. This language introduced me to programming and made me so excited that I decided to switch careers.
 
-I left my communications job in 2019 and went all-in on web development, JavaScript and React.
+I left my communications job in 2018 and went all-in on web development, JavaScript and React.
 
 JavaScript was easy to grasp as I could write code and right away see the result in the web browser.
 
