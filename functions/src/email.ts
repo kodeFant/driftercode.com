@@ -32,6 +32,10 @@ function emailContent({ name, comment, commentId }: MailProps): string {
     <a href="https://us-central1-driftercode-comments-f2d95.cloudfunctions.net/comments/approval/${commentId}">Click here to confirm that you wrote the following comment:</a>
     <br/>
     <p>${comment}</p>
+    <br/>
+    <br/>
+    <h2>Deletion</h2>
+    <p>My comment system is pretty minimal at this stage. If you with to delete your comment, just send a delete request to my <a href="mailto:lars.lillo@gmail.com">personal email.</a></p>
     `}
 
 export function sendConfirmationMail(request: express.Request, response: express.Response, next: express.NextFunction) {
