@@ -88,7 +88,7 @@ commentFormView slug commentForm =
                     { onPress = Just (SubmitComment slug)
                     , label = text "Submit"
                     }
-                    , paragraph [ Font.size 14, Font.italic ] [ text "My comment system is pretty simple at this moment. If you wisht to delete a message, send me an email (available in the confirmation mail you will recieve)." ]
+                    , paragraph [ Font.size 14, Font.italic ] [ text "My comment system is pretty simple at this moment. If you wish to delete a message, send me an email (available in the confirmation mail you will recieve)." ]
                 ]
 
         Loading ->
