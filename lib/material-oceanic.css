@@ -1,15 +1,3 @@
-"use strict"
-
-import Prism from "prismjs";
-import "prismjs/components/prism-elm";
-import "prismjs/components/prism-jsx";
-import "prismjs/components/prism-tsx";
-import "./native-shim.js";
-
-const syntaxCSS = `
-
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
-
 code[class*="language-"],
 pre[class*="language-"] {
 	text-align: left;
@@ -19,7 +7,7 @@ pre[class*="language-"] {
 	word-wrap: normal;
 	color: #c3cee3;
 	background: #263238;
-    font-family: 'Fira Code', monospace;
+	font-family: Roboto Mono, monospace;
 	font-size: 1em;
 	line-height: 1.5em;
 
@@ -220,57 +208,3 @@ pre[class*="language-"] {
 .token.variable {
 	color: #f07178;
 }
-
-pre {
-  padding: 18px;
-  background: #263238;
-  overflow: auto;
-  font-size: 16px;
-  border-radius: 7px;
-}
-`
-
-customElements.define(
-	"code-editor",
-	class extends HTMLElement {
-		constructor() {
-			super();
-			this._editorValue =
-				"-- If you see this, the Elm code didn't set the value.";
-		}
-
-		get editorValue() {
-			return this._editorValue;
-		}
-
-		set editorValue(value) {
-			if (this._editorValue === value) return;
-			this._editorValue = value;
-			if (!this._editor) return;
-			this._editor.setValue(value);
-		}
-
-		get lang() {
-			return this.getAttribute('language');
-		}
-
-		connectedCallback() {
-			let shadow = this.attachShadow({ mode: "open" });
-
-			let style = document.createElement("style");
-			style.textContent = syntaxCSS;
-
-
-
-			let code = document.createElement("code");
-			code.setAttribute("class", `language-${this.lang}`);
-			code.innerHTML = Prism.highlight(this.editorValue, Prism.languages[this.lang], this.lang);
-
-			let pre = document.createElement("pre");
-			pre.appendChild(code);
-
-			shadow.appendChild(style);
-			shadow.appendChild(pre);
-		}
-	}
-);
