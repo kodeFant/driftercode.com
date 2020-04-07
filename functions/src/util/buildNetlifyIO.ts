@@ -8,6 +8,6 @@ export default async function buildNetlify(): Promise<Either<string, globalThis.
         const request = await fetch(functions.config().netlify.buidhook, { method: "POST" })
         return Right(request)
     } catch (e) {
-        return Left(e)
+        return Left(`Netlify Build Hook failed ${e}`)
     }
 }

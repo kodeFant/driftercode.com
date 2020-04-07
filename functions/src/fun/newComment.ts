@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction } from "express"
+import { Response, Request } from "express"
 import { commentsRef } from "../firebase"
 import { AddComment, Comment } from "../codecs/Comment"
 import { Either, Left, Right } from "purify-ts/Either"
@@ -8,20 +8,19 @@ import { firestore } from "firebase-admin"
 
 
 
-export default async function newComment(request: Request, response: Response, next: NextFunction): Promise<Either<string, Comment>> {
+export default async function newComment(request: Request, response: Response): Promise<Either<string, Comment>> {
 
-    const comment: AddComment = {
-        comment: request.body.comment,
-        email: request.body.email,
-        path: request.body.path,
-        name: request.body.name,
-        approved: false,
-        created_at: Date.now(),
-        responses: null,
-        updated_at: Date.now(),
-    }
     try {
-        const commentData = await createNewComment(comment).run()
+        const commentData = await createNewComment({
+            comment: request.body.comment,
+            email: request.body.email,
+            path: request.body.path,
+            name: request.body.name,
+            approved: false,
+            created_at: Date.now(),
+            responses: null,
+            updated_at: Date.now(),
+        }).run()
         response.json({ success: true })
         return commentData
 

@@ -1,5 +1,4 @@
 import * as mailgun from 'mailgun-js';
-import * as express from "express"
 import { Codec, string, GetInterface, array } from "purify-ts/Codec"
 import * as functions from "firebase-functions"
 import { Comment } from './codecs/Comment';
@@ -90,13 +89,11 @@ type DeleteMailProps = GetInterface<typeof DeleteMailProps>
 
 
 
-export function sendDeletionMail(response: express.Response) {
-    return async (props: DeleteMailProps) => {
-        const decodedMailProps = DeleteMailProps.decode(props)
-        if (decodedMailProps.isRight()) {
-            const mailProps = decodedMailProps.extract()
+export function sendDeletionMail() {
+    return async (props: DeleteMailProps): Promise<Either<string, mailgun.messages.SendResponse>> => {
+        try {
             const msgBody = await mg.messages().send({
-                from, subject, to: mailProps.toEmail,
+                from, subject, to: props.toEmail,
                 html: deleteCommentEmail(props)
             }, function (error, body) {
                 if (error) {
@@ -105,11 +102,9 @@ export function sendDeletionMail(response: express.Response) {
 
                 return body
             })
-            return msgBody
-        } else {
-            response.sendStatus(500)
-            return "Error"
+            return Right(msgBody)
+        } catch (e) {
+            return Left(e)
         }
-
     }
 }

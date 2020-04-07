@@ -1,69 +1,64 @@
 import { Request, Response } from "express"
-import { Either } from "purify-ts/Either"
+import { Either, Right, Left } from "purify-ts/Either"
 import { Codec, string, GetInterface } from "purify-ts/Codec"
 import { commentsRef } from "../firebase"
 import { sendDeletionMail } from "../email"
-import { CommentList, Comment } from "../codecs/Comment"
+import { Comment } from "../codecs/Comment"
+import { EitherAsync } from "purify-ts/EitherAsync"
+import * as mailgun from "mailgun-js"
 
 const DeleteRequestBody = Codec.interface({
     email: string
 })
 
-type UpdateApprovalBody = GetInterface<typeof DeleteRequestBody>
+type DeleteRequestBody = GetInterface<typeof DeleteRequestBody>
 
 export default async function requestDeletionMail(request: Request, response: Response) {
-    const body = { email: request.params.email }
-    const decodedBody: Either<string, UpdateApprovalBody> = DeleteRequestBody.decode(body)
-
     try {
-        if (decodedBody.isRight()) {
-            const comments = await commentsRef.where("email", "==", request.params.email).get()
-
-            const commentList: CommentList = []
-
-
-            comments.forEach(doc => {
-                console.log("doc.data()", doc.data())
-                if (!doc.exists) {
-                    console.log("Comment does not exist")
-                } else {
-
-                    const comment = {
-                        ...doc.data(), id: doc.id
-                    }
-                    console.log("comment", comment)
-                    const decodedComment = Comment.decode(comment)
-                    if (decodedComment.isRight()) {
-                        commentList.push(decodedComment.extract())
-                    } else {
-                        console.log(decodedComment)
-                    }
-                }
-            })
-
-            console.log("commentList", commentList)
-
-
-            const decodedComments = await CommentList.decode(commentList)
-
-            if (decodedComments.isRight()) {
-                console.log("decodedComments.isRight()", decodedComments.extract())
-                return sendDeletionMail(response)({
-                    toEmail: decodedBody.extract().email,
-                    comments: decodedComments.extract()
-                })
-            } else {
-                console.log("decodedComments.isLeft()", decodedComments.extract())
-                throw (decodedComments.extract())
-            }
-
-        } else {
-            throw Error(`Something wrong with the body ${decodedBody.extract()}`)
-        }
+        const emailResult = await sendMail(request).run()
+        response.send("Email for deleting comments is sent.")
+        return emailResult
 
     } catch (e) {
         response.statusCode = 500
-        response.send(decodedBody.extract())
-        return `Something went wrong: ${decodedBody.extract()}`
+        response.send(`Something went wrong ${e}`)
+        return `Something went wrong ${e}`
     }
 }
+
+async function getFilteredComments(body: DeleteRequestBody): Promise<Either<string, Comment[]>> {
+    const commentList: Comment[] = []
+    try {
+        const comments = await commentsRef.where("email", "==", body.email).get()
+        comments.forEach(doc => {
+            console.log("doc.data()", doc.data())
+            if (!doc.exists) {
+                console.log("Comment does not exist")
+            } else {
+                const comment = {
+                    ...doc.data(), id: doc.id
+                }
+                console.log("comment", comment)
+                const decodedComment = Comment.decode(comment)
+                if (decodedComment.isRight()) {
+                    commentList.push(decodedComment.extract())
+                } else {
+                    console.log(decodedComment)
+                }
+            }
+        })
+        return Right(commentList)
+    } catch (e) {
+        return Left(e)
+    }
+
+}
+
+const sendMail = (request: Request) => EitherAsync<string, mailgun.messages.SendResponse>(async ({ liftEither, fromPromise }) => {
+    const body = await liftEither(DeleteRequestBody.decode({ email: request.params.email }))
+    const filteredComments = await liftEither(await getFilteredComments(body))
+    return fromPromise(sendDeletionMail()({
+        toEmail: body.email,
+        comments: filteredComments
+    }))
+})

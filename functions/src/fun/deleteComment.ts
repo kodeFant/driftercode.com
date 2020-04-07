@@ -1,10 +1,9 @@
 import { Request, Response } from "express"
 import { Codec, string, GetInterface } from "purify-ts/Codec"
 import { commentsRef } from "../firebase"
-
-import { Either } from "purify-ts/Either";
 import { EitherAsync } from "purify-ts/EitherAsync"
 import { commentExistIO } from "../util/commentExistsIO";
+import buildNetlify from "../util/buildNetlifyIO";
 
 
 const UpdateApprovalBody = Codec.interface({
@@ -16,40 +15,28 @@ type UpdateApprovalBody = GetInterface<typeof UpdateApprovalBody>
 
 export default async function deleteComment(request: Request, response: Response) {
 
-    const body = { commentId: request.params.commentId }
-    const decodedBody: Either<string, UpdateApprovalBody> = UpdateApprovalBody.decode(body)
+    const deleteCommentReq = await (await deleteCommentIO(request)).run()
 
-
-
-    if (decodedBody.isRight()) {
-        const commentRef = await commentsRef.doc(decodedBody.extract().commentId)
-        const commentExists: Either<string, true> = await commentExistIO(commentRef)
-
-        const approved = await updateApprovedCommentIO({ commentExists, commentRef }).run()
-        return approved
-
+    if (deleteCommentReq.isRight()) {
+        response.send(deleteCommentReq.extract())
     } else {
         response.statusCode = 500
-        response.send(decodedBody.extract())
-        return `Something went wrong: ${decodedBody.extract()}`
+        response.send(`Something went wrong: ${deleteCommentReq.extract()}`)
+        return `Something went wrong: ${deleteCommentReq.extract()}`
     }
+
+    return deleteCommentIO
+
 }
 
 
-
-interface UpdateApprovedCommentIOProps {
-    commentExists: Either<string, true>,
-    commentRef: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,
-}
-
-function updateApprovedCommentIO({ commentExists, commentRef }: UpdateApprovedCommentIOProps): EitherAsync<string, string> {
-    const updatedApprovedComment = EitherAsync<string, string>(async ({ liftEither, fromPromise }) => {
-        if (commentExists.isRight()) {
-            await commentRef.delete()
-            return ("Comment deleted")
-        } else {
-            return ("The comment does not exist.")
-        }
+const deleteCommentIO = async (request: Request) =>
+    EitherAsync<string, string>(async ({ liftEither, fromPromise }) => {
+        const decodedBody = await liftEither(UpdateApprovalBody.decode({ commentId: request.params.commentId }))
+        const commentRef = await commentsRef.doc(decodedBody.commentId)
+        await fromPromise(commentExistIO(commentRef))
+        await commentRef.delete()
+        await fromPromise(buildNetlify())
+        return "Comment Deleted"
     })
-    return updatedApprovedComment
-}
+
