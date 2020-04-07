@@ -34,3 +34,4 @@ function decodeAllComments(snapshot: FirebaseFirestore.QuerySnapshot<FirebaseFir
     });
     return Right(entries)
 }
+

@@ -99,6 +99,8 @@ The function is heavily based on [gcantis Flow port of RemoteData](https://mediu
 
 What you see is a **higher order function**. Don't be afraid. It just means a function that takes in or returns a function.
 
+
+
 ```tsx
 function Loading() {
   return <div>Loading</div>;

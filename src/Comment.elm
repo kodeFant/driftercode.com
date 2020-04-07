@@ -11,7 +11,7 @@ import Json.Decode.Exploration as Decode
 import Json.Decode.Exploration.Pipeline as Pipeline
 import RemoteData exposing (RemoteData(..))
 import Time exposing (millisToPosix, utc)
-import Types exposing (CommentForm, Model, Msg(..))
+import Types exposing (CommentForm, Msg(..))
 import Util.Date exposing (formatDate)
 
 
@@ -66,7 +66,6 @@ commentFormView slug commentForm =
                         , placeholder = Nothing
                         , label = Input.labelAbove [] (text "Email")
                         }
-                    
                     ]
                 , Input.multiline
                     [ width fill ]
@@ -88,7 +87,6 @@ commentFormView slug commentForm =
                     { onPress = Just (SubmitComment slug)
                     , label = text "Submit"
                     }
-                    , paragraph [ Font.size 14, Font.italic ] [ text "My comment system is pretty simple at this moment. If you wish to delete a message, send me an email (available in the confirmation mail you will recieve)." ]
                 ]
 
         Loading ->

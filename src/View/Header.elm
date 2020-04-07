@@ -12,7 +12,7 @@ import Types exposing (Msg)
 
 
 view : PagePath Pages.PathKey -> Element Msg
-view currentPath =
+view _ =
     Element.column [ width fill ]
         [ Element.row
             [ paddingXY 25 4

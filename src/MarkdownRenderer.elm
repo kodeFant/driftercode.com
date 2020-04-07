@@ -21,7 +21,6 @@ import Element
         , row
         , spacing
         , text
-        , textColumn
         , width
         )
 import Element.Background as Background
@@ -58,21 +57,6 @@ wordCountMarkdownView markdown =
 
         Err error ->
             Err (error |> List.map Markdown.Parser.deadEndToString |> String.join "\n")
-
-
-markdownViewElement : String -> Element msg
-markdownViewElement markdown =
-    case markdown |> Markdown.Parser.parse of
-        Ok okAst ->
-            case Markdown.Parser.render pageRenderer okAst of
-                Ok rendered ->
-                    textColumn [] rendered
-
-                Err errors ->
-                    el [] (text errors)
-
-        Err error ->
-            el [] (text (error |> List.map Markdown.Parser.deadEndToString |> String.join "\n"))
 
 
 pageRenderer : Renderer (Element msg)

@@ -29,7 +29,6 @@ import Element
         )
 import Element.Border as Border
 import Element.Font as Font
-import MarkdownRenderer exposing (Rendered)
 import Metadata exposing (Metadata(..))
 import Pages
 import Pages.ImagePath as ImagePath

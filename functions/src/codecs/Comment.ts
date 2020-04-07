@@ -34,6 +34,9 @@ export const Comment: Codec<Comment> = Codec.interface({
     responses: SubComment
 })
 
+export const CommentList = array(Comment)
+export type CommentList = Comment[]
+
 export interface Comment {
     id: string;
     path: string;
@@ -68,3 +71,15 @@ export const AddCommentForm = Codec.interface({
     comment: string,
 })
 
+
+export const CommentToDelete = Codec.interface({
+    path: string,
+    email: string,
+    name: string,
+    comment: string,
+    approved: boolean,
+    created_at: number,
+    updated_at: number,
+})
+
+export type CommentToDelete = GetInterface<typeof CommentToDelete>

@@ -3,9 +3,7 @@ module View.Article exposing (view)
 import Comment exposing (Comment)
 import Data.Author as Author
 import Design.Palette as Palette
-import Design.Styles exposing (linkStyle)
-import Element exposing (Element, centerX, column, el, fill, html, link, newTabLink, none, padding, paragraph, rgb255, spacing, text, width)
-import Element.Border as Border
+import Element exposing (Element, centerX, column, el, fill, padding, paragraph, spacing, text, width)
 import Element.Font as Font
 import Element.Region
 import Metadata exposing (ArticleMetadata, Metadata)

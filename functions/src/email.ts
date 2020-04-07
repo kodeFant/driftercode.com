@@ -1,7 +1,9 @@
 import * as mailgun from 'mailgun-js';
 import * as express from "express"
-import { Codec, string, GetInterface } from "purify-ts/Codec"
+import { Codec, string, GetInterface, array } from "purify-ts/Codec"
 import * as functions from "firebase-functions"
+import { Comment } from './codecs/Comment';
+import { Either, Right, Left } from 'purify-ts/Either';
 
 const apiKey = functions.config().mailgun.apikey; // Set your API key
 const domain = 'mg.driftercode.com'; // Set the domain you registered earlier
@@ -13,7 +15,7 @@ const options: mailgun.ConstructorParams = { host: 'api.eu.mailgun.net', apiKey,
 const mg = mailgun(options)
 
 
-const MailProps = Codec.interface({
+const UpdateMailProps = Codec.interface({
     toEmail: string,
     articleTitle: string,
     comment: string,
@@ -21,10 +23,10 @@ const MailProps = Codec.interface({
     name: string
 })
 
-type MailProps = GetInterface<typeof MailProps>
+type UpdateMailProps = GetInterface<typeof UpdateMailProps>
 
 
-function emailContent({ name, comment, commentId }: MailProps): string {
+function confirmationEmail({ name, comment, commentId }: UpdateMailProps): string {
     return `
     <h1>Hi, ${name}</h1>
     <p>Thank you for your comment on driftercode.com</p>
@@ -38,14 +40,14 @@ function emailContent({ name, comment, commentId }: MailProps): string {
     <p>My comment system is pretty minimal at this stage. If you with to delete your comment, just send a delete request to my <a href="mailto:lars.lillo@gmail.com">personal email.</a></p>
     `}
 
-export function sendConfirmationMail(request: express.Request, response: express.Response, next: express.NextFunction) {
-    return async (props: MailProps) => {
-        const decodedMailProps = MailProps.decode(props)
+export function sendConfirmationMail() {
+    return async (props: UpdateMailProps): Promise<Either<string, mailgun.messages.SendResponse>> => {
+        const decodedMailProps = UpdateMailProps.decode(props)
         if (decodedMailProps.isRight()) {
             const mailProps = decodedMailProps.extract()
             const msgBody = await mg.messages().send({
                 from, subject, to: mailProps.toEmail,
-                html: emailContent(props)
+                html: confirmationEmail(props)
             }, function (error, body) {
                 if (error) {
                     console.log(error)
@@ -54,15 +56,60 @@ export function sendConfirmationMail(request: express.Request, response: express
                 console.log("emailBody", body)
                 return body
             })
+            return Right(msgBody)
+        } else {
+            return Left("Error sending email")
+        }
+    }
+}
+
+
+
+function deleteCommentEmail({ comments }: DeleteMailProps): string {
+    const commentLinks: string = comments.map(comment => `
+        
+        <h2>Comment to delete</h2>
+        <p>${comment.comment}</p>
+        <a href="https://us-central1-driftercode-comments-f2d95.cloudfunctions.net/comments/delete/${comment.id}">Click here to delete</a>
+        <br/>
+        <hr/>
+    `).join()
+
+    return `
+        <h1>Email deletion</h1>
+        <strong>WARNING: Clicking on any of these results in permanent deletion of your comment. You will not be asked to confirm.</strong>
+        ${commentLinks}
+    `}
+
+const DeleteMailProps = Codec.interface({
+    toEmail: string,
+    comments: array(Comment)
+})
+
+type DeleteMailProps = GetInterface<typeof DeleteMailProps>
+
+
+
+export function sendDeletionMail(response: express.Response) {
+    return async (props: DeleteMailProps) => {
+        const decodedMailProps = DeleteMailProps.decode(props)
+        if (decodedMailProps.isRight()) {
+            const mailProps = decodedMailProps.extract()
+            const msgBody = await mg.messages().send({
+                from, subject, to: mailProps.toEmail,
+                html: deleteCommentEmail(props)
+            }, function (error, body) {
+                if (error) {
+                    console.log(error)
+                }
+
+                return body
+            })
             return msgBody
-
-
         } else {
             response.sendStatus(500)
             return "Error"
         }
 
     }
-
 }
-
