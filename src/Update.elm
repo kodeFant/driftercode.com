@@ -4,7 +4,7 @@ import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
 import RemoteData exposing (RemoteData(..))
-import Types exposing (CommentForm, CommentSendResponse, Model, Msg(..))
+import Types exposing (CommentForm, CommentSendResponse, DeleteCommentForm, Model, Msg(..))
 
 
 initialCommentForm : CommentForm
@@ -16,10 +16,19 @@ initialCommentForm =
     }
 
 
+initialDeleteCommentForm : DeleteCommentForm
+initialDeleteCommentForm =
+    { email = ""
+    , sendRequest = NotAsked
+    }
+
+
 init : ( Model, Cmd Msg )
 init =
     ( { mobileMenuVisible = False
       , commentForm = initialCommentForm
+      , commentInfo = False
+      , deleteCommentForm = initialDeleteCommentForm
       }
     , Cmd.none
     )
@@ -36,7 +45,7 @@ update msg model =
             ( model, Cmd.none )
 
         ChangedPage ->
-            ( { model | mobileMenuVisible = False, commentForm = initialCommentForm }, Cmd.none )
+            ( { model | mobileMenuVisible = False, commentForm = initialCommentForm, commentInfo = False, deleteCommentForm = initialDeleteCommentForm }, Cmd.none )
 
         ToggleMobileMenu ->
             ( { model | mobileMenuVisible = not model.mobileMenuVisible }, Cmd.none )
@@ -49,6 +58,18 @@ update msg model =
 
         SendCommentResponse webData ->
             ( { model | commentForm = { commentForm | sendRequest = webData } }, Cmd.none )
+
+        CommentInfo bool ->
+            ( { model | commentInfo = bool }, Cmd.none )
+
+        UpdateDeleteCommentForm form ->
+            ( { model | deleteCommentForm = form }, Cmd.none )
+
+        RequestDeletionEmail email ->
+            ( { model | deleteCommentForm = { initialDeleteCommentForm | sendRequest = Loading } }, requestDeleteEmail email )
+
+        GotDeletionEmailResponse webData ->
+            ( { model | deleteCommentForm = { initialDeleteCommentForm | sendRequest = webData } }, Cmd.none )
 
 
 postComment : String -> CommentForm -> Cmd Msg
@@ -71,3 +92,12 @@ postComment slug commentForm =
 commentSendResponseDecoder : Decode.Decoder CommentSendResponse
 commentSendResponseDecoder =
     Decode.map CommentSendResponse (Decode.field "success" Decode.bool)
+
+
+requestDeleteEmail : String -> Cmd Msg
+requestDeleteEmail email =
+    Http.post
+        { url = "https://us-central1-driftercode-comments-f2d95.cloudfunctions.net/comments/request-delete/" ++ email
+        , body = Http.emptyBody
+        , expect = Http.expectString (RemoteData.fromResult >> GotDeletionEmailResponse)
+        }

@@ -3,8 +3,9 @@ module View.Article exposing (view)
 import Comment exposing (Comment)
 import Data.Author as Author
 import Design.Palette as Palette
-import Element exposing (Element, centerX, column, el, fill, padding, paragraph, spacing, text, width)
+import Element exposing (Element, centerX, centerY, column, el, fill, height, padding, paragraph, spacing, text, width)
 import Element.Font as Font
+import Element.Input as Input
 import Element.Region
 import Metadata exposing (ArticleMetadata, Metadata)
 import Pages
@@ -24,7 +25,9 @@ view :
     -> List (Element Msg)
     -> Element Msg
 view model count metadata comments page viewForPage =
-    Element.column [ Element.width Element.fill ]
+    Element.column
+        [ Element.width Element.fill
+        ]
         [ View.Header.view page.path
         , Element.column
             [ Element.padding 30
@@ -50,7 +53,7 @@ view model count metadata comments page viewForPage =
                  ]
                     ++ viewForPage
                 )
-            , Comment.view metadata.slug model.commentForm comments
+            , Comment.view metadata.slug model comments
             ]
         ]
 

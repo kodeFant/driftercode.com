@@ -3,18 +3,22 @@ module View exposing (view)
 import BlogIndex
 import Comment exposing (Comment, commentsDecoder)
 import Data.Author as Author
-import Design.Palette as Palette
+import Design.Palette as Palette exposing (color)
 import Element
     exposing
         ( Element
         , centerX
         , column
+        , el
         , fill
         , height
+        , padding
         , text
         , width
         )
+import Element.Background as Background
 import Element.Font as Font
+import Element.Input as Input
 import Element.Region
 import Head
 import Html exposing (Html)

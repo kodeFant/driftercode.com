@@ -1,4 +1,4 @@
-module Types exposing (CommentForm, CommentSendResponse, Model, Msg(..))
+module Types exposing (CommentForm, CommentSendResponse, DeleteCommentForm, Model, Msg(..))
 
 import RemoteData exposing (WebData)
 
@@ -10,11 +10,23 @@ type Msg
     | UpdateCommentForm CommentForm
     | SubmitComment String
     | SendCommentResponse (WebData CommentSendResponse)
+    | CommentInfo Bool
+    | RequestDeletionEmail String
+    | UpdateDeleteCommentForm DeleteCommentForm
+    | GotDeletionEmailResponse (WebData String)
 
 
 type alias Model =
     { mobileMenuVisible : Bool
     , commentForm : CommentForm
+    , commentInfo : Bool
+    , deleteCommentForm : DeleteCommentForm
+    }
+
+
+type alias DeleteCommentForm =
+    { email : String
+    , sendRequest : WebData String
     }
 
 

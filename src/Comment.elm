@@ -5,13 +5,14 @@ import Design.Palette exposing (color)
 import Design.Responsive exposing (responsiveView)
 import Element exposing (..)
 import Element.Background as Background
+import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
 import Json.Decode.Exploration as Decode
 import Json.Decode.Exploration.Pipeline as Pipeline
 import RemoteData exposing (RemoteData(..))
 import Time exposing (millisToPosix, utc)
-import Types exposing (CommentForm, Msg(..))
+import Types exposing (Model, Msg(..))
 import Util.Date exposing (formatDate)
 
 
@@ -31,13 +32,13 @@ type Responses
     = Responses (List Comment)
 
 
-view : String -> CommentForm -> List Comment -> Element Msg
-view slug commentForm comments =
+view : String -> Model -> List Comment -> Element Msg
+view slug model comments =
     column [ width fill, spacing 28 ]
         [ el
             [ Font.bold, Font.size 28 ]
             (text "Comments")
-        , commentFormView slug commentForm
+        , commentFormView slug model
         , column [ width fill, spacing 20 ]
             (comments
                 |> List.map
@@ -46,9 +47,13 @@ view slug commentForm comments =
         ]
 
 
-commentFormView : String -> CommentForm -> Element Msg
-commentFormView slug commentForm =
-    case commentForm.sendRequest of
+commentFormView : String -> Model -> Element Msg
+commentFormView slug model =
+    let
+        { commentForm } =
+            model
+    in
+    case model.commentForm.sendRequest of
         NotAsked ->
             column [ width fill, spacing 28 ]
                 [ Input.text
@@ -59,7 +64,7 @@ commentFormView slug commentForm =
                     , label = Input.labelAbove [] (text "Name")
                     }
                 , column [ spacing 10, width fill ]
-                    [ Input.text
+                    [ Input.email
                         [ width fill ]
                         { onChange = \value -> UpdateCommentForm { commentForm | email = value }
                         , text = commentForm.email
@@ -87,6 +92,12 @@ commentFormView slug commentForm =
                     { onPress = Just (SubmitComment slug)
                     , label = text "Submit"
                     }
+                , Input.button [ centerX, Font.size 14 ] { label = text "I want to delete a comment", onPress = Just (CommentInfo (not model.commentInfo)) }
+                , if model.commentInfo == True then
+                    deleteForm model
+
+                  else
+                    none
                 ]
 
         Loading ->
@@ -97,6 +108,60 @@ commentFormView slug commentForm =
 
         Success _ ->
             paragraph [] [ text "Comment successfully sent. Please verify your comment at the given email, ", el [ Font.bold ] (text commentForm.email), text ", within 24 hours." ]
+
+
+deleteForm : Model -> Element Msg
+deleteForm model =
+    case model.deleteCommentForm.sendRequest of
+        NotAsked ->
+            let
+                deleteCommentForm =
+                    model.deleteCommentForm
+            in
+            column [ width fill, spacing 16, Border.width 2, padding 16 ]
+                [ el [ centerX, Font.bold ] (text "Delete Comment")
+                , paragraph [ Font.center, Font.italic ] [ text "Want to delete a comment on this page? Fill in you email. You can delete the comment from your email inbox." ]
+                , Input.email
+                    [ width fill ]
+                    { onChange = \value -> UpdateDeleteCommentForm { deleteCommentForm | email = value }
+                    , text = model.deleteCommentForm.email
+                    , placeholder = Nothing
+                    , label = Input.labelAbove [] (text "Email")
+                    }
+                , Input.button
+                    [ width fill
+                    , padding 10
+                    , Font.center
+                    , Font.color color.white
+                    , Font.bold
+                    , Background.color color.red
+                    , mouseOver [ Background.color color.darkRed ]
+                    ]
+                    { onPress = Just (RequestDeletionEmail model.deleteCommentForm.email)
+                    , label = text "Request Deletion"
+                    }
+                , Input.button
+                    [ padding 10
+                    , Font.center
+                    , Font.color color.black
+                    , Font.bold
+                    , Background.color color.lightGray
+                    , mouseOver [ Background.color color.lighterGray ]
+                    , centerX
+                    ]
+                    { onPress = Just (CommentInfo False)
+                    , label = text "Cancel"
+                    }
+                ]
+
+        Loading ->
+            el [] (text "Sending Request...")
+
+        Failure err ->
+            el [] (text "Something went wrong")
+
+        Success string ->
+            el [] (text "Success! Please check your inbox for info about deleting comments.")
 
 
 commentHeader : Comment -> List (Element msg) -> Element msg
