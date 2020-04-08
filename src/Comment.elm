@@ -3,7 +3,26 @@ module Comment exposing (Comment, commentsDecoder, view)
 import Date exposing (fromPosix)
 import Design.Palette exposing (color)
 import Design.Responsive exposing (responsiveView)
-import Element exposing (..)
+import Element
+    exposing
+        ( Element
+        , alignLeft
+        , alignRight
+        , centerX
+        , column
+        , el
+        , fill
+        , mouseOver
+        , none
+        , padding
+        , paragraph
+        , rgb255
+        , row
+        , spacing
+        , text
+        , textColumn
+        , width
+        )
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -103,7 +122,7 @@ commentFormView slug model =
         Loading ->
             paragraph [] [ text "Sending..." ]
 
-        Failure err ->
+        Failure _ ->
             paragraph [] [ text "Something went wrong. Try again later" ]
 
         Success _ ->
@@ -157,15 +176,15 @@ deleteForm model =
         Loading ->
             el [] (text "Sending Request...")
 
-        Failure err ->
+        Failure _ ->
             el [] (text "Something went wrong")
 
         Success string ->
-            el [] (text "Success! Please check your inbox for info about deleting comments.")
+            paragraph [] [ text "Success! Please check your inbox at ", el [ Font.bold ] (text string), text " for info about deleting comments." ]
 
 
 commentHeader : Comment -> List (Element msg) -> Element msg
-commentHeader comment content =
+commentHeader comment _ =
     responsiveView [ width fill ]
         { mobile =
             column [ width fill, spacing 10 ]

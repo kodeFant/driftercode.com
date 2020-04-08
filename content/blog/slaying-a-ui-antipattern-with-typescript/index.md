@@ -238,11 +238,12 @@ Here is a teaser:
 
 ```tsx
 return foldRemoteData(
+  posts,
   () => <FetchPosts getPosts={getPosts} />,
   () => <Loading />,
-  (error: Error) => <Failure error={error} />,
-  (data: Post[]) => <BlogPosts data={data} />
-)(posts);
+  (error) => <Failure error={error} />,
+  (data) => <BlogPosts data={data} />
+);
 ```
 
 If you like this pattern, make it your own. Or if you are a regular JavaScript user, there are several resources showing you how to solve it without TypeScript. Here are some examples:

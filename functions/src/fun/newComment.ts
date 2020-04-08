@@ -2,7 +2,7 @@ import { Response, Request } from "express"
 import { commentsRef } from "../firebase"
 import { AddComment, Comment } from "../codecs/Comment"
 import { Either, Left, Right } from "purify-ts/Either"
-import { sendConfirmationMail } from "../email"
+import { sendConfirmationMail } from "../email/confirmComment"
 import { EitherAsync } from "purify-ts/EitherAsync"
 import { firestore } from "firebase-admin"
 

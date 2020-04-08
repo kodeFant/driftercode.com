@@ -3,9 +3,20 @@ module View.Article exposing (view)
 import Comment exposing (Comment)
 import Data.Author as Author
 import Design.Palette as Palette
-import Element exposing (Element, centerX, centerY, column, el, fill, height, padding, paragraph, spacing, text, width)
+import Element
+    exposing
+        ( Element
+        , centerX
+        , column
+        , el
+        , fill
+        , padding
+        , paragraph
+        , spacing
+        , text
+        , width
+        )
 import Element.Font as Font
-import Element.Input as Input
 import Element.Region
 import Metadata exposing (ArticleMetadata, Metadata)
 import Pages

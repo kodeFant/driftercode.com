@@ -2,5 +2,11 @@
     "cSpell.enableFiletypes": [
         "!plaintext",
         "!typescript"
+    ],
+    "cSpell.words": [
+        "atrule",
+        "hexcode",
+        "jscompiler's",
+        "webcomponentsjs"
     ]
 }

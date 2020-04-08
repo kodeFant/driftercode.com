@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { Codec, string, GetInterface } from "purify-ts/Codec"
+import { Codec, string, GetInterface} from "purify-ts/Codec"
 import { commentsRef } from "../firebase"
 
 import { Either, Left, Right } from "purify-ts/Either";

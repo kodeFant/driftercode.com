@@ -9,16 +9,13 @@ import Element
         ( Element
         , centerX
         , column
-        , el
         , fill
         , height
         , padding
         , text
         , width
         )
-import Element.Background as Background
 import Element.Font as Font
-import Element.Input as Input
 import Element.Region
 import Head
 import Html exposing (Html)
