@@ -6,7 +6,7 @@
   "description": "How to typecheck data from an external source.",
   "image": "/images/article-covers/damsel-in-distress.jpg",
   "published": "2020-04-24",
-  "draft": false,
+  "draft": true,
   "slug": "slaying-a-ui-antipattern-with-typescript-part-3"
 }
 ---
