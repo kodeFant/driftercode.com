@@ -37,6 +37,15 @@ This way of doing it makes sense because the pattern has a somewhat logical orde
 First, we can do an easy refactor and split out the views into separate functions. Just because it's good to separate stuff into smaller functions.
 
 ```tsx
+function FetchPosts({ getPosts }: { getPosts: () => void }) {
+  return (
+    <div style={{ textAlign: "center" }}>
+      <div>Not asked for posts yet</div>
+      <button onClick={getPosts}>Fetch Posts</button>
+    </div>
+  );
+}
+
 function Loading() {
   return <div>Loading</div>;
 }
