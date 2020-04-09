@@ -24,6 +24,7 @@ import Element
         , spacing
         , text
         , width
+        , wrappedRow
         )
 import Element.Background as Background
 import Element.Border as Border
@@ -256,27 +257,25 @@ image { src, alt } =
 
 unorderedList : List (ListItem (Element msg)) -> Element msg
 unorderedList items =
-    Element.column [ Element.spacing 15, moveRight 15 ]
+    Element.textColumn [ Element.spacing 15, moveRight 15, width fill ]
         (items
             |> List.map
                 (\(ListItem task children) ->
-                    row [ spacing 5 ]
-                        [ row
-                            [ alignTop ]
-                            ((case task of
-                                IncompleteTask ->
-                                    Input.defaultCheckbox False
+                    wrappedRow
+                        [ alignTop, width fill ]
+                        ((case task of
+                            IncompleteTask ->
+                                Input.defaultCheckbox False
 
-                                CompletedTask ->
-                                    Input.defaultCheckbox True
+                            CompletedTask ->
+                                Input.defaultCheckbox True
 
-                                NoTask ->
-                                    text "•"
-                             )
-                                :: text " "
-                                :: children
-                            )
-                        ]
+                            NoTask ->
+                                text "•"
+                         )
+                            :: text " "
+                            :: children
+                        )
                 )
         )
 
