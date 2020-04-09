@@ -232,7 +232,7 @@ In cases where data is fetched automatically on page load, you can return the sa
 
 ## Next up
 
-**In the next post, we are going to lay out the rendering of the RemoteData view a bit more elegantly than the switch statement.**
+**In the [part 2](/blog/slaying-a-ui-antipattern-with-typescript-part-2), we are going to lay out the rendering of the RemoteData view a bit more elegantly than the switch statement.**
 
 Here is a teaser:
 
