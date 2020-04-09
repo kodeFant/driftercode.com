@@ -23,7 +23,7 @@ As I landed my first (and current) day job as a developer, I quickly got some co
 
 I had barely started getting to know types from TypeScript, but the type system and syntax in Elm felt alien to me.
 
-![Screenshot of friendly error message](/images/archive/elm-error-msg.png)
+![Screenshot of friendly error message](/images/archive/elm-error-msg.jpg)
 
 I couldn't do mutations. I felt caged in a sterile clean-room. I had to send a message to some massive update function thing and send my requested change into a modified copy of the state model.
 
@@ -53,7 +53,7 @@ My Elm mentor from the former project glanced at my screen while I was working i
 
 I looked at my screen.
 
-![Screenshot of unfriendly React message](/images/archive/react-runtime-error.png)
+![Screenshot of unfriendly React message](/images/archive/react-runtime-error.jpg)
 
 That error could never reach production in Elm because of the strong type system. But it could creep up on any React project. Even one written in TypeScript. And the error message above doesn't even point to the right line of code.
 

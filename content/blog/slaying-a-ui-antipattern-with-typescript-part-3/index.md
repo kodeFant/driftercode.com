@@ -141,7 +141,7 @@ Now, you should have decoding enabled.
 
 By running your code or this [CodeSandbox](https://codesandbox.io/s/remotedata-with-typescript-and-react-part-3-9zrbd?file=/src/index.tsx) you can see the result:
 
-![Screenshot of friendly error message](/images/archive/failing-decoder.png)
+![Screenshot of friendly error message](/images/archive/failing-decoder.jpg)
 
 What 😱 Who wrote that nice error message??
 
