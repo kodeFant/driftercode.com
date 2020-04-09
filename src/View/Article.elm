@@ -2,16 +2,24 @@ module View.Article exposing (view)
 
 import Comment exposing (Comment)
 import Data.Author as Author
+import Design.Icon
 import Design.Palette as Palette
 import Element
     exposing
         ( Element
+        , alignRight
         , centerX
         , column
         , el
         , fill
+        , height
+        , mouseOver
+        , newTabLink
         , padding
         , paragraph
+        , px
+        , rgba255
+        , row
         , spacing
         , text
         , width
@@ -74,8 +82,26 @@ bio metadata =
     Element.row [ Element.spacing 20 ]
         [ Author.view [] metadata.author
         , Element.column [ Element.spacing 10, Element.width Element.fill ]
-            [ Element.paragraph [ Font.bold, Font.size 24 ]
-                [ Element.text metadata.author.name
+            [ row [ spacing 16 ]
+                [ Element.paragraph [ Font.bold, Font.size 24 ]
+                    [ Element.text metadata.author.name
+                    ]
+                , row [ spacing 10 ]
+                    [ newTabLink
+                        [ width (px 16)
+                        , height (px 16)
+                        , Font.color (rgba255 29 161 242 0.5)
+                        , mouseOver [ Font.color (rgba255 29 161 242 1) ]
+                        ]
+                        { label = Design.Icon.twitter [ width fill, height fill ], url = "https://twitter.com/" ++ metadata.author.twitter }
+                    , newTabLink
+                        [ width (px 16)
+                        , height (px 16)
+                        , Font.color (rgba255 29 161 242 0.5)
+                        , mouseOver [ Font.color (rgba255 29 161 242 1) ]
+                        ]
+                        { label = Design.Icon.linkedIn [ width fill, height fill ], url = metadata.author.linkedinUrl }
+                    ]
                 ]
             , Element.paragraph [ Font.size 16 ]
                 [ Element.text metadata.author.bio ]

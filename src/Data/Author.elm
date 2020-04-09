@@ -12,6 +12,8 @@ type alias Author =
     { name : String
     , avatar : ImagePath Pages.PathKey
     , bio : String
+    , twitter : String
+    , linkedinUrl : String
     }
 
 
@@ -20,6 +22,8 @@ all =
     [ { name = "Lars Lillo Ulvestad"
       , avatar = Pages.images.author.lillo
       , bio = "Developer and digital storyteller. Works as a frontend developer at Kantega."
+      , twitter = "larsparsfromage"
+      , linkedinUrl = "https://www.linkedin.com/in/larslilloulvestad/"
       }
     ]
 
