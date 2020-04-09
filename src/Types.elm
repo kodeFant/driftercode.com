@@ -1,4 +1,4 @@
-module Types exposing (CommentForm, CommentSendResponse, DeleteCommentForm, Model, Msg(..))
+module Types exposing (CommentError, CommentField(..), CommentForm, CommentSendResponse, DeleteCommentForm, Model, Msg(..))
 
 import RemoteData exposing (WebData)
 
@@ -34,8 +34,19 @@ type alias CommentForm =
     { name : String
     , email : String
     , message : String
+    , errors : List CommentError
     , sendRequest : WebData CommentSendResponse
     }
+
+
+type CommentField
+    = Name
+    | Email
+    | Message
+
+
+type alias CommentError =
+    ( CommentField, String )
 
 
 type alias CommentSendResponse =

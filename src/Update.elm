@@ -4,7 +4,8 @@ import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
 import RemoteData exposing (RemoteData(..))
-import Types exposing (CommentForm, CommentSendResponse, DeleteCommentForm, Model, Msg(..))
+import Types exposing (CommentError, CommentField(..), CommentForm, CommentSendResponse, DeleteCommentForm, Model, Msg(..))
+import Validate exposing (Validator, ifBlank, ifInvalidEmail, validate)
 
 
 initialCommentForm : CommentForm
@@ -12,6 +13,7 @@ initialCommentForm =
     { name = ""
     , email = ""
     , message = ""
+    , errors = []
     , sendRequest = NotAsked
     }
 
@@ -51,10 +53,15 @@ update msg model =
             ( { model | mobileMenuVisible = not model.mobileMenuVisible }, Cmd.none )
 
         UpdateCommentForm form ->
-            ( { model | commentForm = form }, Cmd.none )
+            ( { model | commentForm = { form | errors = [] } }, Cmd.none )
 
         SubmitComment slug ->
-            ( { model | commentForm = { commentForm | sendRequest = Loading } }, postComment slug model.commentForm )
+            case validate validateCommentForm commentForm of
+                Ok _ ->
+                    ( { model | commentForm = { commentForm | sendRequest = Loading } }, postComment slug model.commentForm )
+
+                Err err ->
+                    ( { model | commentForm = { commentForm | errors = err } }, Cmd.none )
 
         SendCommentResponse webData ->
             ( { model | commentForm = { commentForm | sendRequest = webData } }, Cmd.none )
@@ -101,3 +108,13 @@ requestDeleteEmail email =
         , body = Http.emptyBody
         , expect = Http.expectString (RemoteData.fromResult >> GotDeletionEmailResponse)
         }
+
+
+validateCommentForm : Validator CommentError CommentForm
+validateCommentForm =
+    Validate.all
+        [ ifBlank .email ( Email, "Email is required" )
+        , ifInvalidEmail .email (\_ -> ( Email, "Please enter a valid email adress" ))
+        , ifBlank .name ( Name, "Name is required" )
+        , ifBlank .message ( Message, "Please leave a comment before submitting" )
+        ]

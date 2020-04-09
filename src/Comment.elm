@@ -32,7 +32,7 @@ import Json.Decode.Exploration as Decode
 import Json.Decode.Exploration.Pipeline as Pipeline
 import RemoteData exposing (RemoteData(..))
 import Time exposing (millisToPosix, utc)
-import Types exposing (Model, Msg(..))
+import Types exposing (CommentError, CommentField(..), Model, Msg(..))
 import Util.Date exposing (formatDate)
 
 
@@ -55,10 +55,14 @@ type Responses
 view : String -> Model -> List Comment -> Element Msg
 view slug model comments =
     column [ width fill, spacing 28 ]
-        [ el
-            [ Font.bold, Font.size 28 ]
-            (text "Comments")
-        , commentFormView slug model
+        [ commentFormView slug model
+        , if List.length comments == 0 then
+            none
+
+          else
+            el
+                [ Font.bold, Font.size 28, Font.center ]
+                (text "Comments")
         , column [ width fill, spacing 20 ]
             (comments
                 |> List.map
@@ -75,14 +79,18 @@ commentFormView slug model =
     in
     case model.commentForm.sendRequest of
         NotAsked ->
-            column [ width fill, spacing 28 ]
-                [ Input.text
+            column [ width fill, spacing 20, Font.size 16 ]
+                [ el
+                    [ Font.bold, Font.size 28, Font.center ]
+                    (text "Leave a comment")
+                , Input.text
                     [ width fill ]
                     { onChange = \value -> UpdateCommentForm { commentForm | name = value }
                     , text = commentForm.name
                     , placeholder = Nothing
                     , label = Input.labelAbove [] (text "Name")
                     }
+                , formErrorView commentForm.errors Name
                 , column [ spacing 10, width fill ]
                     [ Input.email
                         [ width fill ]
@@ -92,6 +100,7 @@ commentFormView slug model =
                         , label = Input.labelAbove [] (text "Email")
                         }
                     ]
+                , formErrorView commentForm.errors Email
                 , Input.multiline
                     [ width fill ]
                     { onChange = \value -> UpdateCommentForm { commentForm | message = value }
@@ -100,6 +109,7 @@ commentFormView slug model =
                     , label = Input.labelAbove [] (text "Your message")
                     , spellcheck = False
                     }
+                , formErrorView commentForm.errors Message
                 , Input.button
                     [ width fill
                     , padding 10
@@ -177,11 +187,20 @@ deleteForm model =
         Loading ->
             el [] (text "Sending Request...")
 
-        Failure _ ->
-            el [] (text "Something went wrong")
+        Failure err ->
+            el [] (text (errorToString err))
 
         Success string ->
             paragraph [] [ text "Success! Please check your inbox at ", el [ Font.bold ] (text string), text " for info about deleting comments." ]
+
+
+formErrorView : List CommentError -> CommentField -> Element msg
+formErrorView commentError commentField =
+    column [ Font.color color.red, spacing 10 ]
+        (commentError
+            |> List.filter (\( field, _ ) -> field == commentField)
+            |> List.map (\( _, string ) -> text string)
+        )
 
 
 commentHeader : Comment -> List (Element msg) -> Element msg
@@ -268,7 +287,7 @@ errorToString : Error -> String
 errorToString error =
     case error of
         BadUrl string ->
-            "You did not provide a valid URL"
+            "You did not provide a valid URL: " ++ string
 
         Timeout ->
             "Connection timed out"
@@ -285,4 +304,4 @@ errorToString error =
                     "Error " ++ String.fromInt code
 
         BadBody string ->
-            "Unexpected response:" ++ string
+            "Unexpected response: " ++ string

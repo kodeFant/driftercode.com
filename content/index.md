@@ -5,8 +5,10 @@ type: blog-index
 
 ## I'm Lillo, a self-taught developer and ex-journalist
 
-Resources about functional programming are often very mathy and abstract. It's a shame, because FP is practical and fun.
+Resources about functional programming are often very mathy and abstract. Devs don't have time for that.
 
-**Who doesn't want to make apps with fewer bugs that are easier to refactor?**
+Most developers wants to make great apps with fewer bugs that are easier to refactor. 
 
-Join me in digging out the **fun** of functional programming.
+Come, join my explorations in functional programming.
+
+
