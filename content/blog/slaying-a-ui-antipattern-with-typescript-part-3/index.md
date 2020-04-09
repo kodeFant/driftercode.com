@@ -92,7 +92,7 @@ type Post = GetInterface<typeof Post>
 
 That type does the exact same job as the TypeScript interface we deleted earlier and the errors should be gone.
 
-Yes, the const and the type are both named **Post**. No worries, there is no naming conflict. TypeScript is smart enough to understand when to use a type and when to use a value.
+Yes, the const and the type are both named `Post`. No worries, there is no naming conflict. TypeScript is smart enough to understand when to use a type and when to use a value.
 
 Also add these lines right below.
 
@@ -101,7 +101,7 @@ const PostList = array(Post)
 type PostList = GetInterface<typeof PostList>
 ```
 
-Replace all occurences of **Array<Post>** with **PostList** in the code. That lets us also decode an array of posts.
+Replace all occurences of `Post[]` with `PostList` in the code. That lets us also decode an array of posts.
 
 ## To the hard part
 

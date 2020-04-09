@@ -21,7 +21,8 @@
     "firebase-admin": "^8.10.0",
     "firebase-functions": "^3.0.2",
     "mailgun-js": "^0.22.0",
-    "purify-ts": "^0.14.1"
+    "purify-ts": "^0.14.1",
+    "remeda": "0.0.18"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.1.6",

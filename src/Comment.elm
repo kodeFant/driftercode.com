@@ -27,6 +27,7 @@ import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
+import Http exposing (Error(..))
 import Json.Decode.Exploration as Decode
 import Json.Decode.Exploration.Pipeline as Pipeline
 import RemoteData exposing (RemoteData(..))
@@ -122,8 +123,8 @@ commentFormView slug model =
         Loading ->
             paragraph [] [ text "Sending..." ]
 
-        Failure _ ->
-            paragraph [] [ text "Something went wrong. Try again later" ]
+        Failure err ->
+            paragraph [] [ text (errorToString err) ]
 
         Success _ ->
             paragraph [] [ text "Comment successfully sent. Please verify your comment at the given email, ", el [ Font.bold ] (text commentForm.email), text ", within 24 hours." ]
@@ -261,3 +262,27 @@ commentDecoder =
 commentsDecoder : Decode.Decoder (List Comment)
 commentsDecoder =
     Decode.list commentDecoder
+
+
+errorToString : Error -> String
+errorToString error =
+    case error of
+        BadUrl string ->
+            "You did not provide a valid URL"
+
+        Timeout ->
+            "Connection timed out"
+
+        NetworkError ->
+            "Network Error. Please check your internet connection and try again"
+
+        BadStatus int ->
+            case int of
+                400 ->
+                    "Error 400: Validation error. Please make sure you sent correctly formatted information"
+
+                code ->
+                    "Error " ++ String.fromInt code
+
+        BadBody string ->
+            "Unexpected response:" ++ string
