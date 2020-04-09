@@ -131,7 +131,8 @@ Most of this function is similar to the previous series, but in the **decodedDat
 
 The **PostList.decode** function takes in the uncertain **data** value from the outside and finds out if the types checks out. It returns an **Either** value which can return one of the two values:
 
-A **Left** value with an error message or a **Right** value with the correct and verified **PostList** value.
+1. **Left**: A container with an error message
+2. **Right**: A container with the correct and verified **PostList** value.
 
 To turn these values into RemoteData values, we use the **.either** method to map both the left and right value into RemoteData values.
 

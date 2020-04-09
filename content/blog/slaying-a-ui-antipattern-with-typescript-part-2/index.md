@@ -5,7 +5,7 @@
   "title": "Slaying a UI antipattern with TypeScript and React (part 2)",
   "description": "This time we are folding data based on external data in a neat way.",
   "image": "/images/article-covers/slay-dragon.jpg",
-  "published": "2020-04-10",
+  "published": "2020-04-09",
   "draft": true,
   "slug": "slaying-a-ui-antipattern-with-typescript-part-2"
 }

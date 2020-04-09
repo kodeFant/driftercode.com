@@ -11,8 +11,10 @@ import Element
         , el
         , fill
         , height
+        , link
         , maximum
         , moveRight
+        , newTabLink
         , none
         , padding
         , paddingEach
@@ -26,12 +28,15 @@ import Element
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
+import Element.Input as Input
 import Element.Region as Region
 import Html exposing (Attribute)
 import Html.Attributes exposing (property)
 import Json.Encode as Encode
+import Markdown.Block exposing (HeadingLevel(..), ListItem(..), Task(..), headingLevelToInt)
 import Markdown.Html
-import Markdown.Parser exposing (Renderer)
+import Markdown.Parser
+import Markdown.Renderer exposing (Renderer)
 import Media.Svgs exposing (quoteSvg)
 import Pages
 
@@ -48,7 +53,7 @@ wordCountMarkdownView markdown =
     in
     case markdown |> Markdown.Parser.parse of
         Ok okAst ->
-            case Markdown.Parser.render pageRenderer okAst of
+            case Markdown.Renderer.render pageRenderer okAst of
                 Ok rendered ->
                     Ok ( wordCount, rendered )
 
@@ -62,23 +67,33 @@ wordCountMarkdownView markdown =
 pageRenderer : Renderer (Element msg)
 pageRenderer =
     { heading = heading
-    , raw = raw
+    , paragraph = mdParagraph
+    , blockQuote = blockQuote
     , html = html
-    , plain = plain
-    , code = code
-    , bold = bold
-    , italic = italic
+    , text = text
+    , codeSpan = codeSpan
+    , strong = strong
+    , emphasis = emphasis
+    , hardLineBreak = hardLineBreak
     , link = mdLink
     , image = image
     , unorderedList = unorderedList
     , orderedList = orderedList
     , codeBlock = codeBlock
     , thematicBreak = thematicBreak
+    , table = Element.column []
+    , tableHeader = Element.column []
+    , tableBody = Element.column []
+    , tableRow = Element.row []
+    , tableHeaderCell =
+        \_ children ->
+            Element.paragraph [] children
+    , tableCell = Element.paragraph []
     }
 
 
 heading :
-    { level : Int
+    { level : HeadingLevel
     , rawText : String
     , children : List (Element msg)
     }
@@ -87,10 +102,10 @@ heading { level, children } =
     let
         style =
             case level of
-                1 ->
+                H1 ->
                     [ Font.size 36 ]
 
-                2 ->
+                H2 ->
                     [ Font.size 24 ]
 
                 _ ->
@@ -102,7 +117,7 @@ heading { level, children } =
             [ Font.typeface "Merriweather"
             , Font.serif
             ]
-         , Region.heading level
+         , Region.heading (headingLevelToInt level)
          , paddingEach { top = 20, bottom = 0, left = 0, right = 0 }
          ]
             ++ style
@@ -110,9 +125,19 @@ heading { level, children } =
         children
 
 
-raw : List (Element msg) -> Element msg
-raw elements =
-    paragraph [ width fill, spacing 10 ] elements
+mdParagraph : List (Element msg) -> Element msg
+mdParagraph elements =
+    paragraph [ Element.spacing 15 ] elements
+
+
+blockQuote : List (Element msg) -> Element msg
+blockQuote elements =
+    paragraph [] elements
+
+
+codeSpan : String -> Element msg
+codeSpan string =
+    el [ Font.bold ] (text string)
 
 
 html : Markdown.Html.Renderer (List (Element msg) -> Element msg)
@@ -164,56 +189,64 @@ html =
         ]
 
 
-plain : String -> Element msg
-plain string =
-    text string
+strong : List (Element msg) -> Element msg
+strong content =
+    if List.length content == 1 then
+        el [ Font.bold ] (getFirst content)
+
+    else
+        paragraph [ Font.bold ] content
 
 
-code : String -> Element msg
-code string =
-    el [] (text string)
+emphasis : List (Element msg) -> Element msg
+emphasis content =
+    if List.length content == 1 then
+        el [ Font.italic ] (getFirst content)
+
+    else
+        paragraph [ Font.bold ] content
 
 
-bold : String -> Element msg
-bold string =
-    el [ Font.bold ] (text string)
+hardLineBreak : Element msg
+hardLineBreak =
+    el [] (text "lineBreak")
 
 
-italic : String -> Element msg
-italic string =
-    el [ Font.italic ] (text string)
-
-
-mdLink : { title : Maybe String, destination : String } -> List (Element msg) -> Result String (Element msg)
-mdLink link body =
+mdLink : { title : Maybe String, destination : String } -> List (Element msg) -> Element msg
+mdLink { destination } body =
     case List.head body of
-        Just element ->
-            Pages.isValidRoute link.destination
-                |> Result.map
-                    (\() ->
-                        Element.newTabLink
-                            linkStyle
-                            { url = link.destination
-                            , label =
-                                element
+        Just bodyElement ->
+            case Pages.isValidRoute destination of
+                Ok _ ->
+                    if String.startsWith "http" destination then
+                        newTabLink linkStyle
+                            { label = bodyElement
+                            , url = destination
                             }
-                    )
+
+                    else
+                        link linkStyle
+                            { label = bodyElement
+                            , url = destination
+                            }
+
+                Err string ->
+                    text string
 
         Nothing ->
-            Ok none
+            none
 
 
-image : { src : String } -> String -> Result String (Element msg)
-image { src } description =
+image : { src : String, alt : String, title : Maybe String } -> Element msg
+image { src, alt } =
     el
         [ height (fill |> maximum 600) ]
         (Element.image
             [ centerX
             , width (fill |> maximum 600)
             ]
-            { description = description, src = src }
+            { description = alt, src = src }
         )
-        |> Ok
 
 
 
@@ -221,24 +254,45 @@ image { src } description =
 --     , orderedList : Int -> List (List view) -> view
 
 
-unorderedList : List (List (Element msg)) -> Element msg
+unorderedList : List (ListItem (Element msg)) -> Element msg
 unorderedList items =
-    Element.column [ Element.spacing 15 ]
+    Element.column [ Element.spacing 15, moveRight 15 ]
         (items
             |> List.map
-                (\itemBlocks ->
-                    Element.wrappedRow [ Element.spacing 5, moveRight 5 ]
-                        [ el [ alignTop ] (text "•")
-                        , paragraph [] itemBlocks
+                (\(ListItem task children) ->
+                    row [ spacing 5 ]
+                        [ row
+                            [ alignTop ]
+                            ((case task of
+                                IncompleteTask ->
+                                    Input.defaultCheckbox False
+
+                                CompletedTask ->
+                                    Input.defaultCheckbox True
+
+                                NoTask ->
+                                    text "•"
+                             )
+                                :: text " "
+                                :: children
+                            )
                         ]
                 )
         )
 
 
 orderedList : Int -> List (List (Element msg)) -> Element msg
-orderedList _ _ =
-    column [ spacing 15 ]
-        []
+orderedList startingIndex items =
+    column [ spacing 15, moveRight 15 ]
+        (items
+            |> List.indexedMap
+                (\index itemBlocks ->
+                    row [ spacing 5 ]
+                        [ row [ alignTop ]
+                            (text (String.fromInt (index + startingIndex) ++ ". ") :: itemBlocks)
+                        ]
+                )
+        )
 
 
 codeBlock : { body : String, language : Maybe String } -> Element msg
@@ -275,3 +329,13 @@ editorValue value =
         |> String.trim
         |> Encode.string
         |> property "editorValue"
+
+
+getFirst : List (Element msg) -> Element msg
+getFirst content =
+    case List.head content of
+        Just cont ->
+            cont
+
+        Nothing ->
+            none
