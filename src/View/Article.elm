@@ -7,7 +7,6 @@ import Design.Palette as Palette
 import Element
     exposing
         ( Element
-        , alignRight
         , centerX
         , column
         , el
@@ -30,9 +29,18 @@ import Metadata exposing (ArticleMetadata, Metadata)
 import Pages
 import Pages.ImagePath as ImagePath exposing (ImagePath)
 import Pages.PagePath exposing (PagePath)
-import Types exposing (Model, Msg)
+import Types exposing (Model, Msg(..))
 import Util.Date exposing (formatDate)
 import View.Header
+
+
+commentConfig =
+    { commentInfoToggle = CommentInfo
+    , updateCommentForm = UpdateCommentForm
+    , updateDeleteCommentForm = UpdateDeleteCommentForm
+    , submitComment = SubmitComment
+    , requestDeletionEmail = RequestDeletionEmail
+    }
 
 
 view :
@@ -72,7 +80,13 @@ view model count metadata comments page viewForPage =
                  ]
                     ++ viewForPage
                 )
-            , Comment.view metadata.slug model comments
+            , Comment.view commentConfig
+                metadata.slug
+                { commentForm = model.commentForm
+                , commentInfo = model.commentInfo
+                , deleteCommentForm = model.deleteCommentForm
+                }
+                comments
             ]
         ]
 

@@ -1,4 +1,18 @@
-module Comment exposing (Comment, commentsDecoder, view)
+module Comment exposing
+    ( Comment
+    , CommentField(..)
+    , CommentForm
+    , CommentSendResponse
+    , DeleteCommentForm
+    , commentsDecoder
+    , initialCommentForm
+    , initialDeleteCommentForm
+    , postComment
+    , requestDeleteEmail
+    , updateSubmitComment
+    , validateCommentForm
+    , view
+    )
 
 import Date exposing (fromPosix)
 import Design.Palette exposing (color)
@@ -28,12 +42,19 @@ import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
 import Http exposing (Error(..))
+import Json.Decode
 import Json.Decode.Exploration as Decode
 import Json.Decode.Exploration.Pipeline as Pipeline
-import RemoteData exposing (RemoteData(..))
+import Json.Encode as Encode
+import RemoteData exposing (RemoteData(..), WebData)
 import Time exposing (millisToPosix, utc)
-import Types exposing (CommentError, CommentField(..), Model, Msg(..))
 import Util.Date exposing (formatDate)
+import Util.Error exposing (errorToString)
+import Validate exposing (Validator, ifBlank, ifInvalidEmail, validate)
+
+
+
+-- TYPES
 
 
 type alias Comment =
@@ -48,14 +69,81 @@ type alias Comment =
     }
 
 
+type alias DeleteCommentForm =
+    { email : String
+    , sendRequest : WebData String
+    }
+
+
+type alias CommentForm =
+    { name : String
+    , email : String
+    , message : String
+    , errors : List CommentError
+    , sendRequest : WebData CommentSendResponse
+    }
+
+
+type CommentField
+    = Name
+    | Email
+    | Message
+
+
+type alias CommentError =
+    ( CommentField, String )
+
+
+type alias CommentSendResponse =
+    { success : Bool
+    }
+
+
 type Responses
     = Responses (List Comment)
 
 
-view : String -> Model -> List Comment -> Element Msg
-view slug model comments =
+initialCommentForm : CommentForm
+initialCommentForm =
+    { name = ""
+    , email = ""
+    , message = ""
+    , errors = []
+    , sendRequest = NotAsked
+    }
+
+
+initialDeleteCommentForm : DeleteCommentForm
+initialDeleteCommentForm =
+    { email = ""
+    , sendRequest = NotAsked
+    }
+
+
+
+-- VIEW
+
+
+type alias Config msg =
+    { commentInfoToggle : Bool -> msg
+    , updateCommentForm : CommentForm -> msg
+    , updateDeleteCommentForm : DeleteCommentForm -> msg
+    , submitComment : String -> msg
+    , requestDeletionEmail : String -> msg
+    }
+
+
+type alias CommentState =
+    { commentForm : CommentForm
+    , commentInfo : Bool
+    , deleteCommentForm : DeleteCommentForm
+    }
+
+
+view : Config msg -> String -> CommentState -> List Comment -> Element msg
+view config slug state comments =
     column [ width fill, spacing 28 ]
-        [ commentFormView slug model
+        [ commentFormView config slug state
         , if List.length comments == 0 then
             none
 
@@ -71,13 +159,16 @@ view slug model comments =
         ]
 
 
-commentFormView : String -> Model -> Element Msg
-commentFormView slug model =
+commentFormView : Config msg -> String -> CommentState -> Element msg
+commentFormView config slug state =
     let
         { commentForm } =
-            model
+            state
+
+        { updateCommentForm, submitComment, commentInfoToggle } =
+            config
     in
-    case model.commentForm.sendRequest of
+    case state.commentForm.sendRequest of
         NotAsked ->
             column [ width fill, spacing 20, Font.size 16 ]
                 [ el
@@ -85,7 +176,7 @@ commentFormView slug model =
                     (text "Leave a comment")
                 , Input.text
                     [ width fill ]
-                    { onChange = \value -> UpdateCommentForm { commentForm | name = value }
+                    { onChange = \value -> updateCommentForm { commentForm | name = value }
                     , text = commentForm.name
                     , placeholder = Nothing
                     , label = Input.labelAbove [] (text "Name")
@@ -94,7 +185,7 @@ commentFormView slug model =
                 , column [ spacing 10, width fill ]
                     [ Input.email
                         [ width fill ]
-                        { onChange = \value -> UpdateCommentForm { commentForm | email = value }
+                        { onChange = \value -> updateCommentForm { commentForm | email = value }
                         , text = commentForm.email
                         , placeholder = Nothing
                         , label = Input.labelAbove [] (text "Email")
@@ -103,7 +194,7 @@ commentFormView slug model =
                 , formErrorView commentForm.errors Email
                 , Input.multiline
                     [ width fill ]
-                    { onChange = \value -> UpdateCommentForm { commentForm | message = value }
+                    { onChange = \value -> updateCommentForm { commentForm | message = value }
                     , text = commentForm.message
                     , placeholder = Nothing
                     , label = Input.labelAbove [] (text "Your message")
@@ -119,12 +210,12 @@ commentFormView slug model =
                     , Background.color color.primary
                     , mouseOver [ Background.color color.secondary ]
                     ]
-                    { onPress = Just (SubmitComment slug)
+                    { onPress = Just (submitComment slug)
                     , label = text "Submit"
                     }
-                , Input.button [ centerX, Font.size 14 ] { label = text "I want to delete a comment", onPress = Just (CommentInfo (not model.commentInfo)) }
-                , if model.commentInfo == True then
-                    deleteForm model
+                , Input.button [ centerX, Font.size 14 ] { label = text "I want to delete a comment", onPress = Just (commentInfoToggle (not state.commentInfo)) }
+                , if state.commentInfo == True then
+                    deleteForm config state
 
                   else
                     none
@@ -140,21 +231,21 @@ commentFormView slug model =
             paragraph [] [ text "Comment successfully sent. Please verify your comment at the given email, ", el [ Font.bold ] (text commentForm.email), text ", within 24 hours." ]
 
 
-deleteForm : Model -> Element Msg
-deleteForm model =
-    case model.deleteCommentForm.sendRequest of
+deleteForm : Config msg -> CommentState -> Element msg
+deleteForm { updateDeleteCommentForm, commentInfoToggle, requestDeletionEmail } state =
+    case state.deleteCommentForm.sendRequest of
         NotAsked ->
             let
                 deleteCommentForm =
-                    model.deleteCommentForm
+                    state.deleteCommentForm
             in
             column [ width fill, spacing 16, Border.width 2, padding 16 ]
                 [ el [ centerX, Font.bold ] (text "Delete Comment")
                 , paragraph [ Font.center, Font.italic ] [ text "Want to delete a comment on this page? Fill in you email. You can delete the comment from your email inbox." ]
                 , Input.email
                     [ width fill ]
-                    { onChange = \value -> UpdateDeleteCommentForm { deleteCommentForm | email = value }
-                    , text = model.deleteCommentForm.email
+                    { onChange = \value -> updateDeleteCommentForm { deleteCommentForm | email = value }
+                    , text = state.deleteCommentForm.email
                     , placeholder = Nothing
                     , label = Input.labelAbove [] (text "Email")
                     }
@@ -167,7 +258,7 @@ deleteForm model =
                     , Background.color color.red
                     , mouseOver [ Background.color color.darkRed ]
                     ]
-                    { onPress = Just (RequestDeletionEmail model.deleteCommentForm.email)
+                    { onPress = Just (requestDeletionEmail state.deleteCommentForm.email)
                     , label = text "Request Deletion"
                     }
                 , Input.button
@@ -179,7 +270,7 @@ deleteForm model =
                     , mouseOver [ Background.color color.lighterGray ]
                     , centerX
                     ]
-                    { onPress = Just (CommentInfo False)
+                    { onPress = Just (commentInfoToggle False)
                     , label = text "Cancel"
                     }
                 ]
@@ -260,6 +351,10 @@ commentView comment =
         ]
 
 
+
+-- DECODERS
+
+
 responseDecoder : Decode.Decoder (Maybe Responses)
 responseDecoder =
     Decode.maybe (Decode.map Responses (Decode.list (Decode.lazy (\_ -> commentDecoder))))
@@ -283,25 +378,60 @@ commentsDecoder =
     Decode.list commentDecoder
 
 
-errorToString : Error -> String
-errorToString error =
-    case error of
-        BadUrl string ->
-            "You did not provide a valid URL: " ++ string
+postComment : (WebData CommentSendResponse -> msg) -> String -> CommentForm -> Cmd msg
+postComment message slug commentForm =
+    Http.post
+        { url = "https://us-central1-driftercode-comments-f2d95.cloudfunctions.net/comments/new"
+        , body =
+            Http.jsonBody
+                (Encode.object
+                    [ ( "path", Encode.string slug )
+                    , ( "name", Encode.string commentForm.name )
+                    , ( "email", Encode.string commentForm.email )
+                    , ( "comment", Encode.string commentForm.message )
+                    ]
+                )
+        , expect = Http.expectJson (RemoteData.fromResult >> message) commentSendResponseDecoder
+        }
 
-        Timeout ->
-            "Connection timed out"
 
-        NetworkError ->
-            "Network Error. Please check your internet connection and try again"
+commentSendResponseDecoder : Json.Decode.Decoder CommentSendResponse
+commentSendResponseDecoder =
+    Json.Decode.map CommentSendResponse (Json.Decode.field "success" Json.Decode.bool)
 
-        BadStatus int ->
-            case int of
-                400 ->
-                    "Error 400: Validation error. Please make sure you sent correctly formatted information"
 
-                code ->
-                    "Error " ++ String.fromInt code
+requestDeleteEmail : (WebData String -> msg) -> String -> Cmd msg
+requestDeleteEmail message email =
+    Http.post
+        { url = "https://us-central1-driftercode-comments-f2d95.cloudfunctions.net/comments/request-delete/" ++ email
+        , body = Http.emptyBody
+        , expect = Http.expectString (RemoteData.fromResult >> message)
+        }
 
-        BadBody string ->
-            "Unexpected response: " ++ string
+
+validateCommentForm : Validator CommentError CommentForm
+validateCommentForm =
+    Validate.all
+        [ ifBlank .email ( Email, "Email is required" )
+        , ifInvalidEmail .email (\_ -> ( Email, "Please enter a valid email adress" ))
+        , ifBlank .name ( Name, "Name is required" )
+        , ifBlank .message ( Message, "Please leave a comment before submitting" )
+        ]
+
+
+updateSubmitComment :
+    (WebData CommentSendResponse -> msg)
+    -> String
+    -> { r | commentForm : CommentForm }
+    -> ( { r | commentForm : CommentForm }, Cmd msg )
+updateSubmitComment message slug model =
+    let
+        commentForm =
+            model.commentForm
+    in
+    case validate validateCommentForm commentForm of
+        Ok _ ->
+            ( { model | commentForm = { commentForm | sendRequest = Loading } }, postComment message slug model.commentForm )
+
+        Err err ->
+            ( { model | commentForm = { commentForm | errors = err } }, Cmd.none )
