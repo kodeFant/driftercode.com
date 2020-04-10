@@ -39,7 +39,7 @@ generate :
     -> String
 generate { siteTagline, siteUrl } siteMetadata =
     Rss.generate
-        { title = "Driftercode - The functional programming journey"
+        { title = "Driftercode - The great functional programming journey"
         , description = siteTagline
         , url = "https://driftercode.com"
         , lastBuildTime = Pages.builtAt
