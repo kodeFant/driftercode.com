@@ -21,7 +21,7 @@ import Webmanifest exposing (manifest)
 
 canonicalSiteUrl : String
 canonicalSiteUrl =
-    "https://driftercode.com/"
+    "https://driftercode.com"
 
 
 main : Pages.Platform.Program Model Msg Metadata (Rendered Msg)
