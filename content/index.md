@@ -3,7 +3,7 @@ title: driftercode.com
 type: blog-index
 ---
 
-## I'm Lillo, a self-taught developer and ex-journalist
+## I'm Lillo, a functional developer and ex-journalist
 
 Resources about functional programming are often very mathy and abstract. Devs don't have time for that.
 
