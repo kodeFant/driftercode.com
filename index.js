@@ -21,4 +21,5 @@ pagesInit({
 })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
 ga('create', 'UA-163362016-1', 'auto');
+ga('set', 'anonymizeIp', true);
 ga('send', 'pageview');
