@@ -1,4 +1,4 @@
-module Webmanifest exposing (manifest)
+module ElmPages.Webmanifest exposing (manifest)
 
 import Color
 import Pages exposing (images, pages)
@@ -17,6 +17,6 @@ manifest =
     , name = "driftercode"
     , themeColor = Just Color.white
     , startUrl = pages.index
-    , shortName = Just "driftercode"
+    , shortName = Nothing
     , sourceIcon = images.iconPng
     }

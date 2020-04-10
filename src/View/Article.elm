@@ -34,15 +34,6 @@ import Util.Date exposing (formatDate)
 import View.Header
 
 
-commentConfig =
-    { commentInfoToggle = CommentInfo
-    , updateCommentForm = UpdateCommentForm
-    , updateDeleteCommentForm = UpdateDeleteCommentForm
-    , submitComment = SubmitComment
-    , requestDeletionEmail = RequestDeletionEmail
-    }
-
-
 view :
     Model
     -> Int
@@ -80,12 +71,18 @@ view model count metadata comments page viewForPage =
                  ]
                     ++ viewForPage
                 )
-            , Comment.view commentConfig
-                metadata.slug
+            , Comment.view
+                { commentInfoToggle = CommentInfo
+                , updateCommentForm = UpdateCommentForm
+                , updateDeleteCommentForm = UpdateDeleteCommentForm
+                , submitComment = SubmitComment
+                , requestDeletionEmail = RequestDeletionEmail
+                }
                 { commentForm = model.commentForm
                 , commentInfo = model.commentInfo
                 , deleteCommentForm = model.deleteCommentForm
                 }
+                metadata.slug
                 comments
             ]
         ]

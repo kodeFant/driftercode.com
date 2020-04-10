@@ -1,6 +1,5 @@
 module View exposing (view)
 
-import BlogIndex
 import Comment exposing (Comment, commentsDecoder)
 import Data.Author as Author
 import Design.Palette as Palette exposing (color)
@@ -19,15 +18,16 @@ import Element.Font as Font
 import Element.Region
 import Head
 import Html exposing (Html)
-import MarkdownRenderer exposing (Rendered)
 import Metadata exposing (Metadata)
 import PageHead exposing (head)
 import Pages
 import Pages.PagePath exposing (PagePath)
 import Pages.Secrets as Secrets
 import Pages.StaticHttp as StaticHttp
+import Renderer exposing (Rendered)
 import Types exposing (Model, Msg)
 import View.Article
+import View.BlogIndex
 import View.Header
 import View.Page
 
@@ -115,7 +115,7 @@ pageView model comments siteMetadata page ( count, viewForPage ) =
                         [ Element.centerX
                         , Element.paddingXY 0 50
                         ]
-                        [ BlogIndex.view siteMetadata viewForPage ]
+                        [ View.BlogIndex.view siteMetadata viewForPage ]
                     ]
             }
 

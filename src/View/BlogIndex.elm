@@ -1,4 +1,4 @@
-module BlogIndex exposing (view)
+module View.BlogIndex exposing (view)
 
 import Date
 import Design.Palette as Palette

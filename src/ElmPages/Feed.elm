@@ -1,4 +1,4 @@
-module Feed exposing (fileToGenerate)
+module ElmPages.Feed exposing (fileToGenerate)
 
 import Metadata exposing (Metadata(..))
 import Pages

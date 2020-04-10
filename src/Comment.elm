@@ -140,8 +140,8 @@ type alias CommentState =
     }
 
 
-view : Config msg -> String -> CommentState -> List Comment -> Element msg
-view config slug state comments =
+view : Config msg -> CommentState -> String -> List Comment -> Element msg
+view config state slug comments =
     column [ width fill, spacing 28 ]
         [ commentFormView config slug state
         , if List.length comments == 0 then

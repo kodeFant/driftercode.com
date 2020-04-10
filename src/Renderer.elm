@@ -1,4 +1,4 @@
-module MarkdownRenderer exposing (Rendered, pageRenderer, wordCountMarkdownView)
+module Renderer exposing (Rendered, pageRenderer, wordCountMarkdownView)
 
 import Design.Palette as Palette
 import Design.Styles exposing (linkStyle)

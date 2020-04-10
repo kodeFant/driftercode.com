@@ -1,17 +1,17 @@
 module Main exposing (main)
 
-import Feed
-import MarkdownRenderer exposing (Rendered)
+import ElmPages.Feed as Feed
+import ElmPages.Sitemap as Sitemap
+import ElmPages.Webmanifest exposing (manifest)
 import Metadata exposing (Metadata)
-import MySitemap
 import Pages
 import Pages.Document
 import Pages.PagePath exposing (PagePath)
 import Pages.Platform
+import Renderer exposing (Rendered)
 import Types exposing (Model, Msg(..))
 import Update exposing (init, update)
 import View exposing (view)
-import Webmanifest exposing (manifest)
 
 
 
@@ -55,7 +55,7 @@ generateFiles :
             )
 generateFiles siteMetadata =
     [ Feed.fileToGenerate { siteTagline = siteTagline, siteUrl = canonicalSiteUrl } siteMetadata |> Ok
-    , MySitemap.build { siteUrl = canonicalSiteUrl } siteMetadata |> Ok
+    , Sitemap.build { siteUrl = canonicalSiteUrl } siteMetadata |> Ok
     ]
 
 
@@ -71,7 +71,7 @@ markdownDocument =
         , metadata = Metadata.decoder
         , body =
             \markdownBody ->
-                MarkdownRenderer.wordCountMarkdownView markdownBody
+                Renderer.wordCountMarkdownView markdownBody
         }
 
 
