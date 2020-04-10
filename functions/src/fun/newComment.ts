@@ -8,7 +8,7 @@ import { firestore } from 'firebase-admin';
 
 export default async function newComment(request: Request, response: Response): Promise<Either<string, Comment>> {
 	try {
-		const commentData = await createNewComment({
+		const IO = await createNewComment({
 			comment: request.body.comment,
 			email: request.body.email,
 			path: request.body.path,
@@ -19,12 +19,7 @@ export default async function newComment(request: Request, response: Response): 
 			updated_at: Date.now()
 		}).run();
 
-		if (commentData.isLeft()) {
-			return fail(400, response, commentData.extract());
-		}
-
-		response.json({ success: true });
-		return commentData;
+		return IO.ifLeft((data) => fail(400, response, data)).ifRight(() => response.json({ success: true }));
 	} catch (e) {
 		return fail(500, response, e.message);
 	}

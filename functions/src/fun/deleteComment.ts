@@ -12,24 +12,22 @@ const UpdateApprovalBody = Codec.interface({
 type UpdateApprovalBody = GetInterface<typeof UpdateApprovalBody>;
 
 export default async function deleteComment(request: Request, response: Response) {
-	const deleteCommentReq = await (await deleteCommentIO(request)).run();
-
-	if (deleteCommentReq.isRight()) {
-		response.send('Your comment was successfully deleted');
-	} else {
+	try {
+		const IO = await deleteCommentIO(request).run();
+		return IO.ifRight(() => response.send('Your comment was successfully deleted')).ifLeft((error) => {
+			response.statusCode = 400;
+			response.send(`Something went wrong: ${error}`);
+			return `Something went wrong: ${error}`;
+		});
+	} catch (e) {
 		response.statusCode = 500;
-		response.send(`Something went wrong: ${deleteCommentReq.extract()}`);
-		return `Something went wrong: ${deleteCommentReq.extract()}`;
+		response.send(`Something went wrong: ${e}`);
+		return `Something went wrong: ${e}`;
 	}
-
-	return deleteCommentIO;
 }
 
 const deleteCommentIO = (request: Request): EitherAsync<string, globalThis.Response> =>
-	EitherAsync<
-		string,
-		FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>
-	>(async ({ liftEither, fromPromise }) => {
+	EitherAsync<string, FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>>(async ({ liftEither }) => {
 		const decodedBody = await liftEither(UpdateApprovalBody.decode({ commentId: request.params.commentId }));
 		const commentRef = await commentsRef.doc(decodedBody.commentId);
 
