@@ -1,9 +1,13 @@
 {
     "cSpell.enableFiletypes": [
+        "!css",
         "!plaintext",
         "!typescript"
     ],
     "cSpell.words": [
+        "Immer",
+        "Peasy",
+        "Remeda",
         "antipattern",
         "atrule",
         "devexperts",
@@ -11,6 +15,7 @@
         "hexcode",
         "jscompiler's",
         "remotedata",
+        "typeof",
         "webcomponentsjs"
     ]
 }

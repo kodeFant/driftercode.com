@@ -3,7 +3,7 @@
   "type": "blog",
   "author": Lars Lillo Ulvestad,
   "title": "Slaying a UI antipattern with TypeScript and React (part 3)",
-  "description": "How to typecheck data from an external source.",
+  "description": "How to type check data from an external source.",
   "image": "/images/article-covers/damsel-in-distress.jpg",
   "published": "2020-04-24",
   "draft": true,
@@ -21,7 +21,7 @@ One thing we need to cover for the app to have the benefits of an Elm app is dec
 
 Elm actually forces you to do that, and it contributes to eliminating pretty much all runtime exceptions. When something doesn't check out, it fails fast and loud.
 
-TypeScript lacks this feature as it only typechecks what happens in the source code. 
+TypeScript lacks this feature as it only type checks what happens in the source code. 
 
 Luckily, a library like **Purify** or **fp-ts** can give you these guarantees with little extra effort.
 
@@ -51,7 +51,7 @@ interface Post {
 
 Delete it. **Wait, what?**
 
-As mentioned, it does not help us in typechecking external data. And a puny TypeScript typeguard is too weak to withstand the chaos outside your source code. 
+As mentioned, it does not help us in type checking external data. And a puny TypeScript type guard is too weak to withstand the chaos outside your source code. 
 
 
 So let's install Purify
@@ -101,7 +101,7 @@ const PostList = array(Post)
 type PostList = GetInterface<typeof PostList>
 ```
 
-Replace all occurences of `Post[]` with `PostList` in the code. That lets us also decode an array of posts.
+Replace all occurrences of `Post[]` with `PostList` in the code. That lets us also decode an array of posts.
 
 ## To the hard part
 
