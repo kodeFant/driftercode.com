@@ -1,9 +1,10 @@
 module Main exposing (main)
 
+import Constants exposing (canonicalSiteUrl, siteTagline)
 import ElmPages.Feed as Feed
 import ElmPages.Sitemap as Sitemap
 import ElmPages.Webmanifest exposing (manifest)
-import Metadata exposing (Metadata)
+import Head.Metadata exposing (Metadata)
 import Pages
 import Pages.Document
 import Pages.PagePath exposing (PagePath)
@@ -17,11 +18,6 @@ import View exposing (view)
 
 -- the intellij-elm plugin doesn't support type aliases for Programs so we need to use this line
 -- main : Platform.Program Pages.Platform.Flags (Pages.Platform.Model Model Msg Metadata Rendered) (Pages.Platform.Msg Msg Metadata Rendered)
-
-
-canonicalSiteUrl : String
-canonicalSiteUrl =
-    "https://driftercode.com"
 
 
 main : Pages.Platform.Program Model Msg Metadata (Rendered Msg)
@@ -59,16 +55,11 @@ generateFiles siteMetadata =
     ]
 
 
-siteTagline : String
-siteTagline =
-    "DrifterCode - The great functional programming journey"
-
-
 markdownDocument : ( String, Pages.Document.DocumentHandler Metadata (Rendered Msg) )
 markdownDocument =
     Pages.Document.parser
         { extension = "md"
-        , metadata = Metadata.decoder
+        , metadata = Head.Metadata.decoder
         , body =
             \markdownBody ->
                 Renderer.wordCountMarkdownView markdownBody

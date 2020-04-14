@@ -1,4 +1,4 @@
-module View.Header exposing (view)
+module Layout.Header exposing (view)
 
 import Design.Palette as Palette
 import Element exposing (Element, centerX, fill, paddingXY, px, rgba255, width)

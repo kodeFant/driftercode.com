@@ -49,13 +49,13 @@ const createNewComment = (newCom: AddComment): EitherAsync<string, Comment> =>
 		.chain((decodedResult) =>
 			EitherAsync(async ({ fromPromise }) => {
 				await fromPromise(
-					sendConfirmationMail()({
+					sendConfirmationMail({
 						toEmail: decodedResult.email,
 						articleTitle: decodedResult.path,
 						comment: decodedResult.comment,
 						commentId: decodedResult.id,
 						name: decodedResult.name
-					})
+					}).run()
 				);
 				return decodedResult;
 			})

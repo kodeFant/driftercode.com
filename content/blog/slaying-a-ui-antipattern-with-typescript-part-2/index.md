@@ -183,7 +183,7 @@ I currently prefer to just put the RemoteData type and the fold function into my
 
 ## Next up
 
-**That's it for RemoteData, but the series goes on.**
+**That's it for RemoteData, but I will continue with yet another post in this series.**
 
 I want this code to mimic the advantages of Elm. That will require a few more steps.
 

@@ -1,4 +1,4 @@
-module Metadata exposing (ArticleMetadata, Metadata(..), PageMetadata, decoder)
+module Head.Metadata exposing (ArticleMetadata, Metadata(..), PageMetadata, decoder)
 
 import Data.Author
 import Date exposing (Date)

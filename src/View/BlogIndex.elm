@@ -29,7 +29,7 @@ import Element
         )
 import Element.Border as Border
 import Element.Font as Font
-import Metadata exposing (Metadata(..))
+import Head.Metadata exposing (Metadata(..))
 import Pages
 import Pages.ImagePath as ImagePath
 import Pages.PagePath as PagePath exposing (PagePath)
@@ -59,20 +59,20 @@ postList posts =
         |> List.filterMap
             (\( path, metadata ) ->
                 case metadata of
-                    Metadata.Page _ ->
+                    Head.Metadata.Page _ ->
                         Nothing
 
-                    Metadata.Author _ ->
+                    Head.Metadata.Author _ ->
                         Nothing
 
-                    Metadata.Article meta ->
+                    Head.Metadata.Article meta ->
                         if meta.draft then
                             Nothing
 
                         else
                             Just ( path, meta )
 
-                    Metadata.BlogIndex ->
+                    Head.Metadata.BlogIndex ->
                         Nothing
             )
         |> List.sortWith
@@ -82,14 +82,14 @@ postList posts =
 
 
 postSummary :
-    ( PagePath Pages.PathKey, Metadata.ArticleMetadata )
+    ( PagePath Pages.PathKey, Head.Metadata.ArticleMetadata )
     -> Element msg
 postSummary ( postPath, post ) =
     articleIndex post
         |> linkToPost postPath
 
 
-articleIndex : Metadata.ArticleMetadata -> Element msg
+articleIndex : Head.Metadata.ArticleMetadata -> Element msg
 articleIndex metadata =
     el
         [ centerX
@@ -112,7 +112,7 @@ linkToPost postPath content =
         { url = PagePath.toString postPath, label = content }
 
 
-listView : Metadata.ArticleMetadata -> Element msg
+listView : Head.Metadata.ArticleMetadata -> Element msg
 listView post =
     responsiveView []
         { mobile = listViewMobile post
@@ -122,7 +122,7 @@ listView post =
         }
 
 
-listViewMobile : Metadata.ArticleMetadata -> Element msg
+listViewMobile : Head.Metadata.ArticleMetadata -> Element msg
 listViewMobile post =
     textColumn
         [ centerX
@@ -147,7 +147,7 @@ listViewMobile post =
         ]
 
 
-listViewLarge : Metadata.ArticleMetadata -> Element msg
+listViewLarge : Head.Metadata.ArticleMetadata -> Element msg
 listViewLarge post =
     row [ spacing 16 ]
         [ column [ width (fillPortion 2) ]

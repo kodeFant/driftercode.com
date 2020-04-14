@@ -428,7 +428,8 @@ body::-webkit-scrollbar-thumb {
 	white-space: initial;
 }
 
-p {
+p,
+ul {
 	line-height: 1.8;
 }
 
@@ -438,8 +439,10 @@ p {
 }
 
 .link:hover {
+	background-color: rgba(0, 0, 0, 0.829);
 	color: orange;
 	text-decoration: none;
+	transition: all 200ms ease-in-out;
 }
 
 .image {

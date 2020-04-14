@@ -17,9 +17,10 @@ import Element
 import Element.Font as Font
 import Element.Region
 import Head
+import Head.Metadata exposing (Metadata)
+import Head.PageHead exposing (head)
 import Html exposing (Html)
-import Metadata exposing (Metadata)
-import PageHead exposing (head)
+import Layout.Header
 import Pages
 import Pages.PagePath exposing (PagePath)
 import Pages.Secrets as Secrets
@@ -28,7 +29,6 @@ import Renderer exposing (Rendered)
 import Types exposing (Model, Msg)
 import View.Article
 import View.BlogIndex
-import View.Header
 import View.Page
 
 
@@ -90,13 +90,13 @@ pageView :
     -> { title : String, body : Element Msg }
 pageView model comments siteMetadata page ( count, viewForPage ) =
     case page.frontmatter of
-        Metadata.Page metadata ->
+        Head.Metadata.Page metadata ->
             { title = metadata.title
             , body =
                 View.Page.view metadata.title viewForPage page
             }
 
-        Metadata.Article metadata ->
+        Head.Metadata.Article metadata ->
             let
                 filteredComments =
                     comments
@@ -106,11 +106,11 @@ pageView model comments siteMetadata page ( count, viewForPage ) =
             , body = View.Article.view model count metadata filteredComments page viewForPage
             }
 
-        Metadata.BlogIndex ->
+        Head.Metadata.BlogIndex ->
             { title = "Blog"
             , body =
                 Element.column [ Element.width Element.fill ]
-                    [ View.Header.view page.path
+                    [ Layout.Header.view page.path
                     , Element.column
                         [ Element.centerX
                         , Element.paddingXY 0 50
@@ -119,13 +119,13 @@ pageView model comments siteMetadata page ( count, viewForPage ) =
                     ]
             }
 
-        Metadata.Author author ->
+        Head.Metadata.Author author ->
             { title = author.name
             , body =
                 Element.column
                     [ Element.width Element.fill
                     ]
-                    [ View.Header.view page.path
+                    [ Layout.Header.view page.path
                     , Element.column
                         [ Element.padding 30
                         , Element.spacing 20

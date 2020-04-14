@@ -25,13 +25,13 @@ import Element
         )
 import Element.Font as Font
 import Element.Region
-import Metadata exposing (ArticleMetadata, Metadata)
+import Head.Metadata exposing (ArticleMetadata, Metadata)
+import Layout.Header
 import Pages
 import Pages.ImagePath as ImagePath exposing (ImagePath)
 import Pages.PagePath exposing (PagePath)
 import Types exposing (Model, Msg(..))
 import Util.Date exposing (formatDate)
-import View.Header
 
 
 view :
@@ -46,7 +46,7 @@ view model count metadata comments page viewForPage =
     Element.column
         [ Element.width Element.fill
         ]
-        [ View.Header.view page.path
+        [ Layout.Header.view page.path
         , Element.column
             [ Element.padding 30
             , Element.spacing 40
@@ -120,7 +120,7 @@ bio metadata =
         ]
 
 
-publishedDateView : Metadata.ArticleMetadata -> Element msg
+publishedDateView : Head.Metadata.ArticleMetadata -> Element msg
 publishedDateView metadata =
     Element.text
         (formatDate

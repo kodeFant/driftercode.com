@@ -1,6 +1,6 @@
 module ElmPages.Feed exposing (fileToGenerate)
 
-import Metadata exposing (Metadata(..))
+import Head.Metadata exposing (Metadata(..))
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
 import Rss

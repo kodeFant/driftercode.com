@@ -8,7 +8,7 @@ import Element
         , link
         , text
         )
-import Html exposing (Attribute, Html, div, h1, h2, h3, h4, h5, h6)
+import Html exposing (Attribute, Html, h1, h2, h3, h4, h5, h6)
 import Html.Attributes exposing (class, property, target)
 import Json.Encode as Encode
 import Markdown.Block exposing (HeadingLevel(..), ListItem(..), Task(..))

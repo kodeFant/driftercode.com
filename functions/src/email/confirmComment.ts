@@ -1,21 +1,21 @@
-import { mg, from } from "./index"
+import { mg, from } from './index';
 import { Either, Right, Left } from 'purify-ts/Either';
-import { Codec, string, GetInterface } from "purify-ts/Codec"
-import * as mailgun from "mailgun-js"
+import { Codec, string, GetInterface } from 'purify-ts/Codec';
+import * as mailgun from 'mailgun-js';
+import { EitherAsync } from 'purify-ts/EitherAsync';
 
 export const UpdateMailProps = Codec.interface({
-    toEmail: string,
-    articleTitle: string,
-    comment: string,
-    commentId: string,
-    name: string
-})
+	toEmail: string,
+	articleTitle: string,
+	comment: string,
+	commentId: string,
+	name: string
+});
 
-export type UpdateMailProps = GetInterface<typeof UpdateMailProps>
+export type UpdateMailProps = GetInterface<typeof UpdateMailProps>;
 
 function confirmationEmail({ name, comment, commentId }: UpdateMailProps): string {
-
-    return `
+	return `
     <h1>Hi, ${name}</h1>
     <p>Thank you for your comment on driftercode.com</p>
     <p>To prevent spam, I need you to prove you own this email.</p>
@@ -26,29 +26,42 @@ function confirmationEmail({ name, comment, commentId }: UpdateMailProps): strin
     <br/>
     <h2>Deletion</h2>
     <p>My comment system is pretty minimal at this stage. If you with to delete your comment, just send a delete request to my <a href="mailto:lars.lillo@gmail.com">personal email.</a></p>
-    `}
+    `;
+}
 
-export function sendConfirmationMail() {
-    const subject = 'Confirm comment on driftercode.com';
+export function sendConfirmationMail(props: UpdateMailProps): EitherAsync<string, mailgun.messages.SendResponse> {
+	const subject = 'Confirm comment on driftercode.com';
+	return EitherAsync<string, UpdateMailProps>(async ({ liftEither }) => {
+		const decodedMailProps = await liftEither(UpdateMailProps.decode(props));
+		return decodedMailProps;
+	}).chain((mailProps) =>
+		EitherAsync(async ({ fromPromise }) => {
+			const sendResponse = await fromPromise(sendEmail({ subject, mailProps }));
+			return sendResponse;
+		})
+	);
+}
 
-    return async (props: UpdateMailProps): Promise<Either<string, mailgun.messages.SendResponse>> => {
-        const decodedMailProps = UpdateMailProps.decode(props)
-        if (decodedMailProps.isRight()) {
-            const mailProps = decodedMailProps.extract()
-            const msgBody = await mg.messages().send({
-                from, subject, to: mailProps.toEmail,
-                html: confirmationEmail(props)
-            }, function (error, body) {
-                if (error) {
-                    console.log(error)
-                }
+interface SendEmail {
+	subject: string;
+	mailProps: UpdateMailProps;
+}
 
-                console.log("emailBody", body)
-                return body
-            })
-            return Right(msgBody)
-        } else {
-            return Left("Error sending email")
-        }
-    }
+async function sendEmail({ subject, mailProps }: SendEmail): Promise<Either<string, mailgun.messages.SendResponse>> {
+	try {
+		const msgBody = await mg.messages().send({
+			from,
+			subject,
+			to: mailProps.toEmail,
+			html: confirmationEmail(mailProps)
+		}, function(error, body) {
+			if (error) {
+				console.log(error);
+			}
+			console.log('emailBody', body);
+		});
+		return Right(msgBody);
+	} catch (e) {
+		return Left(e);
+	}
 }

@@ -3,11 +3,11 @@ module View.Page exposing (view)
 import Element exposing (Element, centerX, column, el, fill, padding, spacing, text, textColumn, width)
 import Element.Font as Font
 import Element.Region
-import Metadata exposing (Metadata)
+import Head.Metadata exposing (Metadata)
+import Layout.Header
 import Pages
 import Pages.PagePath exposing (PagePath)
 import Types exposing (Msg)
-import View.Header
 
 
 view :
@@ -17,7 +17,7 @@ view :
     -> Element Msg
 view title viewForPage page =
     textColumn [ Element.width Element.fill ]
-        [ View.Header.view page.path
+        [ Layout.Header.view page.path
         , el [ width fill ]
             (column
                 [ Element.padding 30

@@ -1,16 +1,16 @@
-module PageHead exposing (head)
+module Head.PageHead exposing (head)
 
 import Date
 import Head
+import Head.Metadata exposing (Metadata)
 import Head.Seo as Seo
-import Metadata exposing (Metadata)
 import Pages exposing (images)
 
 
 head : Metadata -> List (Head.Tag Pages.PathKey)
 head metadata =
     case metadata of
-        Metadata.Page meta ->
+        Head.Metadata.Page meta ->
             Seo.summaryLarge
                 { canonicalUrlOverride = Nothing
                 , siteName = siteName
@@ -26,7 +26,7 @@ head metadata =
                 }
                 |> Seo.website
 
-        Metadata.Article meta ->
+        Head.Metadata.Article meta ->
             Seo.summaryLarge
                 { canonicalUrlOverride = Nothing
                 , siteName = siteName
@@ -48,7 +48,7 @@ head metadata =
                     , expirationTime = Nothing
                     }
 
-        Metadata.Author meta ->
+        Head.Metadata.Author meta ->
             let
                 ( firstName, lastName ) =
                     case meta.name |> String.split " " of
@@ -83,7 +83,7 @@ head metadata =
                     , username = Nothing
                     }
 
-        Metadata.BlogIndex ->
+        Head.Metadata.BlogIndex ->
             Seo.summaryLarge
                 { canonicalUrlOverride = Nothing
                 , siteName = siteName
