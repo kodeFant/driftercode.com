@@ -2,25 +2,10 @@ module View.BlogIndex exposing (view)
 
 import Data.Author
 import Date
-import Element
-    exposing
-        ( Element
-        , centerX
-        , column
-        , fill
-        , html
-        , image
-        , maximum
-        , padding
-        , row
-        , spacing
-        , text
-        , textColumn
-        , width
-        )
 import Head.Metadata exposing (Metadata(..))
-import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (..)
+import Layout.Footer
 import Layout.Header
 import Pages
 import Pages.ImagePath as ImagePath
@@ -33,23 +18,22 @@ view :
     List ( PagePath Pages.PathKey, Metadata )
     -> List (Html msg)
     -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
-    -> Element msg
+    -> Html msg
 view posts rendered page =
-    Element.column [ Element.width Element.fill ]
+    div [ style "width" "100%" ]
         [ Layout.Header.view page.path
-        , html
-            (div [ class "blog-index" ]
-                [ div [ class "index-author" ]
-                    [ Data.Author.view
-                        [ Html.Attributes.style "width" "60px"
-                        , Html.Attributes.style "border-radius" "50%"
-                        ]
-                        Data.Author.defaultAuthor
-                    , div [] rendered
+        , div [ class "blog-index" ]
+            [ div [ class "index-author" ]
+                [ Data.Author.view
+                    [ style "width" "60px"
+                    , style "border-radius" "50%"
                     ]
-                , blogIndexItems posts
+                    Data.Author.defaultAuthor
+                , div [] rendered
                 ]
-            )
+            , blogIndexItems posts
+            ]
+        , Layout.Footer.view
         ]
 
 
@@ -91,9 +75,9 @@ blogIndexItem ( postPath, post ) =
             ]
         , div [ class "index-card__part2" ]
             [ div []
-                [ div [ class "index-card__date" ] [ Html.text (post.published |> formatDate) ]
-                , h2 [ class "index-card__title" ] [ Html.text post.title ]
-                , div [ class "index-card__description" ] [ Html.text post.description ]
+                [ div [ class "index-card__date" ] [ text (post.published |> formatDate) ]
+                , h2 [ class "index-card__title" ] [ text post.title ]
+                , div [ class "index-card__description" ] [ text post.description ]
                 ]
             ]
         ]

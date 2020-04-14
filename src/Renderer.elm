@@ -1,20 +1,13 @@
 module Renderer exposing (Rendered, wordCountMarkdownView)
 
-import Element
-    exposing
-        ( Element
-        , height
-        , html
-        , link
-        , text
-        )
-import Html exposing (Attribute, Html, h1, h2, h3, h4, h5, h6)
-import Html.Attributes exposing (class, property, target)
+import DefaultHtmlRenderer exposing (defaultHtmlRenderer)
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (..)
 import Json.Encode as Encode
 import Markdown.Block exposing (HeadingLevel(..), ListItem(..), Task(..))
 import Markdown.Html
 import Markdown.Parser
-import Markdown.Renderer exposing (Renderer, defaultHtmlRenderer)
+import Markdown.Renderer exposing (Renderer)
 import Pages
 import Styled
 
@@ -49,30 +42,7 @@ htmlRenderer =
         , codeBlock = codeBlock
         , link = mdLink
         , image = image
-        , heading = heading
     }
-
-
-heading : { children : List (Html msg), level : HeadingLevel, rawText : String } -> Html msg
-heading { children, level } =
-    case level of
-        H1 ->
-            h1 [ class "heading" ] children
-
-        H2 ->
-            h2 [ class "heading" ] children
-
-        H3 ->
-            h3 [ class "heading" ] children
-
-        H4 ->
-            h4 [ class "heading" ] children
-
-        H5 ->
-            h5 [ class "heading" ] children
-
-        H6 ->
-            h6 [ class "heading" ] children
 
 
 html : Markdown.Html.Renderer (List (Html msg) -> Html msg)
@@ -80,9 +50,9 @@ html =
     Markdown.Html.oneOf
         [ Markdown.Html.tag "youtube"
             (\id _ ->
-                Html.iframe
-                    [ Html.Attributes.src ("https://www.youtube.com/embed/" ++ id)
-                    , Html.Attributes.height 400
+                iframe
+                    [ src ("https://www.youtube.com/embed/" ++ id)
+                    , height 400
                     ]
                     []
             )
@@ -98,22 +68,22 @@ mdLink { destination } body =
                 Ok _ ->
                     if String.startsWith "http" destination then
                         Styled.link
-                            [ Html.Attributes.href destination
+                            [ href destination
                             , target "_blank"
                             ]
                             [ bodyElement
                             ]
 
                     else
-                        Styled.link [ Html.Attributes.href destination ]
+                        Styled.link [ href destination ]
                             [ bodyElement
                             ]
 
                 Err string ->
-                    Html.text string
+                    text string
 
         Nothing ->
-            Html.text ""
+            text ""
 
 
 image : { src : String, alt : String, title : Maybe String } -> Html msg
@@ -125,17 +95,17 @@ codeBlock : { body : String, language : Maybe String } -> Html msg
 codeBlock details =
     case details.language of
         Just lang ->
-            Html.node "code-editor"
+            node "code-editor"
                 [ editorValue details.body
-                , Html.Attributes.style "white-space" "normal"
-                , Html.Attributes.attribute "language" lang
+                , style "white-space" "normal"
+                , attribute "language" lang
                 ]
                 []
 
         Nothing ->
-            Html.node "code-editor"
+            node "code-editor"
                 [ editorValue details.body
-                , Html.Attributes.style "white-space" "normal"
+                , style "white-space" "normal"
                 ]
                 []
 

@@ -1,26 +1,11 @@
 module View exposing (view)
 
 import Comment exposing (Comment, commentsDecoder)
-import Data.Author as Author
-import Design.Palette as Palette exposing (color)
-import Element
-    exposing
-        ( Element
-        , centerX
-        , column
-        , fill
-        , height
-        , padding
-        , text
-        , width
-        )
-import Element.Font as Font
-import Element.Region
 import Head
 import Head.Metadata exposing (Metadata)
 import Head.PageHead exposing (head)
-import Html exposing (Html)
-import Layout.Header
+import Html
+import Html.Styled exposing (..)
 import Pages
 import Pages.PagePath exposing (PagePath)
 import Pages.Secrets as Secrets
@@ -40,7 +25,7 @@ view :
         }
     ->
         StaticHttp.Request
-            { view : Model -> Rendered Msg -> { title : String, body : Html Msg }
+            { view : Model -> Rendered Msg -> { title : String, body : Html.Html Msg }
             , head : List (Head.Tag Pages.PathKey)
             }
 view siteMetadata page =
@@ -54,14 +39,7 @@ view siteMetadata page =
                     in
                     { title = title ++ " | DrifterCode"
                     , body =
-                        Element.layout
-                            [ Element.width Element.fill
-                            , height fill
-                            , Font.size 20
-                            , Font.family [ Font.typeface "Open Sans", Font.sansSerif ]
-                            , Font.color (Element.rgba255 0 0 0 0.8)
-                            ]
-                            body
+                        toUnstyled body
                     }
             , head = head page.frontmatter
             }
@@ -87,13 +65,13 @@ pageView :
     -> List ( PagePath Pages.PathKey, Metadata )
     -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
     -> Rendered Msg
-    -> { title : String, body : Element Msg }
+    -> { title : String, body : Html Msg }
 pageView model comments siteMetadata page ( count, viewForPage ) =
     case page.frontmatter of
         Head.Metadata.Page metadata ->
             { title = metadata.title
             , body =
-                View.Page.view metadata.title [ Element.html (Html.div [] viewForPage) ] page
+                View.Page.view metadata.title viewForPage page
             }
 
         Head.Metadata.Article metadata ->
@@ -103,7 +81,7 @@ pageView model comments siteMetadata page ( count, viewForPage ) =
                         |> List.filter (\comment -> comment.path == metadata.slug)
             in
             { title = metadata.title
-            , body = View.Article.view model count metadata filteredComments page [ Element.html (Html.div [] viewForPage) ]
+            , body = View.Article.view model count metadata filteredComments page viewForPage
             }
 
         Head.Metadata.BlogIndex ->
@@ -115,20 +93,5 @@ pageView model comments siteMetadata page ( count, viewForPage ) =
         Head.Metadata.Author author ->
             { title = author.name
             , body =
-                Element.column
-                    [ Element.width Element.fill
-                    ]
-                    [ Layout.Header.view page.path
-                    , Element.column
-                        [ Element.padding 30
-                        , Element.spacing 20
-                        , Element.Region.mainContent
-                        , Element.width (Element.fill |> Element.maximum 800)
-                        , Element.centerX
-                        ]
-                        [ Palette.blogHeading author.name
-                        , Author.elmUIView [] author
-                        , Element.paragraph [ Element.centerX, Font.center ] [ Element.text "viewForPage" ]
-                        ]
-                    ]
+                div [] []
             }

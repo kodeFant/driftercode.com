@@ -1,7 +1,7 @@
 module Styled exposing (image, link)
 
-import Html exposing (Attribute, Html, a, img)
-import Html.Attributes exposing (alt, class, src)
+import Html.Styled exposing (Attribute, Html, a, img)
+import Html.Styled.Attributes exposing (alt, class, src)
 
 
 image : List (Attribute msg) -> { path : String, description : String } -> Html msg

@@ -1,6 +1,14 @@
 @import "https://fonts.googleapis.com/css?family=Merriweather:700|Open+Sans:400, 400i, 700&display=swap";
 @import "./normalize.scss";
 
+:root {
+	--black: rgb(30, 30, 30);
+	--darkest-gray: rgb(51, 51, 51);
+	--white: rgb(255, 255, 255);
+	--light-gray: rgb(200, 200, 200);
+	--lighter-gray: rgb(237, 237, 237);
+}
+
 html {
 	box-sizing: border-box;
 }
@@ -228,5 +236,22 @@ h6.heading {
 	p {
 		margin: 0;
 		line-height: normal;
+	}
+}
+
+footer.footer {
+	background-color: var(--darkest-gray);
+	color: var(--lighter-gray);
+	text-align: center;
+	width: 100%;
+	padding: 3rem 0;
+	margin-top: 5rem;
+	font-size: 1rem;
+
+	.copyright {
+		font-weight: bold;
+		margin-bottom: 1rem;
+	}
+	.privacy {
 	}
 }

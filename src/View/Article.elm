@@ -2,34 +2,14 @@ module View.Article exposing (view)
 
 import Comment exposing (Comment)
 import Data.Author as Author
-import Design.Icon
-import Design.Palette as Palette
 import Element
-    exposing
-        ( Element
-        , centerX
-        , column
-        , el
-        , fill
-        , height
-        , mouseOver
-        , newTabLink
-        , padding
-        , paragraph
-        , px
-        , rgba255
-        , row
-        , spacing
-        , text
-        , width
-        )
-import Element.Font as Font
-import Element.Region
 import Head.Metadata exposing (ArticleMetadata, Metadata)
+import Html.Styled exposing (..)
 import Layout.Header
 import Pages
 import Pages.ImagePath as ImagePath exposing (ImagePath)
 import Pages.PagePath exposing (PagePath)
+import Styled
 import Types exposing (Model, Msg(..))
 import Util.Date exposing (formatDate)
 
@@ -40,98 +20,98 @@ view :
     -> ArticleMetadata
     -> List Comment
     -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
-    -> List (Element Msg)
-    -> Element Msg
+    -> List (Html Msg)
+    -> Html Msg
 view model count metadata comments page viewForPage =
-    Element.column
-        [ Element.width Element.fill
-        ]
+    div []
         [ Layout.Header.view page.path
-        , Element.column
-            [ Element.padding 30
-            , Element.spacing 40
-            , Element.Region.mainContent
-            , Element.width (Element.fill |> Element.maximum 750)
-            , Element.centerX
-            ]
-            [ Element.textColumn [ Element.spacing 24, Element.width Element.fill ]
-                ([ bio metadata
-                 , Palette.blogHeading metadata.title
-                 , paragraph [ Font.family [ Font.typeface "Merriweather", Font.sansSerif ], Font.size 24, Font.center ] [ text metadata.description ]
-                 , column
-                    [ Font.size 16
-                    , Font.color (Element.rgba255 0 0 0 0.6)
-                    , Font.center
-                    , spacing 10
-                    ]
-                    [ el [ centerX ] (publishedDateView <| metadata)
-                    , el [ centerX ] (text (displayReadingLength count))
-                    ]
-                 , articleImageView metadata.image
-                 ]
-                    ++ viewForPage
+        , bio metadata
+        , text metadata.title
+        , text metadata.description
+        , text (publishedDateView <| metadata)
+        , text (displayReadingLength count)
+        , articleImageView metadata.image
+        , div [] viewForPage
+        , fromUnstyled
+            (Element.layout
+                []
+                (Comment.view
+                    { commentInfoToggle = CommentInfo
+                    , updateCommentForm = UpdateCommentForm
+                    , updateDeleteCommentForm = UpdateDeleteCommentForm
+                    , submitComment = SubmitComment
+                    , requestDeletionEmail = RequestDeletionEmail
+                    }
+                    { commentForm = model.commentForm
+                    , commentInfo = model.commentInfo
+                    , deleteCommentForm = model.deleteCommentForm
+                    }
+                    metadata.slug
+                    comments
                 )
-            , Comment.view
-                { commentInfoToggle = CommentInfo
-                , updateCommentForm = UpdateCommentForm
-                , updateDeleteCommentForm = UpdateDeleteCommentForm
-                , submitComment = SubmitComment
-                , requestDeletionEmail = RequestDeletionEmail
-                }
-                { commentForm = model.commentForm
-                , commentInfo = model.commentInfo
-                , deleteCommentForm = model.deleteCommentForm
-                }
-                metadata.slug
-                comments
-            ]
+            )
         ]
 
 
-bio : ArticleMetadata -> Element msg
+bio : ArticleMetadata -> Html msg
 bio metadata =
-    Element.row [ Element.spacing 20 ]
-        [ Author.elmUIView [] metadata.author
-        , Element.column [ Element.spacing 10, Element.width Element.fill ]
-            [ row [ spacing 16 ]
-                [ Element.paragraph [ Font.bold, Font.size 24, Font.family [ Font.typeface "Merriweather" ] ]
-                    [ Element.text metadata.author.name
-                    ]
-                , row [ spacing 10 ]
-                    [ newTabLink
-                        [ width (px 16)
-                        , height (px 16)
-                        , Font.color (rgba255 29 161 242 0.5)
-                        , mouseOver [ Font.color (rgba255 29 161 242 1) ]
-                        ]
-                        { label = Design.Icon.twitter [ width fill, height fill ], url = "https://twitter.com/" ++ metadata.author.twitter }
-                    , newTabLink
-                        [ width (px 16)
-                        , height (px 16)
-                        , Font.color (rgba255 29 161 242 0.5)
-                        , mouseOver [ Font.color (rgba255 29 161 242 1) ]
-                        ]
-                        { label = Design.Icon.linkedIn [ width fill, height fill ], url = metadata.author.linkedinUrl }
-                    ]
-                ]
-            , Element.paragraph [ Font.size 16 ]
-                [ Element.text metadata.author.bio ]
+    div []
+        [ div []
+            [ Author.view []
+                metadata.author
+            , div
+                []
+                [ text metadata.author.name ]
             ]
+        , div []
+            [ text "twitterLink"
+            , text "linkedInLink"
+            ]
+        , div [] [ text metadata.author.bio ]
         ]
 
 
-publishedDateView : Head.Metadata.ArticleMetadata -> Element msg
+
+-- Element.row [ Element.spacing 20 ]
+--     [ Author.elmUIView [] metadata.author
+--     , Element.column [ Element.spacing 10, Element.width Element.fill ]
+--         [ row [ spacing 16 ]
+--             [ Element.paragraph [ Font.bold, Font.size 24, Font.family [ Font.typeface "Merriweather" ] ]
+--                 [ Element.text metadata.author.name
+--                 ]
+--             , row [ spacing 10 ]
+--                 [ newTabLink
+--                     [ width (px 16)
+--                     , height (px 16)
+--                     , Font.color (rgba255 29 161 242 0.5)
+--                     , mouseOver [ Font.color (rgba255 29 161 242 1) ]
+--                     ]
+--                     { label = Design.Icon.twitter [ width fill, height fill ], url = "https://twitter.com/" ++ metadata.author.twitter }
+--                 , newTabLink
+--                     [ width (px 16)
+--                     , height (px 16)
+--                     , Font.color (rgba255 29 161 242 0.5)
+--                     , mouseOver [ Font.color (rgba255 29 161 242 1) ]
+--                     ]
+--                     { label = Design.Icon.linkedIn [ width fill, height fill ], url = metadata.author.linkedinUrl }
+--                 ]
+--             ]
+--         , Element.paragraph [ Font.size 16 ]
+--             [ Element.text metadata.author.bio ]
+--         ]
+--     ]
+
+
+publishedDateView : Head.Metadata.ArticleMetadata -> String
 publishedDateView metadata =
-    Element.text
-        (formatDate
-            metadata.published
-        )
+    formatDate
+        metadata.published
 
 
-articleImageView : ImagePath Pages.PathKey -> Element msg
+articleImageView : ImagePath Pages.PathKey -> Html msg
 articleImageView articleImage =
-    Element.image [ Element.width Element.fill ]
-        { src = ImagePath.toString articleImage
+    Styled.image []
+        { path = ImagePath.toString articleImage
         , description = "Article cover photo"
         }
 
