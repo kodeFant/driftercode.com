@@ -20,10 +20,10 @@ import Styled
 
 
 type alias Rendered msg =
-    ( Int, List (Element msg) )
+    ( Int, List (Html msg) )
 
 
-wordCountMarkdownView : String -> Result String ( Int, List (Element msg) )
+wordCountMarkdownView : String -> Result String ( Int, List (Html msg) )
 wordCountMarkdownView markdown =
     let
         wordCount =
@@ -33,7 +33,7 @@ wordCountMarkdownView markdown =
         Ok okAst ->
             case Markdown.Renderer.render htmlRenderer okAst of
                 Ok rendered ->
-                    Ok ( wordCount, List.map Element.html rendered )
+                    Ok ( wordCount, rendered )
 
                 Err errors ->
                     Err errors

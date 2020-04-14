@@ -1,189 +1,99 @@
 module View.BlogIndex exposing (view)
 
+import Data.Author
 import Date
-import Design.Palette as Palette
-import Design.Responsive exposing (responsiveView)
 import Element
     exposing
         ( Element
         , centerX
-        , centerY
         , column
-        , el
         , fill
-        , fillPortion
-        , height
+        , html
         , image
-        , link
         , maximum
-        , mouseOver
-        , moveUp
         , padding
-        , paragraph
-        , rgba255
         , row
         , spacing
         , text
         , textColumn
         , width
         )
-import Element.Border as Border
-import Element.Font as Font
 import Head.Metadata exposing (Metadata(..))
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Layout.Header
 import Pages
 import Pages.ImagePath as ImagePath
 import Pages.PagePath as PagePath exposing (PagePath)
+import Styled
 import Util.Date exposing (formatDate)
 
 
 view :
     List ( PagePath Pages.PathKey, Metadata )
-    -> List (Element msg)
+    -> List (Html msg)
+    -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
     -> Element msg
-view posts rendered =
-    Element.column [ Element.spacing 20, padding 10, width (fill |> maximum 900) ]
-        (textColumn
-            [ centerX
-            , padding 10
-            , spacing 20
-            , width (fill |> maximum 700)
-            ]
-            rendered
-            :: postList posts
+view posts rendered page =
+    Element.column [ Element.width Element.fill ]
+        [ Layout.Header.view page.path
+        , html
+            (div [ class "blog-index" ]
+                [ div [ class "index-author" ]
+                    [ Data.Author.view
+                        [ Html.Attributes.style "width" "60px"
+                        , Html.Attributes.style "border-radius" "50%"
+                        ]
+                        Data.Author.defaultAuthor
+                    , div [] rendered
+                    ]
+                , blogIndexItems posts
+                ]
+            )
+        ]
+
+
+blogIndexItems : List ( PagePath Pages.PathKey, Metadata ) -> Html msg
+blogIndexItems posts =
+    div [ class "blog-index-items" ]
+        (posts
+            |> List.filterMap
+                (\( path, metadata ) ->
+                    case metadata of
+                        Head.Metadata.Page _ ->
+                            Nothing
+
+                        Head.Metadata.Author _ ->
+                            Nothing
+
+                        Head.Metadata.Article meta ->
+                            if meta.draft then
+                                Nothing
+
+                            else
+                                Just ( path, meta )
+
+                        Head.Metadata.BlogIndex ->
+                            Nothing
+                )
+            |> List.sortWith
+                (\( _, metaA ) ( _, metaB ) -> Date.compare metaA.published metaB.published)
+            |> List.reverse
+            |> List.map blogIndexItem
         )
 
 
-postList : List ( PagePath Pages.PathKey, Metadata ) -> List (Element msg)
-postList posts =
-    posts
-        |> List.filterMap
-            (\( path, metadata ) ->
-                case metadata of
-                    Head.Metadata.Page _ ->
-                        Nothing
-
-                    Head.Metadata.Author _ ->
-                        Nothing
-
-                    Head.Metadata.Article meta ->
-                        if meta.draft then
-                            Nothing
-
-                        else
-                            Just ( path, meta )
-
-                    Head.Metadata.BlogIndex ->
-                        Nothing
-            )
-        |> List.sortWith
-            (\( _, metaA ) ( _, metaB ) -> Date.compare metaA.published metaB.published)
-        |> List.reverse
-        |> List.map postSummary
-
-
-postSummary :
-    ( PagePath Pages.PathKey, Head.Metadata.ArticleMetadata )
-    -> Element msg
-postSummary ( postPath, post ) =
-    articleIndex post
-        |> linkToPost postPath
-
-
-articleIndex : Head.Metadata.ArticleMetadata -> Element msg
-articleIndex metadata =
-    el
-        [ centerX
-        , padding 40
-        , spacing 10
-        , Border.width 1
-        , Border.color (rgba255 0 0 0 0.1)
-        , mouseOver
-            [ Border.color Palette.color.primary
-            , moveUp 5
-            , Border.glow Palette.color.primary 2
+blogIndexItem : ( PagePath Pages.PathKey, Head.Metadata.ArticleMetadata ) -> Html msg
+blogIndexItem ( postPath, post ) =
+    a [ class "index-card", href (PagePath.toString postPath) ]
+        [ div [ class "index-card__part1" ]
+            [ Styled.image [ class "index-card__image" ] { description = "", path = ImagePath.toString post.image }
             ]
-        ]
-        (listView metadata)
-
-
-linkToPost : PagePath Pages.PathKey -> Element msg -> Element msg
-linkToPost postPath content =
-    link [ width fill ]
-        { url = PagePath.toString postPath, label = content }
-
-
-listView : Head.Metadata.ArticleMetadata -> Element msg
-listView post =
-    responsiveView []
-        { mobile = listViewMobile post
-        , medium =
-            listViewMobile post
-        , large = listViewLarge post
-        }
-
-
-listViewMobile : Head.Metadata.ArticleMetadata -> Element msg
-listViewMobile post =
-    textColumn
-        [ centerX
-        , width fill
-        , spacing 10
-        , Font.size 18
-        ]
-        [ image [ height fill, width fill ]
-            { src = ImagePath.toString post.image
-            , description = ""
-            }
-        , el [ Font.center ] (text (post.published |> formatDate))
-        , title post.title
-        , post.description
-            |> text
-            |> List.singleton
-            |> paragraph
-                [ Font.size 22
-                , Font.center
-                , Font.family [ Font.typeface "Open Sans" ]
+        , div [ class "index-card__part2" ]
+            [ div []
+                [ div [ class "index-card__date" ] [ Html.text (post.published |> formatDate) ]
+                , h2 [ class "index-card__title" ] [ Html.text post.title ]
+                , div [ class "index-card__description" ] [ Html.text post.description ]
                 ]
-        ]
-
-
-listViewLarge : Head.Metadata.ArticleMetadata -> Element msg
-listViewLarge post =
-    row [ spacing 16 ]
-        [ column [ width (fillPortion 2) ]
-            [ image [ centerY, width fill ]
-                { src = ImagePath.toString post.image
-                , description = "Article cover photo"
-                }
-            , post.description
-                |> text
-                |> List.singleton
-                |> paragraph
-                    [ Font.size 22
-                    , Font.center
-                    , Font.family [ Font.typeface "Open Sans" ]
-                    , padding 20
-                    ]
-            ]
-        , textColumn
-            [ centerX
-            , width fill
-            , spacing 30
-            , width (fillPortion 2)
-            ]
-            [ el [ Font.center ] (text (post.published |> formatDate))
-            , title post.title
             ]
         ]
-
-
-title : String -> Element msg
-title textString =
-    [ text textString ]
-        |> paragraph
-            [ Font.size 38
-            , Font.center
-            , Font.family [ Font.typeface "Merriweather" ]
-            , Font.semiBold
-            , padding 16
-            ]

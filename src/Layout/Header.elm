@@ -11,7 +11,7 @@ import Pages.PagePath exposing (PagePath)
 import Types exposing (Msg)
 
 
-view : PagePath Pages.PathKey -> Element Msg
+view : PagePath Pages.PathKey -> Element msg
 view _ =
     Element.column [ width fill ]
         [ Element.row

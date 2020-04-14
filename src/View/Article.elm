@@ -91,10 +91,10 @@ view model count metadata comments page viewForPage =
 bio : ArticleMetadata -> Element msg
 bio metadata =
     Element.row [ Element.spacing 20 ]
-        [ Author.view [] metadata.author
+        [ Author.elmUIView [] metadata.author
         , Element.column [ Element.spacing 10, Element.width Element.fill ]
             [ row [ spacing 16 ]
-                [ Element.paragraph [ Font.bold, Font.size 24 ]
+                [ Element.paragraph [ Font.bold, Font.size 24, Font.family [ Font.typeface "Merriweather" ] ]
                     [ Element.text metadata.author.name
                     ]
                 , row [ spacing 10 ]

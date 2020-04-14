@@ -93,7 +93,7 @@ pageView model comments siteMetadata page ( count, viewForPage ) =
         Head.Metadata.Page metadata ->
             { title = metadata.title
             , body =
-                View.Page.view metadata.title viewForPage page
+                View.Page.view metadata.title [ Element.html (Html.div [] viewForPage) ] page
             }
 
         Head.Metadata.Article metadata ->
@@ -103,20 +103,13 @@ pageView model comments siteMetadata page ( count, viewForPage ) =
                         |> List.filter (\comment -> comment.path == metadata.slug)
             in
             { title = metadata.title
-            , body = View.Article.view model count metadata filteredComments page viewForPage
+            , body = View.Article.view model count metadata filteredComments page [ Element.html (Html.div [] viewForPage) ]
             }
 
         Head.Metadata.BlogIndex ->
             { title = "Blog"
             , body =
-                Element.column [ Element.width Element.fill ]
-                    [ Layout.Header.view page.path
-                    , Element.column
-                        [ Element.centerX
-                        , Element.paddingXY 0 50
-                        ]
-                        [ View.BlogIndex.view siteMetadata viewForPage ]
-                    ]
+                View.BlogIndex.view siteMetadata viewForPage page
             }
 
         Head.Metadata.Author author ->
@@ -134,7 +127,7 @@ pageView model comments siteMetadata page ( count, viewForPage ) =
                         , Element.centerX
                         ]
                         [ Palette.blogHeading author.name
-                        , Author.view [] author
+                        , Author.elmUIView [] author
                         , Element.paragraph [ Element.centerX, Font.center ] [ Element.text "viewForPage" ]
                         ]
                     ]

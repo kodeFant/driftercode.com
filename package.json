@@ -12,6 +12,7 @@
 	"license": "BSD-3",
 	"dependencies": {
 		"fetch-inject": "^2.0.4",
+		"node-sass": "^4.13.1",
 		"prismjs": "^1.19.0"
 	},
 	"devDependencies": {
