@@ -1,8 +1,8 @@
-module Data.Author exposing (Author, all, decoder, defaultAuthor, elmUIView, view)
+module Data.Author exposing (Author, all, decoder, defaultAuthor, view)
 
-import Element exposing (Element)
-import Html exposing (Html)
-import Html.Attributes as Attr
+import Css exposing (..)
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (..)
 import Json.Decode as Decode exposing (Decoder)
 import List.Extra
 import Pages
@@ -48,16 +48,14 @@ decoder =
             )
 
 
-elmUIView : List (Element.Attribute msg) -> Author -> Element msg
-elmUIView attributes author =
-    Element.image
-        (Element.width (Element.px 70)
-            :: Element.htmlAttribute (Attr.class "avatar")
-            :: attributes
-        )
-        { src = ImagePath.toString author.avatar, description = author.name }
-
-
-view : List (Html.Attribute msg) -> Author -> Html msg
+view : List (Attribute msg) -> Author -> Html msg
 view attributes author =
-    Styled.image (attributes ++ []) { description = author.name, path = ImagePath.toString author.avatar }
+    Styled.image
+        (attributes
+            ++ [ css
+                    [ borderRadius (pct 50)
+                    , maxWidth (px 70)
+                    ]
+               ]
+        )
+        { description = author.name, path = ImagePath.toString author.avatar }

@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap");
+
+:root {
+  --black: rgb(30, 30, 30);
+  --darkest-gray: rgb(51, 51, 51);
+  --white: rgb(255, 255, 255);
+  --light-gray: rgb(200, 200, 200);
+  --lighter-gray: rgb(237, 237, 237);
+}
+
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  font-family: "Open Sans";
+}
+
+* {
+  transition: transform 200ms ease-in-out, border-color 600ms ease-in-out;
+  white-space: initial;
+}
+
+/* COLORATION ON SCROLLBAR */
+
+body::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+
+body::-webkit-scrollbar {
+  width: 16px;
+  background-color: #f5f5f5;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #f90;
+  background-image: -webkit-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+}

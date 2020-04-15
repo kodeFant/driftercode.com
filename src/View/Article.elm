@@ -1,35 +1,17 @@
 module View.Article exposing (view)
 
 import Comment exposing (Comment)
+import Css exposing (..)
 import Data.Author as Author
 import Design.Icon
-import Design.Palette as Palette
-import Element
-    exposing
-        ( Element
-        , centerX
-        , column
-        , el
-        , fill
-        , height
-        , mouseOver
-        , newTabLink
-        , padding
-        , paragraph
-        , px
-        , rgba255
-        , row
-        , spacing
-        , text
-        , width
-        )
-import Element.Font as Font
-import Element.Region
 import Head.Metadata exposing (ArticleMetadata, Metadata)
-import Layout.Header
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (..)
+import Layout.Scaffold
 import Pages
 import Pages.ImagePath as ImagePath exposing (ImagePath)
 import Pages.PagePath exposing (PagePath)
+import Styled
 import Types exposing (Model, Msg(..))
 import Util.Date exposing (formatDate)
 
@@ -40,98 +22,57 @@ view :
     -> ArticleMetadata
     -> List Comment
     -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
-    -> List (Element Msg)
-    -> Element Msg
+    -> List (Html Msg)
+    -> Html Msg
 view model count metadata comments page viewForPage =
-    Element.column
-        [ Element.width Element.fill
-        ]
-        [ Layout.Header.view page.path
-        , Element.column
-            [ Element.padding 30
-            , Element.spacing 40
-            , Element.Region.mainContent
-            , Element.width (Element.fill |> Element.maximum 750)
-            , Element.centerX
-            ]
-            [ Element.textColumn [ Element.spacing 24, Element.width Element.fill ]
-                ([ bio metadata
-                 , Palette.blogHeading metadata.title
-                 , paragraph [ Font.family [ Font.typeface "Merriweather", Font.sansSerif ], Font.size 24, Font.center ] [ text metadata.description ]
-                 , column
-                    [ Font.size 16
-                    , Font.color (Element.rgba255 0 0 0 0.6)
-                    , Font.center
-                    , spacing 10
-                    ]
-                    [ el [ centerX ] (publishedDateView <| metadata)
-                    , el [ centerX ] (text (displayReadingLength count))
-                    ]
-                 , articleImageView metadata.image
-                 ]
-                    ++ viewForPage
-                )
-            , Comment.view
-                { commentInfoToggle = CommentInfo
-                , updateCommentForm = UpdateCommentForm
-                , updateDeleteCommentForm = UpdateDeleteCommentForm
-                , submitComment = SubmitComment
-                , requestDeletionEmail = RequestDeletionEmail
-                }
-                { commentForm = model.commentForm
-                , commentInfo = model.commentInfo
-                , deleteCommentForm = model.deleteCommentForm
-                }
-                metadata.slug
-                comments
-            ]
-        ]
-
-
-bio : ArticleMetadata -> Element msg
-bio metadata =
-    Element.row [ Element.spacing 20 ]
-        [ Author.elmUIView [] metadata.author
-        , Element.column [ Element.spacing 10, Element.width Element.fill ]
-            [ row [ spacing 16 ]
-                [ Element.paragraph [ Font.bold, Font.size 24, Font.family [ Font.typeface "Merriweather" ] ]
-                    [ Element.text metadata.author.name
-                    ]
-                , row [ spacing 10 ]
-                    [ newTabLink
-                        [ width (px 16)
-                        , height (px 16)
-                        , Font.color (rgba255 29 161 242 0.5)
-                        , mouseOver [ Font.color (rgba255 29 161 242 1) ]
+    Layout.Scaffold.view page.path
+        (Styled.mainContainer
+            [ articleContainer
+                [ bio metadata
+                , Styled.heading1 [ css [ textAlign center ] ] [ text metadata.title ]
+                , div
+                    [ css
+                        [ fontSize (rem 2)
+                        , textAlign center
+                        , fontSize (px 25)
                         ]
-                        { label = Design.Icon.twitter [ width fill, height fill ], url = "https://twitter.com/" ++ metadata.author.twitter }
-                    , newTabLink
-                        [ width (px 16)
-                        , height (px 16)
-                        , Font.color (rgba255 29 161 242 0.5)
-                        , mouseOver [ Font.color (rgba255 29 161 242 1) ]
-                        ]
-                        { label = Design.Icon.linkedIn [ width fill, height fill ], url = metadata.author.linkedinUrl }
                     ]
+                    [ text metadata.description ]
+                , div
+                    [ css [ textAlign center ] ]
+                    [ div [] [ text (publishedDateView <| metadata) ]
+                    , div [] [ text (displayReadingLength count) ]
+                    ]
+                , articleImageView metadata.image
+                , div [] viewForPage
+                , Comment.view
+                    { commentInfoToggle = CommentInfo
+                    , updateCommentForm = UpdateCommentForm
+                    , updateDeleteCommentForm = UpdateDeleteCommentForm
+                    , submitComment = SubmitComment
+                    , requestDeletionEmail = RequestDeletionEmail
+                    }
+                    { commentForm = model.commentForm
+                    , commentInfo = model.commentInfo
+                    , deleteCommentForm = model.deleteCommentForm
+                    }
+                    metadata.slug
+                    comments
                 ]
-            , Element.paragraph [ Font.size 16 ]
-                [ Element.text metadata.author.bio ]
             ]
-        ]
-
-
-publishedDateView : Head.Metadata.ArticleMetadata -> Element msg
-publishedDateView metadata =
-    Element.text
-        (formatDate
-            metadata.published
         )
 
 
-articleImageView : ImagePath Pages.PathKey -> Element msg
+publishedDateView : Head.Metadata.ArticleMetadata -> String
+publishedDateView metadata =
+    formatDate
+        metadata.published
+
+
+articleImageView : ImagePath Pages.PathKey -> Html msg
 articleImageView articleImage =
-    Element.image [ Element.width Element.fill ]
-        { src = ImagePath.toString articleImage
+    Styled.image []
+        { path = ImagePath.toString articleImage
         , description = "Article cover photo"
         }
 
@@ -149,4 +90,71 @@ displayReadingLength wordCount =
         "Less than one minute"
 
     else
-        String.fromInt (round readingLength) ++ " minute read"
+        String.fromInt (Basics.round readingLength) ++ " minute read"
+
+
+bio : ArticleMetadata -> Html msg
+bio metadata =
+    div
+        [ css
+            [ Css.property "display" "grid"
+            , Css.property "grid-template-columns" "auto 1fr"
+            , Css.property "grid-gap" "1rem"
+            , padding2 (rem 2) (rem 0)
+            ]
+        ]
+        [ Author.view []
+            metadata.author
+        , div
+            [ css
+                [ Css.property "display" "grid"
+                , Css.property "grid-template-columns" "1fr"
+                , Css.property "grid-gap" "0.1rem"
+                , padding2 (px 0) (rem 1)
+                ]
+            ]
+            [ div [ css [ displayFlex, alignItems center ] ]
+                [ span
+                    [ css
+                        [ fontWeight bold
+                        , fontSize (px 24)
+                        , marginRight (rem 1)
+                        ]
+                    ]
+                    [ text metadata.author.name ]
+                , div [ css [ displayFlex, alignItems center ] ]
+                    [ a
+                        [ href ("https://twitter.com/" ++ metadata.author.twitter)
+                        , Html.Styled.Attributes.target "_blank"
+                        , rel "noreferrer noopener"
+                        , css
+                            [ Css.width (px 16)
+                            , marginRight (rem 0.5)
+                            , color (rgba 29 161 242 0.5)
+                            , hover [ color (rgba 29 161 242 0.9) ]
+                            ]
+                        ]
+                        [ Design.Icon.twitter ]
+                    , a
+                        [ href metadata.author.linkedinUrl
+                        , Html.Styled.Attributes.target "_blank"
+                        , rel "noreferrer noopener"
+                        , css
+                            [ Css.width (px 16)
+                            , color (rgba 29 161 242 0.5)
+                            , hover [ color (rgba 29 161 242 0.9) ]
+                            ]
+                        ]
+                        [ Design.Icon.linkedIn ]
+                    ]
+                ]
+            , div [] [ text metadata.author.bio ]
+            ]
+        ]
+
+
+articleContainer : List (Html msg) -> Html msg
+articleContainer content =
+    article
+        [ css [ maxWidth (px 700), Css.width (pct 100), padding (rem 1) ] ]
+        content

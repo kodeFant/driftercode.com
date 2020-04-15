@@ -4,10 +4,10 @@
   "author": Lars Lillo Ulvestad,
   "title": "Learning functional programming requires a big leap of faith",
   "description": "Not sure I would bother to learn it, had I not been thrown into it.",
-  "image": "/images/article-covers/leap-of-faith.jpg",
+  "image": "images/article-covers/leap-of-faith.jpg",
   "published": "2020-02-27",
   "draft": false,
-  "slug": "learning-functional-programming-requires-a-big-leap-of-faith"
+  "slug": "learning-functional-programming-requires-a-big-leap-of-faith",
 }
 ---
 

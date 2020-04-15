@@ -4,10 +4,10 @@
   "author": Lars Lillo Ulvestad,
   "title": "Slaying a UI antipattern with TypeScript and React",
   "description": "Fetch data like a knight in functional armor using a powerful Elm pattern.",
-  "image": "/images/article-covers/anti-pattern.jpg",
+  "image": "images/article-covers/anti-pattern.jpg",
   "published": "2020-03-26",
   "draft": false,
-  "slug": "slaying-a-ui-antipattern-with-typescript"
+  "slug": "slaying-a-ui-antipattern-with-typescript",
 }
 ---
 
@@ -57,7 +57,7 @@ Very shortly outlined from the article, this is the antipattern we want to handl
 ```javascript
 var data = {
   loading: true,
-  blogPosts: []
+  blogPosts: [],
 };
 ```
 
@@ -69,8 +69,7 @@ It will be just another switch to remember to turn on and off at the right time.
 
 ## Begin with the data structure
 
-Let's do a super simple example. 
-
+Let's do a super simple example.
 
 Make a new React app with TypeScript and clear out the the entry file, which might be named **index.tsx**.
 
@@ -156,12 +155,12 @@ To avoid introducing too many conepts in this article, I'll just use the useStat
 ```tsx
 function Main(): JSX.Element {
   const [posts, setPosts] = useState<RemoteData<Error, Post[]>>({
-    type: "NOT_ASKED"
+    type: "NOT_ASKED",
   });
 
   const getPosts = () => {
     setPosts({ type: "LOADING" });
-    fetchPosts().then(remoteData => setPosts(remoteData));
+    fetchPosts().then((remoteData) => setPosts(remoteData));
   };
 
   return <div>Hello World</div>;
@@ -181,12 +180,12 @@ The main function will look like this:
 ```tsx
 function Main(): JSX.Element {
   const [posts, setPosts] = useState<RemoteData<Error, Post[]>>({
-    type: "NOT_ASKED"
+    type: "NOT_ASKED",
   });
 
   const getPosts = () => {
     setPosts({ type: "LOADING" });
-    fetchPosts().then(remoteData => setPosts(remoteData));
+    fetchPosts().then((remoteData) => setPosts(remoteData));
   };
 
   switch (posts.type) {
@@ -204,13 +203,13 @@ function Main(): JSX.Element {
     case "SUCCESS":
       return (
         <div>
-          {posts.data.map(post => (
+          {posts.data.map((post) => (
             <article
               key={post.id}
               style={{
                 border: "1px solid darkgray",
                 margin: "1rem",
-                padding: "1rem"
+                padding: "1rem",
               }}
             >
               <h2>{post.title}</h2>
@@ -227,12 +226,9 @@ In cases where data is fetched automatically on page load, you can return the sa
 
 - **See the [CodeSandbox](https://codesandbox.io/s/remotedata-with-typescript-and-react-77dci) for a complete example.**
 
-
-
-
 ## Next up
 
-**In the [part 2](/blog/slaying-a-ui-antipattern-with-typescript-part-2), we are going to lay out the rendering of the RemoteData view a bit more elegantly than the switch statement.**
+**In the [part 2](blog/slaying-a-ui-antipattern-with-typescript-part-2), we are going to lay out the rendering of the RemoteData view a bit more elegantly than the switch statement.**
 
 Here is a teaser:
 

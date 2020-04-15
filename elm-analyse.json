@@ -1,6 +1,7 @@
 {
-	"excludedPaths": [ "gen/Pages.elm" ],
-	"checks": {
-		"SingleFieldRecord": false
-	}
+  "excludedPaths": ["gen/Pages.elm"],
+  "checks": {
+    "SingleFieldRecord": false,
+    "ImportAll": false
+  }
 }

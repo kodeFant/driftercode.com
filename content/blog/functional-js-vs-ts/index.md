@@ -4,10 +4,10 @@
   "author": Lars Lillo Ulvestad,
   "title": "Functional JavaScript vs TypeScript",
   "description": "Is there a cost to TypeScript in Functional Programming",
-  "image": "/images/article-covers/illustration-coding.jpg",
+  "image": "images/article-covers/illustration-coding.jpg",
   "published": "2020-03-17",
   "draft": true,
-  "slug": "functional-js-vs-ts"
+  "slug": "functional-js-vs-ts",
 }
 ---
 
