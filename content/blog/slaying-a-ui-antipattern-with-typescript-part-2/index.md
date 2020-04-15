@@ -129,7 +129,7 @@ The function is heavily based on [gcantis Flow port of RemoteData](https://mediu
 
 I made the fold function a bit more general. I also ditched it being curried as it disabled type inference on the data and error types.
 
-What you see is a **higher order function**. Don't be afraid. It just means a function that takes in or returns functions. You probably deal with it all the time.
+What you see above is a **higher order function**. Don't be afraid. It just means a function that takes in or returns functions. You probably deal with it all the time.
 
 ## Using the fold function
 
