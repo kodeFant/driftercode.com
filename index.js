@@ -1,5 +1,5 @@
 import "./lib/code-editor.js";
-import "./style.scss";
+import "./style.css";
 
 const { Elm } = require("./src/Main.elm");
 const pagesInit = require("elm-pages");

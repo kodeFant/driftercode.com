@@ -176,6 +176,7 @@ indexCardImage imagePath =
         [ css
             [ Css.height (pct 100)
             , Css.property "object-fit" "cover"
+            , firstOfType [ padding (rem 1.5) ]
             ]
         ]
         { description = "", path = imagePath }

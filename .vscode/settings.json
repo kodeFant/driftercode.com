@@ -1,6 +1,7 @@
 {
     "cSpell.enableFiletypes": [
         "!css",
+        "!javascript",
         "!json",
         "!plaintext",
         "!typescript"
