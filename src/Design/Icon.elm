@@ -1,7 +1,6 @@
 module Design.Icon exposing (linkedIn, twitter)
 
 import Css exposing (..)
-import Element exposing (Attribute, Element, el, html)
 import FontAwesome.Brands as FaBrands
 import FontAwesome.Icon as Icon
 import Html.Attributes exposing (style)
