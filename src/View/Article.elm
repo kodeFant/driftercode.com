@@ -4,7 +4,6 @@ import Comment exposing (Comment)
 import Css exposing (..)
 import Data.Author as Author
 import Design.Icon
-import Element
 import Head.Metadata exposing (ArticleMetadata, Metadata)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
@@ -46,25 +45,19 @@ view model count metadata comments page viewForPage =
                     ]
                 , articleImageView metadata.image
                 , div [] viewForPage
-
-                -- , Html.Styled.fromUnstyled
-                --     (Element.layout
-                --         []
-                --         (Comment.view
-                --             { commentInfoToggle = CommentInfo
-                --             , updateCommentForm = UpdateCommentForm
-                --             , updateDeleteCommentForm = UpdateDeleteCommentForm
-                --             , submitComment = SubmitComment
-                --             , requestDeletionEmail = RequestDeletionEmail
-                --             }
-                --             { commentForm = model.commentForm
-                --             , commentInfo = model.commentInfo
-                --             , deleteCommentForm = model.deleteCommentForm
-                --             }
-                --             metadata.slug
-                --             comments
-                --         )
-                --     )
+                , Comment.view
+                    { commentInfoToggle = CommentInfo
+                    , updateCommentForm = UpdateCommentForm
+                    , updateDeleteCommentForm = UpdateDeleteCommentForm
+                    , submitComment = SubmitComment
+                    , requestDeletionEmail = RequestDeletionEmail
+                    }
+                    { commentForm = model.commentForm
+                    , commentInfo = model.commentInfo
+                    , deleteCommentForm = model.deleteCommentForm
+                    }
+                    metadata.slug
+                    comments
                 ]
             ]
         )

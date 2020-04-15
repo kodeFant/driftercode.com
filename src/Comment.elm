@@ -15,32 +15,8 @@ module Comment exposing
     )
 
 import Date exposing (fromPosix)
-import Design.Palette exposing (elmUIcolor)
-import Design.Responsive exposing (responsiveView)
-import Element
-    exposing
-        ( Element
-        , alignLeft
-        , alignRight
-        , centerX
-        , column
-        , el
-        , fill
-        , mouseOver
-        , none
-        , padding
-        , paragraph
-        , rgb255
-        , row
-        , spacing
-        , text
-        , textColumn
-        , width
-        )
-import Element.Background as Background
-import Element.Border as Border
-import Element.Font as Font
-import Element.Input as Input
+import Html.Styled exposing (..)
+import Html.Styled.Events exposing (onInput)
 import Http exposing (Error(..))
 import Json.Decode
 import Json.Decode.Exploration as Decode
@@ -140,18 +116,16 @@ type alias CommentState =
     }
 
 
-view : Config msg -> CommentState -> String -> List Comment -> Element msg
+view : Config msg -> CommentState -> String -> List Comment -> Html msg
 view config state slug comments =
-    column [ width fill, spacing 28 ]
+    div []
         [ commentFormView config slug state
         , if List.length comments == 0 then
-            none
+            div [] []
 
           else
-            el
-                [ Font.bold, Font.size 28, Font.center ]
-                (text "Comments")
-        , column [ width fill, spacing 20 ]
+            Html.Styled.text "Comments"
+        , div []
             (comments
                 |> List.map
                     commentView
@@ -159,7 +133,7 @@ view config state slug comments =
         ]
 
 
-commentFormView : Config msg -> String -> CommentState -> Element msg
+commentFormView : Config msg -> String -> CommentState -> Html msg
 commentFormView config slug state =
     let
         { commentForm } =
@@ -170,68 +144,36 @@ commentFormView config slug state =
     in
     case state.commentForm.sendRequest of
         NotAsked ->
-            column [ width fill, spacing 20, Font.size 16 ]
-                [ el
-                    [ Font.bold, Font.size 28, Font.center ]
-                    (text "Leave a comment")
-                , Input.text
-                    [ width fill ]
-                    { onChange = \value -> updateCommentForm { commentForm | name = value }
-                    , text = commentForm.name
-                    , placeholder = Nothing
-                    , label = Input.labelAbove [] (text "Name")
-                    }
+            div []
+                [ div
+                    []
+                    [ text "Leave a comment" ]
+                , input [ onInput (\value -> updateCommentForm { commentForm | name = value }) ] []
                 , formErrorView commentForm.errors Name
-                , column [ spacing 10, width fill ]
-                    [ Input.email
-                        [ width fill ]
-                        { onChange = \value -> updateCommentForm { commentForm | email = value }
-                        , text = commentForm.email
-                        , placeholder = Nothing
-                        , label = Input.labelAbove [] (text "Email")
-                        }
-                    ]
+                , input [ onInput (\value -> updateCommentForm { commentForm | email = value }) ] []
                 , formErrorView commentForm.errors Email
-                , Input.multiline
-                    [ width fill ]
-                    { onChange = \value -> updateCommentForm { commentForm | message = value }
-                    , text = commentForm.message
-                    , placeholder = Nothing
-                    , label = Input.labelAbove [] (text "Your message")
-                    , spellcheck = False
-                    }
+                , textarea [ onInput (\value -> updateCommentForm { commentForm | message = value }) ] []
                 , formErrorView commentForm.errors Message
-                , Input.button
-                    [ width fill
-                    , padding 10
-                    , Font.center
-                    , Font.color elmUIcolor.white
-                    , Font.bold
-                    , Background.color elmUIcolor.primary
-                    , mouseOver [ Background.color elmUIcolor.secondary ]
-                    ]
-                    { onPress = Just (submitComment slug)
-                    , label = text "Submit"
-                    }
-                , Input.button [ centerX, Font.size 14 ] { label = text "I want to delete a comment", onPress = Just (commentInfoToggle (not state.commentInfo)) }
+                , button [ Html.Styled.Events.onClick (submitComment slug) ] [ text "Submit comment" ]
+                , button [ Html.Styled.Events.onClick (commentInfoToggle (not state.commentInfo)) ] [ text "I want to delete a comment" ]
                 , if state.commentInfo == True then
                     deleteForm config state
 
                   else
-                    none
+                    div [] []
                 ]
 
         Loading ->
-            paragraph [] [ text "Sending..." ]
+            div [] [ text "Sending..." ]
 
         Failure err ->
-            paragraph [] [ text (errorToString err) ]
+            div [] [ text (errorToString err) ]
 
         Success _ ->
-            paragraph [] [ text "Comment successfully sent. Please verify your comment at the given email, ", el [ Font.bold ] (text commentForm.email), text ", within 24 hours." ]
+            div [] [ text "Comment successfully sent. Please verify your comment at the given email, ", strong [] [ text commentForm.email, text ", within 24 hours." ] ]
 
 
-deleteForm : Config msg -> CommentState -> Element msg
+deleteForm : Config msg -> CommentState -> Html msg
 deleteForm { updateDeleteCommentForm, commentInfoToggle, requestDeletionEmail } state =
     case state.deleteCommentForm.sendRequest of
         NotAsked ->
@@ -239,115 +181,51 @@ deleteForm { updateDeleteCommentForm, commentInfoToggle, requestDeletionEmail } 
                 deleteCommentForm =
                     state.deleteCommentForm
             in
-            column [ width fill, spacing 16, Border.width 2, padding 16 ]
-                [ el [ centerX, Font.bold ] (text "Delete Comment")
-                , paragraph [ Font.center, Font.italic ] [ text "Want to delete a comment on this page? Fill in you email. You can delete the comment from your email inbox." ]
-                , Input.email
-                    [ width fill ]
-                    { onChange = \value -> updateDeleteCommentForm { deleteCommentForm | email = value }
-                    , text = state.deleteCommentForm.email
-                    , placeholder = Nothing
-                    , label = Input.labelAbove [] (text "Email")
-                    }
-                , Input.button
-                    [ width fill
-                    , padding 10
-                    , Font.center
-                    , Font.color elmUIcolor.white
-                    , Font.bold
-                    , Background.color elmUIcolor.red
-                    , mouseOver [ Background.color elmUIcolor.darkRed ]
-                    ]
-                    { onPress = Just (requestDeletionEmail state.deleteCommentForm.email)
-                    , label = text "Request Deletion"
-                    }
-                , Input.button
-                    [ padding 10
-                    , Font.center
-                    , Font.color elmUIcolor.black
-                    , Font.bold
-                    , Background.color elmUIcolor.lightGray
-                    , mouseOver [ Background.color elmUIcolor.lighterGray ]
-                    , centerX
-                    ]
-                    { onPress = Just (commentInfoToggle False)
-                    , label = text "Cancel"
-                    }
+            div []
+                [ div [] [ text "Delete Comment" ]
+                , div [] [ text "Want to delete a comment on this page? Fill in you email. You can delete the comment from your email inbox." ]
+                , input [ onInput (\value -> updateDeleteCommentForm { deleteCommentForm | email = value }) ] []
+                , button [ Html.Styled.Events.onClick (requestDeletionEmail state.deleteCommentForm.email) ] [ text "Request Deletion" ]
+                , button [ Html.Styled.Events.onClick (commentInfoToggle False) ] [ text "Request Deletion" ]
                 ]
 
         Loading ->
-            el [] (text "Sending Request...")
+            div [] [ text "Sending Request..." ]
 
         Failure err ->
-            el [] (text (errorToString err))
+            div [] [ text (errorToString err) ]
 
         Success string ->
-            paragraph [] [ text "Success! Please check your inbox at ", el [ Font.bold ] (text string), text " for info about deleting comments." ]
+            div [] [ text "Success! Please check your inbox at ", strong [] [ text string ], text " for info about deleting comments." ]
 
 
-formErrorView : List CommentError -> CommentField -> Element msg
+formErrorView : List CommentError -> CommentField -> Html msg
 formErrorView commentError commentField =
-    column [ Font.color elmUIcolor.red, spacing 10 ]
+    div []
         (commentError
             |> List.filter (\( field, _ ) -> field == commentField)
             |> List.map (\( _, string ) -> text string)
         )
 
 
-commentHeader : Comment -> List (Element msg) -> Element msg
-commentHeader comment _ =
-    responsiveView [ width fill ]
-        { phone =
-            column [ width fill, spacing 10 ]
-                [ el [ Font.bold, alignLeft ] (text comment.name)
-                , el [ Font.size 14, alignLeft ]
-                    (text
-                        (formatDate
-                            (fromPosix utc (millisToPosix comment.createdAt))
-                        )
-                    )
-                ]
-        , medium =
-            row [ width fill ]
-                [ el [ Font.bold, alignLeft ] (text comment.name)
-                , el [ Font.size 14, alignRight ]
-                    (text
-                        (formatDate
-                            (fromPosix utc (millisToPosix comment.createdAt))
-                        )
-                    )
-                ]
-        , large =
-            row [ width fill ]
-                [ el [ Font.bold, alignLeft ] (text comment.name)
-                , el [ Font.size 14, alignRight ]
-                    (text
-                        (formatDate
-                            (fromPosix utc (millisToPosix comment.createdAt))
-                        )
-                    )
-                ]
-        }
-
-
-commentView : Comment -> Element msg
-commentView comment =
-    textColumn
-        [ spacing 20
-        , padding 20
-        , width fill
-        , Background.color (rgb255 250 250 250)
-        ]
-        [ commentHeader comment
-            [ el [ Font.bold, alignLeft ] (text comment.name)
-            , el [ Font.size 14, alignRight ]
-                (text
-                    (formatDate
-                        (fromPosix utc (millisToPosix comment.createdAt))
-                    )
+commentHeader : Comment -> Html msg
+commentHeader comment =
+    div []
+        [ div [] [ Html.Styled.text comment.name ]
+        , div []
+            [ Html.Styled.text
+                (formatDate
+                    (fromPosix utc (millisToPosix comment.createdAt))
                 )
             ]
-        , paragraph [] [ text comment.comment ]
+        ]
+
+
+commentView : Comment -> Html msg
+commentView comment =
+    div []
+        [ commentHeader comment
+        , div [] [ Html.Styled.text comment.comment ]
         ]
 
 

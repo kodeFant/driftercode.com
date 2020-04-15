@@ -8,7 +8,6 @@ import Html.Styled.Attributes exposing (..)
 import Pages
 import Pages.PagePath exposing (PagePath)
 import Styled
-import Types exposing (Msg)
 
 
 view : PagePath Pages.PathKey -> Html msg
