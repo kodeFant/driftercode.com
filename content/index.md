@@ -7,7 +7,7 @@ type: blog-index
 
 I'm a budding functional programmer who used to be a journalist.
 
-Just sharing my findings on functional functional path through the **learn by blogging** principle.
+Just sharing my findings through the **learn by blogging** principle.
 
 Mathy algebraic slang to be kept at a minimum.
 
