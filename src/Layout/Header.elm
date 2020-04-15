@@ -1,5 +1,8 @@
 module Layout.Header exposing (view)
 
+import Css exposing (..)
+import Css.Animations exposing (..)
+import Design.Palette exposing (colors)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Pages
@@ -8,45 +11,51 @@ import Styled
 import Types exposing (Msg)
 
 
-
--- view : PagePath Pages.PathKey -> Element msg
--- view _ =
---     Element.column [ width fill ]
---         [ Element.row
---             [ paddingXY 25 4
---             , width fill
---             , Border.color (rgba255 40 80 40 0.4)
---             , Background.color Palette.color.darkestGray
---             , Element.paddingXY 48 16
---             ]
---             [ Element.link
---                 [ Font.color Palette.color.primary
---                 , Element.mouseOver [ Font.color Palette.color.white ]
---                 , centerX
---                 ]
---                 { url = "/"
---                 , label =
---                     Element.row [ Font.size 30, Element.spacing 16 ]
---                         [ logo
---                         ]
---                 }
---             ]
---         ]
-
-
 view : PagePath Pages.PathKey -> Html msg
 view _ =
     div
-        [ style "display" "flex"
-        , style "justify-content" "center"
-        , style "width" "100%"
-        , style "background-color" "var(--darkest-gray)"
-        , style "padding" "0.5rem 1rem"
+        [ css
+            [ displayFlex
+            , justifyContent center
+            , Css.width (pct 100)
+            , Css.backgroundColor colors.darkestGray
+            , padding2 (rem 0.5) (rem 1)
+            ]
         ]
-        [ a [ href "/", style "width" "170px" ] [ logo ]
+        [ a
+            [ href "/"
+            , css [ Css.width (px 170) ]
+            ]
+            [ logo ]
         ]
 
 
 logo : Html msg
 logo =
-    Styled.image [ class "logo" ] { path = "/images/logo.png", description = "" }
+    Styled.image
+        [ css
+            [ hover
+                [ animationName logoKeyFrames
+                , animationDuration (ms 200)
+                , Css.property "animation-timing-function" "linear"
+                , Css.property "animation-fill-mode" "forwards"
+                ]
+            ]
+        ]
+        { path = "/images/logo.png", description = "" }
+
+
+logoKeyFrames : Keyframes {}
+logoKeyFrames =
+    keyframes
+        [ ( 0
+          , [ Css.Animations.property "filter" "brightness(1)"
+            , Css.Animations.property "filter" "saturate(1)"
+            ]
+          )
+        , ( 100
+          , [ Css.Animations.property "filter" "brightness(5)"
+            , Css.Animations.property "filter" "saturate(0)"
+            ]
+          )
+        ]

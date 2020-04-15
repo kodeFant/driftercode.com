@@ -4,10 +4,10 @@
   "author": Lars Lillo Ulvestad,
   "title": "Slaying a UI antipattern with TypeScript and React (part 3)",
   "description": "How to type check data from an external source.",
-  "image": "/images/article-covers/damsel-in-distress.jpg",
+  "image": "images/article-covers/damsel-in-distress.jpg",
   "published": "2020-04-24",
   "draft": true,
-  "slug": "slaying-a-ui-antipattern-with-typescript-part-3"
+  "slug": "slaying-a-ui-antipattern-with-typescript-part-3",
 }
 ---
 
@@ -21,7 +21,7 @@ One thing we need to cover for the app to have the benefits of an Elm app is dec
 
 Elm actually forces you to do that, and it contributes to eliminating pretty much all runtime exceptions. When something doesn't check out, it fails fast and loud.
 
-TypeScript lacks this feature as it only type checks what happens in the source code. 
+TypeScript lacks this feature as it only type checks what happens in the source code.
 
 Luckily, a library like **Purify** or **fp-ts** can give you these guarantees with little extra effort.
 
@@ -31,9 +31,9 @@ In this series we will use [Purify](https://gigobyte.github.io/purify/). I prefe
 
 [fp-ts](https://gcanti.github.io/fp-ts/) almost gives you Haskell or Scala in TypeScript. It's powerful, but harder to learn and the documentation is not beginner friendly.
 
-I get all I need from Purify and a utility library like [Remeda](https://github.com/remeda/remeda) (a Ramda-like for TypeScript). They both have pretty nice and simple documentation so another developer can get up to speed on your code pretty fast. 
+I get all I need from Purify and a utility library like [Remeda](https://github.com/remeda/remeda) (a Ramda-like for TypeScript). They both have pretty nice and simple documentation so another developer can get up to speed on your code pretty fast.
 
-If you need something even more functional and safe, just take the leap of faith and move on to [Elm](https://elm-lang.org/) already. 
+If you need something even more functional and safe, just take the leap of faith and move on to [Elm](https://elm-lang.org/) already.
 
 - Use the [CodeSandbox](https://codesandbox.io/s/remotedata-with-typescript-and-react-part-2-hlu4v?file=/src/index.tsx) from the previous post as a starter code
 
@@ -51,8 +51,7 @@ interface Post {
 
 Delete it. **Wait, what?**
 
-As mentioned, it does not help us in type checking external data. And a puny TypeScript type guard is too weak to withstand the chaos outside your source code. 
-
+As mentioned, it does not help us in type checking external data. And a puny TypeScript type guard is too weak to withstand the chaos outside your source code.
 
 So let's install Purify
 
@@ -63,13 +62,7 @@ yarn install purify-ts
 and import the needed dependencies from **Codec** in **index.ts**
 
 ```jsx
-import {
-  Codec,
-  string,
-  array,
-  GetInterface,
-  number
-} from "purify-ts/Codec"
+import { Codec, string, array, GetInterface, number } from "purify-ts/Codec";
 ```
 
 Did you delete the **Post interface** yet? If not, do it now!
@@ -80,14 +73,14 @@ Then define this constant:
 const Post = Codec.interface({
   id: string,
   title: string,
-  body: string
-})
+  body: string,
+});
 ```
 
 This gives you the decoder. To get the TypeScript interface back, just add this line below it:
 
 ```tsx
-type Post = GetInterface<typeof Post>
+type Post = GetInterface<typeof Post>;
 ```
 
 That type does the exact same job as the TypeScript interface we deleted earlier and the errors should be gone.
@@ -97,8 +90,8 @@ Yes, the const and the type are both named `Post`. No worries, there is no namin
 Also add these lines right below.
 
 ```jsx
-const PostList = array(Post)
-type PostList = GetInterface<typeof PostList>
+const PostList = array(Post);
+type PostList = GetInterface<typeof PostList>;
 ```
 
 Replace all occurrences of `Post[]` with `PostList` in the code. That lets us also decode an array of posts.
@@ -113,14 +106,22 @@ async function fetchPosts(): Promise<RemoteData<Error, PostList>> {
   try {
     if (!response.ok) throw await response.json();
     const data = await response.json();
-    const decodedData = PostList.decode(data)
-      .either(
-        (err) => { return ({ type: "FAILURE", error: Error(err) } as RemoteData<Error, PostList>) },
-        (successData) => { return ({ type: "SUCCESS", data: successData } as RemoteData<Error, PostList>) }
-      )
+    const decodedData = PostList.decode(data).either(
+      (err) => {
+        return { type: "FAILURE", error: Error(err) } as RemoteData<
+          Error,
+          PostList
+        >;
+      },
+      (successData) => {
+        return { type: "SUCCESS", data: successData } as RemoteData<
+          Error,
+          PostList
+        >;
+      }
+    );
 
-    return decodedData
-
+    return decodedData;
   } catch (e) {
     return { type: "FAILURE", error: e };
   }
@@ -146,7 +147,7 @@ By running your code or this [CodeSandbox](https://codesandbox.io/s/remotedata-w
 
 What 😱 Who wrote that nice error message??
 
-The decoder of course, and it gives you a helpful error message pretty much like Elm would in this situation. 
+The decoder of course, and it gives you a helpful error message pretty much like Elm would in this situation.
 
 **I have been deceiving you all along.** It turns out the **id** value never was a string after all, even though we declared it as a string already in the very first part of this series.
 
@@ -158,8 +159,8 @@ Let's turn the **id** into a number in the Codec, and we should be all good:
 const Post = Codec.interface({
   id: number,
   title: string,
-  body: string
-})
+  body: string,
+});
 ```
 
 ## What remains

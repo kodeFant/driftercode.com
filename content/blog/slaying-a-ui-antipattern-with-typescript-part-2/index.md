@@ -4,19 +4,18 @@
   "author": Lars Lillo Ulvestad,
   "title": "Slaying a UI antipattern with TypeScript and React (part 2)",
   "description": "This time we are folding data based on external data in a neat way.",
-  "image": "/images/article-covers/slay-dragon.jpg",
+  "image": "images/article-covers/slay-dragon.jpg",
   "published": "2020-04-09",
   "draft": false,
-  "slug": "slaying-a-ui-antipattern-with-typescript-part-2"
+  "slug": "slaying-a-ui-antipattern-with-typescript-part-2",
 }
 ---
 
-In my [previous post](/blog/slaying-a-ui-antipattern-with-typescript), I promised to build on the RemoteData type based on the popular Elm pattern. Read it first to understand the **why** and the **wtf** of this post. 
+In my [previous post](blog/slaying-a-ui-antipattern-with-typescript), I promised to build on the RemoteData type based on the popular Elm pattern. Read it first to understand the **why** and the **wtf** of this post.
 
 **Use the code from the [CodeSandbox](https://codesandbox.io/s/remotedata-with-typescript-and-react-77dci) from the previous post as a starter code.**
 
 This time we will make the switch statement in the **Main** React component into a thing of beauty.
-
 
 ```tsx
 return foldRemoteData(
@@ -34,8 +33,7 @@ This way of doing it makes sense because the pattern has a somewhat logical orde
 
 ## Split the logic
 
-
-Just because it's good to separate stuff into smaller functions, we can start with extracting the views out of the Main. 
+Just because it's good to separate stuff into smaller functions, we can start with extracting the views out of the Main.
 
 ```tsx
 function FetchPosts({ getPosts }: { getPosts: () => void }) {
@@ -58,13 +56,13 @@ function Failure({ error }: { error: Error }) {
 function BlogPosts({ data }: { data: Post[] }) {
   return (
     <div>
-      {data.map(post => (
+      {data.map((post) => (
         <article
           key={post.id}
           style={{
             border: "1px solid darkgray",
             margin: "1rem",
-            padding: "1rem"
+            padding: "1rem",
           }}
         >
           <h2>{post.title}</h2>
@@ -81,25 +79,23 @@ Doing this makes the **Main** function already look very clean.
 ```tsx
 function Main(): JSX.Element {
   const [posts, setPosts] = useState<RemoteData<Error, Post[]>>({
-    type: "NOT_ASKED"
+    type: "NOT_ASKED",
   });
 
   const getPosts = () => {
     setPosts({ type: "LOADING" });
-    fetchPosts().then(remoteData => setPosts(remoteData));
+    fetchPosts().then((remoteData) => setPosts(remoteData));
   };
 
   switch (posts.type) {
     case "NOT_ASKED":
-      return <FetchPosts getPosts={getPosts} />
+      return <FetchPosts getPosts={getPosts} />;
     case "LOADING":
       return <Loading />;
     case "FAILURE":
       return <Failure error={posts.error} />;
     case "SUCCESS":
-      return (
-        <BlogPosts data={posts.data} />
-      );
+      return <BlogPosts data={posts.data} />;
   }
 }
 ```
@@ -129,7 +125,7 @@ function foldRemoteData<R, E, D>(
 }
 ```
 
-The function is heavily based on [gcantis Flow port of RemoteData](https://medium.com/@gcanti/slaying-a-ui-antipattern-with-flow-5eed0cfb627b). 
+The function is heavily based on [gcantis Flow port of RemoteData](https://medium.com/@gcanti/slaying-a-ui-antipattern-with-flow-5eed0cfb627b).
 
 I made the fold function a bit more general. I also ditched it being curried as it disabled type inference on the data and error types.
 
@@ -142,12 +138,12 @@ Now, you can replace the switch statement with the **foldRemoteData** function.
 ```tsx
 function Main(): JSX.Element {
   const [posts, setPosts] = useState<RemoteData<Error, Post[]>>({
-    type: "NOT_ASKED"
+    type: "NOT_ASKED",
   });
 
   const getPosts = () => {
     setPosts({ type: "LOADING" });
-    fetchPosts().then(remoteData => setPosts(remoteData));
+    fetchPosts().then((remoteData) => setPosts(remoteData));
   };
 
   return foldRemoteData(
@@ -160,7 +156,7 @@ function Main(): JSX.Element {
 }
 ```
 
-Very sleek! 
+Very sleek!
 
 - See the complete code on [CodeSandbox](https://codesandbox.io/s/remotedata-with-typescript-and-react-part-2-hlu4v?file=/src/index.tsx)
 
@@ -175,11 +171,9 @@ The devexperts version seems to have some advanced utilities, but I wish there w
 
 You can pretty easily make your own convenience functions as the pattern is really simple anyway.
 
-I currently prefer to just put the RemoteData type and the fold function into my own code. That's pretty much all I need, and there isn't much more to it. 
+I currently prefer to just put the RemoteData type and the fold function into my own code. That's pretty much all I need, and there isn't much more to it.
 
-- Feel free to use this  **[Github gist as a "minimal library"](https://gist.github.com/kodeFant/2def3e32daa41e5dbc6b9664bf001429)** on your own project
-
-
+- Feel free to use this **[Github gist as a "minimal library"](https://gist.github.com/kodeFant/2def3e32daa41e5dbc6b9664bf001429)** on your own project
 
 ## Next up
 
@@ -189,6 +183,6 @@ I want this code to mimic the advantages of Elm. That will require a few more st
 
 Therefore I think we should cover **decoding the incoming data** in the next post.
 
-Decoding JSON doesn't sound very cool, but it's one of those features in Elm that makes it almost impossible to get run-time exceptions in production. 
+Decoding JSON doesn't sound very cool, but it's one of those features in Elm that makes it almost impossible to get run-time exceptions in production.
 
 And with a functional library based on TypeScript, it's pretty easy. [Purify](https://gigobyte.github.io/purify/) to the rescue!

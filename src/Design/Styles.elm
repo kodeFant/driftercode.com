@@ -7,4 +7,4 @@ import Element.Font as Font
 
 linkStyle : List (Attribute msg)
 linkStyle =
-    [ Font.color Palette.color.secondary, mouseOver [ Font.color Palette.color.primary ] ]
+    [ Font.color Palette.elmUIcolor.secondary, mouseOver [ Font.color Palette.elmUIcolor.primary ] ]

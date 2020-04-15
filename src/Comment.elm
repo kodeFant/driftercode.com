@@ -15,7 +15,7 @@ module Comment exposing
     )
 
 import Date exposing (fromPosix)
-import Design.Palette exposing (color)
+import Design.Palette exposing (elmUIcolor)
 import Design.Responsive exposing (responsiveView)
 import Element
     exposing
@@ -205,10 +205,10 @@ commentFormView config slug state =
                     [ width fill
                     , padding 10
                     , Font.center
-                    , Font.color color.white
+                    , Font.color elmUIcolor.white
                     , Font.bold
-                    , Background.color color.primary
-                    , mouseOver [ Background.color color.secondary ]
+                    , Background.color elmUIcolor.primary
+                    , mouseOver [ Background.color elmUIcolor.secondary ]
                     ]
                     { onPress = Just (submitComment slug)
                     , label = text "Submit"
@@ -253,10 +253,10 @@ deleteForm { updateDeleteCommentForm, commentInfoToggle, requestDeletionEmail } 
                     [ width fill
                     , padding 10
                     , Font.center
-                    , Font.color color.white
+                    , Font.color elmUIcolor.white
                     , Font.bold
-                    , Background.color color.red
-                    , mouseOver [ Background.color color.darkRed ]
+                    , Background.color elmUIcolor.red
+                    , mouseOver [ Background.color elmUIcolor.darkRed ]
                     ]
                     { onPress = Just (requestDeletionEmail state.deleteCommentForm.email)
                     , label = text "Request Deletion"
@@ -264,10 +264,10 @@ deleteForm { updateDeleteCommentForm, commentInfoToggle, requestDeletionEmail } 
                 , Input.button
                     [ padding 10
                     , Font.center
-                    , Font.color color.black
+                    , Font.color elmUIcolor.black
                     , Font.bold
-                    , Background.color color.lightGray
-                    , mouseOver [ Background.color color.lighterGray ]
+                    , Background.color elmUIcolor.lightGray
+                    , mouseOver [ Background.color elmUIcolor.lighterGray ]
                     , centerX
                     ]
                     { onPress = Just (commentInfoToggle False)
@@ -287,7 +287,7 @@ deleteForm { updateDeleteCommentForm, commentInfoToggle, requestDeletionEmail } 
 
 formErrorView : List CommentError -> CommentField -> Element msg
 formErrorView commentError commentField =
-    column [ Font.color color.red, spacing 10 ]
+    column [ Font.color elmUIcolor.red, spacing 10 ]
         (commentError
             |> List.filter (\( field, _ ) -> field == commentField)
             |> List.map (\( _, string ) -> text string)
@@ -297,7 +297,7 @@ formErrorView commentError commentField =
 commentHeader : Comment -> List (Element msg) -> Element msg
 commentHeader comment _ =
     responsiveView [ width fill ]
-        { mobile =
+        { phone =
             column [ width fill, spacing 10 ]
                 [ el [ Font.bold, alignLeft ] (text comment.name)
                 , el [ Font.size 14, alignLeft ]

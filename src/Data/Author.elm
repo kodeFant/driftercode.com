@@ -1,6 +1,8 @@
 module Data.Author exposing (Author, all, decoder, defaultAuthor, view)
 
+import Css exposing (..)
 import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (..)
 import Json.Decode as Decode exposing (Decoder)
 import List.Extra
 import Pages
@@ -48,4 +50,12 @@ decoder =
 
 view : List (Attribute msg) -> Author -> Html msg
 view attributes author =
-    Styled.image (attributes ++ []) { description = author.name, path = ImagePath.toString author.avatar }
+    Styled.image
+        (attributes
+            ++ [ css
+                    [ borderRadius (pct 50)
+                    , maxWidth (px 70)
+                    ]
+               ]
+        )
+        { description = author.name, path = ImagePath.toString author.avatar }

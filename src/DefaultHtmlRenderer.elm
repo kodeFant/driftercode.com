@@ -5,6 +5,7 @@ import Html.Styled.Attributes exposing (..)
 import Markdown.Block as Block exposing (HeadingLevel(..), ListItem(..), Task(..))
 import Markdown.Html
 import Markdown.Renderer exposing (Renderer, defaultHtmlRenderer)
+import Styled
 
 
 defaultHtmlRenderer : Renderer (Html msg)
@@ -13,23 +14,23 @@ defaultHtmlRenderer =
         \{ level, children } ->
             case level of
                 Block.H1 ->
-                    h1 [] children
+                    Styled.heading1 [] children
 
                 Block.H2 ->
-                    h2 [] children
+                    Styled.heading2 [] children
 
                 Block.H3 ->
-                    h3 [] children
+                    Styled.heading3 [] children
 
                 Block.H4 ->
-                    h4 [] children
+                    Styled.heading4 [] children
 
                 Block.H5 ->
-                    h5 [] children
+                    Styled.heading5 [] children
 
                 Block.H6 ->
-                    h6 [] children
-    , paragraph = p []
+                    Styled.heading6 [] children
+    , paragraph = Styled.paragraph []
     , hardLineBreak = br [] []
     , blockQuote = blockquote []
     , strong =

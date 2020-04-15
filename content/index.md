@@ -3,8 +3,6 @@ title: driftercode.com
 type: blog-index
 ---
 
-# I'm Lillo, a functional developer and ex-journalist
+# The great functional programming journey
 
 Join me in my explorations in functional programming.
-
-

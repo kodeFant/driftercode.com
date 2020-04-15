@@ -1,27 +1,26 @@
 module Design.Icon exposing (linkedIn, twitter)
 
+import Css exposing (..)
 import Element exposing (Attribute, Element, el, html)
 import FontAwesome.Brands as FaBrands
 import FontAwesome.Icon as Icon
+import Html.Attributes exposing (style)
+import Html.Styled exposing (Html, fromUnstyled)
 
 
-twitter : List (Attribute msg) -> Element msg
-twitter attr =
-    el attr
-        (html
-            (Icon.viewStyled
-                []
-                FaBrands.twitter
-            )
+twitter : Html msg
+twitter =
+    fromUnstyled
+        (Icon.viewStyled
+            [ style "width" "100%" ]
+            FaBrands.twitter
         )
 
 
-linkedIn : List (Attribute msg) -> Element msg
-linkedIn attr =
-    el attr
-        (html
-            (Icon.viewStyled
-                []
-                FaBrands.linkedin
-            )
+linkedIn : Html msg
+linkedIn =
+    fromUnstyled
+        (Icon.viewStyled
+            [ style "width" "100%" ]
+            FaBrands.linkedin
         )
