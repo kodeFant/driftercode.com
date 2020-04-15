@@ -5,7 +5,7 @@ import Head
 import Head.Metadata exposing (Metadata)
 import Head.PageHead exposing (head)
 import Html
-import Html.Styled exposing (..)
+import Html.Styled exposing (Html, div, toUnstyled)
 import Pages
 import Pages.PagePath exposing (PagePath)
 import Pages.Secrets as Secrets
