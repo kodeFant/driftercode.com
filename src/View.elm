@@ -10,7 +10,7 @@ import Pages
 import Pages.PagePath exposing (PagePath)
 import Pages.Secrets as Secrets
 import Pages.StaticHttp as StaticHttp
-import Renderer exposing (Rendered)
+import Renderer.View exposing (Rendered)
 import Types exposing (Model, Msg)
 import View.Article
 import View.BlogIndex

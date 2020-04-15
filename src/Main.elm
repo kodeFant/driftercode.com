@@ -9,7 +9,7 @@ import Pages
 import Pages.Document
 import Pages.PagePath exposing (PagePath)
 import Pages.Platform
-import Renderer exposing (Rendered)
+import Renderer.View exposing (Rendered)
 import Types exposing (Model, Msg(..))
 import Update exposing (init, update)
 import View exposing (view)
@@ -62,7 +62,7 @@ markdownDocument =
         , metadata = Head.Metadata.decoder
         , body =
             \markdownBody ->
-                Renderer.wordCountMarkdownView markdownBody
+                Renderer.View.wordCountMarkdownView markdownBody
         }
 
 
