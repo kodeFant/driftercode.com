@@ -1,4 +1,4 @@
-module Layout.Scaffold exposing (..)
+module Layout.Scaffold exposing (view)
 
 import Css exposing (..)
 import Html.Styled exposing (..)

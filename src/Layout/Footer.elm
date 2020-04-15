@@ -1,4 +1,4 @@
-module Layout.Footer exposing (..)
+module Layout.Footer exposing (view)
 
 import Css exposing (..)
 import Design.Palette exposing (colors)

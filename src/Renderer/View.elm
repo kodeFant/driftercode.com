@@ -4,7 +4,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Markdown.Block exposing (HeadingLevel(..), ListItem(..), Task(..))
 import Markdown.Parser
-import Markdown.Renderer exposing (Renderer)
+import Markdown.Renderer
 import Renderer.Markdown exposing (mainRenderer)
 
 
