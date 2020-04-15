@@ -1,5 +1,8 @@
 module Styled exposing
-    ( heading1
+    ( button
+    , dangerButton
+    , emailInput
+    , heading1
     , heading2
     , heading3
     , heading4
@@ -10,12 +13,17 @@ module Styled exposing
     , mainContainer
     , newTabLink
     , paragraph
+    , primaryButton
+    , textAreaInput
+    , textInput
     )
 
 import Css exposing (..)
 import Css.Transitions exposing (backgroundColor3, easeInOut, transition)
-import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (alt, css, rel, src, target)
+import Design.Palette exposing (colors)
+import Html.Styled as Html exposing (..)
+import Html.Styled.Attributes as Attr exposing (..)
+import Html.Styled.Events exposing (..)
 
 
 image : List (Attribute msg) -> { path : String, description : String } -> Html msg
@@ -23,7 +31,7 @@ image attr { path, description } =
     img
         ([ src path
          , alt description
-         , css [ width (pct 100) ]
+         , css [ Css.width (pct 100) ]
          ]
             ++ attr
         )
@@ -50,7 +58,7 @@ link attr content =
 
 newTabLink : List (Attribute msg) -> List (Html msg) -> Html msg
 newTabLink attr content =
-    link (attr ++ [ Html.Styled.Attributes.target "_blank", rel "noreferrer noopener" ]) content
+    link (attr ++ [ Attr.target "_blank", rel "noreferrer noopener" ]) content
 
 
 mainContainer : List (Html msg) -> Html msg
@@ -98,3 +106,195 @@ heading6 attr content =
 paragraph : List (Attribute msg) -> List (Html msg) -> Html msg
 paragraph attr content =
     p (attr ++ [ css [ fontSize (rem 1.1), lineHeight (rem 2) ] ]) content
+
+
+{-| Autocomplete Values:
+<https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete#Values>
+-}
+genericInput :
+    List (Attribute msg)
+    ->
+        { onChange : String -> msg
+        , label : String
+        , autoComplete : Maybe String
+        , fieldType : Maybe String
+        }
+    -> Html msg
+genericInput attr { onChange, label, autoComplete, fieldType } =
+    div
+        []
+        [ Html.label []
+            [ text label
+            , input
+                (attr
+                    ++ [ css
+                            [ displayFlex
+                            , flexDirection column
+                            , Css.width (pct 100)
+                            , padding (rem 0.3)
+                            , fontSize (rem 1.2)
+                            , margin2 (rem 1) zero
+                            ]
+                       , onInput onChange
+                       , case fieldType of
+                            Just string ->
+                                type_ string
+
+                            Nothing ->
+                                type_ "text"
+                       , case autoComplete of
+                            Just string ->
+                                attribute "autocomplete" string
+
+                            Nothing ->
+                                autocomplete False
+                       ]
+                )
+                []
+            ]
+        ]
+
+
+emailInput :
+    List (Attribute msg)
+    ->
+        { onChange : String -> msg
+        , label : String
+        , autoComplete : Bool
+        }
+    -> Html msg
+emailInput attr { onChange, label, autoComplete } =
+    genericInput (attr ++ [])
+        { autoComplete =
+            if autoComplete == True then
+                Just "email"
+
+            else
+                Nothing
+        , label = label
+        , onChange = onChange
+        , fieldType = Just "email"
+        }
+
+
+textInput :
+    List (Attribute msg)
+    ->
+        { onChange : String -> msg
+        , label : String
+        , autoComplete : Maybe String
+        }
+    -> Html msg
+textInput attr { onChange, label, autoComplete } =
+    genericInput (attr ++ [])
+        { autoComplete = autoComplete
+        , label = label
+        , onChange = onChange
+        , fieldType = Just "text"
+        }
+
+
+textAreaInput :
+    List (Attribute msg)
+    ->
+        { onChange : String -> msg
+        , label : String
+        }
+    -> Html msg
+textAreaInput attr { onChange, label } =
+    div
+        []
+        [ Html.label [ onInput onChange ]
+            [ text label
+            , textarea
+                (attr
+                    ++ [ css
+                            [ displayFlex
+                            , flexDirection column
+                            , Css.width (pct 100)
+                            , padding (rem 0.3)
+                            , fontSize (rem 1.2)
+                            , margin2 (rem 1) zero
+                            ]
+                       ]
+                )
+                []
+            ]
+        ]
+
+
+{-| Autocomplete Values:
+<https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button>
+-}
+button :
+    List (Attribute msg)
+    ->
+        { onPress : msg
+        , label : Html msg
+        , buttonType : String
+        }
+    -> Html msg
+button attr { onPress, buttonType, label } =
+    Html.button
+        ([ onClick onPress
+         , type_ buttonType
+         , css
+            [ fontSize (rem 1)
+            , padding (rem 0.5)
+            , border zero
+            , borderRadius (px 5)
+            , margin4 (rem 0.5) (rem 0.5) (rem 0.5) zero
+            ]
+         ]
+            ++ attr
+        )
+        [ label ]
+
+
+dangerButton :
+    List (Attribute msg)
+    ->
+        { onPress : msg
+        , label : Html msg
+        , buttonType : String
+        }
+    -> Html msg
+dangerButton attr { onPress, buttonType, label } =
+    button
+        (attr
+            ++ [ css
+                    [ backgroundColor colors.error
+                    , color colors.black
+                    ]
+               ]
+        )
+        { onPress = onPress
+        , buttonType = buttonType
+        , label = label
+        }
+
+
+primaryButton :
+    List (Attribute msg)
+    ->
+        { onPress : msg
+        , label : Html msg
+        , buttonType : String
+        }
+    -> Html msg
+primaryButton attr { onPress, buttonType, label } =
+    button
+        (attr
+            ++ [ css
+                    [ backgroundColor colors.secondary
+                    , color colors.white
+                    , hover
+                        [ backgroundColor colors.primary
+                        ]
+                    ]
+               ]
+        )
+        { onPress = onPress
+        , buttonType = buttonType
+        , label = label
+        }

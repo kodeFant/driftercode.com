@@ -14,15 +14,18 @@ module Comment exposing
     , view
     )
 
+import Css exposing (..)
 import Date exposing (fromPosix)
+import Design.Palette exposing (colors)
 import Html.Styled exposing (..)
-import Html.Styled.Events exposing (onInput)
+import Html.Styled.Attributes exposing (..)
 import Http exposing (Error(..))
 import Json.Decode
 import Json.Decode.Exploration as Decode
 import Json.Decode.Exploration.Pipeline as Pipeline
 import Json.Encode as Encode
 import RemoteData exposing (RemoteData(..), WebData)
+import Styled
 import Time exposing (millisToPosix, utc)
 import Util.Date exposing (formatDate)
 import Util.Error exposing (errorToString)
@@ -135,33 +138,15 @@ view config state slug comments =
 
 commentFormView : Config msg -> String -> CommentState -> Html msg
 commentFormView config slug state =
-    let
-        { commentForm } =
-            state
-
-        { updateCommentForm, submitComment, commentInfoToggle } =
-            config
-    in
     case state.commentForm.sendRequest of
         NotAsked ->
-            div []
-                [ div
-                    []
-                    [ text "Leave a comment" ]
-                , input [ onInput (\value -> updateCommentForm { commentForm | name = value }) ] []
-                , formErrorView commentForm.errors Name
-                , input [ onInput (\value -> updateCommentForm { commentForm | email = value }) ] []
-                , formErrorView commentForm.errors Email
-                , textarea [ onInput (\value -> updateCommentForm { commentForm | message = value }) ] []
-                , formErrorView commentForm.errors Message
-                , button [ Html.Styled.Events.onClick (submitComment slug) ] [ text "Submit comment" ]
-                , button [ Html.Styled.Events.onClick (commentInfoToggle (not state.commentInfo)) ] [ text "I want to delete a comment" ]
-                , if state.commentInfo == True then
-                    deleteForm config state
+            if state.commentInfo == True then
+                commentDialog
+                    [ deleteForm config state ]
 
-                  else
-                    div [] []
-                ]
+            else
+                commentDialog
+                    [ commentFormContainer slug config state ]
 
         Loading ->
             div [] [ text "Sending..." ]
@@ -170,7 +155,50 @@ commentFormView config slug state =
             div [] [ text (errorToString err) ]
 
         Success _ ->
-            div [] [ text "Comment successfully sent. Please verify your comment at the given email, ", strong [] [ text commentForm.email, text ", within 24 hours." ] ]
+            div [] [ text "Comment successfully sent. Please verify your comment at the given email, ", strong [] [ text state.commentForm.email, text ", within 24 hours." ] ]
+
+
+commentDialog : List (Html msg) -> Html msg
+commentDialog =
+    div [ css [ padding (rem 1), backgroundColor colors.lighterGray ] ]
+
+
+commentFormContainer : String -> Config msg -> CommentState -> Html msg
+commentFormContainer slug { updateCommentForm, submitComment, commentInfoToggle } { commentForm, commentInfo } =
+    div []
+        [ h3
+            [ css [ fontSize (px 28) ] ]
+            [ text "Leave a comment" ]
+        , Styled.textInput []
+            { onChange = \value -> updateCommentForm { commentForm | name = value }
+            , label = "Your name"
+            , autoComplete = Just "name"
+            }
+        , formErrorView commentForm.errors Name
+        , Styled.emailInput []
+            { onChange = \value -> updateCommentForm { commentForm | email = value }
+            , label = "Email"
+            , autoComplete = False
+            }
+        , formErrorView commentForm.errors Email
+        , Styled.textAreaInput []
+            { onChange = \value -> updateCommentForm { commentForm | message = value }
+            , label = "Message"
+            }
+        , formErrorView commentForm.errors Message
+        , div [ css [ displayFlex, justifyContent spaceBetween ] ]
+            [ Styled.primaryButton []
+                { onPress = submitComment slug
+                , label = text "Submit comment"
+                , buttonType = "submit"
+                }
+            , Styled.dangerButton []
+                { onPress = commentInfoToggle (not commentInfo)
+                , label = text "I want to delete a comment"
+                , buttonType = "button"
+                }
+            ]
+        ]
 
 
 deleteForm : Config msg -> CommentState -> Html msg
@@ -182,11 +210,21 @@ deleteForm { updateDeleteCommentForm, commentInfoToggle, requestDeletionEmail } 
                     state.deleteCommentForm
             in
             div []
-                [ div [] [ text "Delete Comment" ]
+                [ h3 [ css [ fontSize (px 28) ] ] [ text "Delete Comment" ]
                 , div [] [ text "Want to delete a comment on this page? Fill in you email. You can delete the comment from your email inbox." ]
-                , input [ onInput (\value -> updateDeleteCommentForm { deleteCommentForm | email = value }) ] []
-                , button [ Html.Styled.Events.onClick (requestDeletionEmail state.deleteCommentForm.email) ] [ text "Request Deletion" ]
-                , button [ Html.Styled.Events.onClick (commentInfoToggle False) ] [ text "Request Deletion" ]
+                , Styled.emailInput [] { onChange = \value -> updateDeleteCommentForm { deleteCommentForm | email = value }, autoComplete = True, label = "Email address" }
+                , div [ css [ displayFlex, justifyContent spaceBetween ] ]
+                    [ Styled.dangerButton []
+                        { onPress = requestDeletionEmail state.deleteCommentForm.email
+                        , label = text "Request deletion"
+                        , buttonType = "submit"
+                        }
+                    , Styled.button []
+                        { onPress = commentInfoToggle False
+                        , label = text "Cancel"
+                        , buttonType = "button"
+                        }
+                    ]
                 ]
 
         Loading ->
@@ -201,10 +239,14 @@ deleteForm { updateDeleteCommentForm, commentInfoToggle, requestDeletionEmail } 
 
 formErrorView : List CommentError -> CommentField -> Html msg
 formErrorView commentError commentField =
-    div []
+    div
+        [ css
+            [ margin2 (rem 1) zero
+            ]
+        ]
         (commentError
             |> List.filter (\( field, _ ) -> field == commentField)
-            |> List.map (\( _, string ) -> text string)
+            |> List.map (\( _, string ) -> div [ css [ padding (rem 0.3), color colors.red ] ] [ text string ])
         )
 
 

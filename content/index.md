@@ -3,6 +3,10 @@ title: driftercode.com
 type: blog-index
 ---
 
-# The great functional programming journey
+## A blog about functional programming
 
-Join me in my explorations in functional programming.
+I'm a budding functional programmer who used to be a journalist.
+
+Just sharing my findings on functional programming way through the **learn by blogging** principle.
+
+Mathy algebraic slang to be kept at a minimum.

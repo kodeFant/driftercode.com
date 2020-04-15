@@ -1,7 +1,6 @@
 module View.BlogIndex exposing (view)
 
 import Css exposing (..)
-import Data.Author
 import Date
 import Design.Palette exposing (colors)
 import Design.Responsive as Responsive
@@ -25,12 +24,8 @@ view posts rendered page =
     Layout.Scaffold.view page.path
         (Styled.mainContainer
             [ blogIndexContainer
-                [ indexAuthor
-                    [ Data.Author.view
-                        [ css [ Css.width (px 60), borderRadius (pct 50) ]
-                        ]
-                        Data.Author.defaultAuthor
-                    , div [] rendered
+                [ indexHeader
+                    [ div [ css [ textAlign center ] ] rendered
                     ]
                 , blogIndexItems posts
                 ]
@@ -38,15 +33,13 @@ view posts rendered page =
         )
 
 
-indexAuthor : List (Html msg) -> Html msg
-indexAuthor content =
+indexHeader : List (Html msg) -> Html msg
+indexHeader content =
     div
         [ css
-            [ Css.property "display" "grid"
-            , Css.property "grid-template-columns" "auto 1fr"
-            , Css.property "grid-gap" "1rem"
-            , alignItems center
-            , padding2 (rem 3) zero
+            [ alignItems center
+            , padding (rem 1)
+            , Responsive.tabletUp [ padding (rem 3) ]
             ]
         ]
         content
