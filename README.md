@@ -1,6 +1,6 @@
 # DrifterCode.com
 
-A blog written in Elm Pages.
+A blog written in [elm-pages](https://github.com/dillonkearns/elm-pages).
 
 The comment system is written with Firebase Cloud Functions written in TypeScript and `purify-ts`.
 
