@@ -33,7 +33,7 @@ This way of doing it makes sense because the pattern has a somewhat logical orde
 
 ## Split the logic
 
-Just because it's good to separate stuff into smaller functions, we can start with extracting the views out of the Main.
+Just because it's good to separate stuff into smaller functions, we can start with extracting the views out of the Main function.
 
 ```tsx
 function FetchPosts({ getPosts }: { getPosts: () => void }) {
@@ -74,7 +74,7 @@ function BlogPosts({ data }: { data: Post[] }) {
 }
 ```
 
-Doing this makes the **Main** function already look very clean.
+Doing this makes it already look very clean.
 
 ```tsx
 function Main(): JSX.Element {

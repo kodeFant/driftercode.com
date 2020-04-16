@@ -3,6 +3,7 @@ module View.Article exposing (view)
 import Comment exposing (Comment)
 import Component.Bio exposing (bio)
 import Css exposing (..)
+import Design.Palette exposing (colors)
 import Head.Metadata exposing (ArticleMetadata, Metadata)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
@@ -32,10 +33,11 @@ view model count metadata comments page viewForPage =
                     [ text metadata.title ]
                 , styledPreamble
                     [ text metadata.description ]
-                , styledReadingLength
-                    [ text (displayReadingLength count) ]
-                , styledPublishedDate
-                    [ text "Published: ", text (publishedDateView <| metadata) ]
+                , styledMetadata
+                    [ styledPublishedDate [ text "Published: ", text (publishedDateView <| metadata) ]
+                    , styledReadingLength
+                        [ text (displayReadingLength count) ]
+                    ]
                 , articleImageView metadata.image
                 , article [] viewForPage
                 , Comment.view
@@ -94,26 +96,27 @@ displayReadingLength wordCount =
 -- METADATA CONTAINER
 
 
-styledPublishedDate : List (Html msg) -> Html msg
-styledPublishedDate =
+styledMetadata : List (Html msg) -> Html msg
+styledMetadata =
     div
         [ css
-            [ fontStyle italic
-            , margin2 (rem 1) zero
-            , fontSize (rem 1.1)
+            [ color colors.darkestGray
             , textAlign center
+            , fontSize (rem 0.9)
+            , margin2 (rem 2) zero
             ]
         ]
+
+
+styledPublishedDate : List (Html msg) -> Html msg
+styledPublishedDate =
+    div [ css [ marginBottom (rem 0.5) ] ]
 
 
 styledReadingLength : List (Html msg) -> Html msg
 styledReadingLength =
     div
-        [ css
-            [ textAlign center
-            , marginBottom (rem 3)
-            ]
-        ]
+        []
 
 
 
