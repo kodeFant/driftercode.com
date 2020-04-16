@@ -375,6 +375,14 @@ validateCommentForm =
         ]
 
 
+validateDeleteCommentForm : Validator CommentError DeleteCommentForm
+validateDeleteCommentForm =
+    Validate.all
+        [ ifBlank .email ( Email, "Email is required" )
+        , ifInvalidEmail .email (\_ -> ( Email, "Please enter a valid email adress" ))
+        ]
+
+
 updateSubmitComment :
     (WebData CommentSendResponse -> msg)
     -> String
