@@ -123,16 +123,18 @@ view : Config msg -> CommentState -> String -> List Comment -> Html msg
 view config state slug comments =
     div []
         [ commentFormView config slug state
-        , if List.length comments == 0 then
-            div [] []
-
-          else
-            Html.Styled.text "Comments"
         , div []
-            (comments
-                |> List.map
-                    commentView
-            )
+            [ if List.length comments == 0 then
+                div [] []
+
+              else
+                Styled.heading3 [] [ text "Comments" ]
+            , div []
+                (comments
+                    |> List.indexedMap
+                        commentView
+                )
+            ]
         ]
 
 
@@ -156,6 +158,23 @@ commentFormView config slug state =
 
         Success _ ->
             div [] [ text "Comment successfully sent. Please verify your comment at the given email, ", strong [] [ text state.commentForm.email, text ", within 24 hours." ] ]
+
+
+commentView : Int -> Comment -> Html msg
+commentView index comment =
+    styledCommentContainer
+        [ styledCommentHeader
+            [ styledCommentCount [ text ("#" ++ String.fromInt (index + 1)) ]
+            , styledCommenterName [ text ("By " ++ comment.name) ]
+            , styledCommentDate
+                [ text
+                    (formatDate
+                        (fromPosix utc (millisToPosix comment.createdAt))
+                    )
+                ]
+            ]
+        , styledCommentBody [ Html.Styled.text comment.comment ]
+        ]
 
 
 commentDialog : List (Html msg) -> Html msg
@@ -250,25 +269,34 @@ formErrorView commentError commentField =
         )
 
 
-commentHeader : Comment -> Html msg
-commentHeader comment =
-    div []
-        [ div [] [ Html.Styled.text comment.name ]
-        , div []
-            [ Html.Styled.text
-                (formatDate
-                    (fromPosix utc (millisToPosix comment.createdAt))
-                )
-            ]
-        ]
+styledCommentContainer : List (Html msg) -> Html msg
+styledCommentContainer =
+    div [ css [ border3 (px 2) dashed colors.black, padding (rem 1), marginBottom (rem 1) ] ]
 
 
-commentView : Comment -> Html msg
-commentView comment =
+styledCommentCount : List (Html msg) -> Html msg
+styledCommentCount =
+    div [ css [ fontWeight bold, marginBottom (rem 0.5) ] ]
+
+
+styledCommentHeader : List (Html msg) -> Html msg
+styledCommentHeader =
+    div [ css [ marginBottom (rem 1) ] ]
+
+
+styledCommenterName : List (Html msg) -> Html msg
+styledCommenterName =
+    div [ css [ fontWeight bold ] ]
+
+
+styledCommentDate : List (Html msg) -> Html msg
+styledCommentDate =
+    div [ css [ fontStyle italic, marginBottom (px 1) ] ]
+
+
+styledCommentBody : List (Html msg) -> Html msg
+styledCommentBody =
     div []
-        [ commentHeader comment
-        , div [] [ Html.Styled.text comment.comment ]
-        ]
 
 
 
@@ -298,6 +326,15 @@ commentsDecoder =
     Decode.list commentDecoder
 
 
+commentSendResponseDecoder : Json.Decode.Decoder CommentSendResponse
+commentSendResponseDecoder =
+    Json.Decode.map CommentSendResponse (Json.Decode.field "success" Json.Decode.bool)
+
+
+
+-- HTTP
+
+
 postComment : (WebData CommentSendResponse -> msg) -> String -> CommentForm -> Cmd msg
 postComment message slug commentForm =
     Http.post
@@ -315,11 +352,6 @@ postComment message slug commentForm =
         }
 
 
-commentSendResponseDecoder : Json.Decode.Decoder CommentSendResponse
-commentSendResponseDecoder =
-    Json.Decode.map CommentSendResponse (Json.Decode.field "success" Json.Decode.bool)
-
-
 requestDeleteEmail : (WebData String -> msg) -> String -> Cmd msg
 requestDeleteEmail message email =
     Http.post
@@ -327,6 +359,10 @@ requestDeleteEmail message email =
         , body = Http.emptyBody
         , expect = Http.expectString (RemoteData.fromResult >> message)
         }
+
+
+
+-- UPDATE
 
 
 validateCommentForm : Validator CommentError CommentForm

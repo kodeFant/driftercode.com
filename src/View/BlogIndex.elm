@@ -23,8 +23,8 @@ view :
 view posts rendered page =
     Layout.Scaffold.view page.path
         (Styled.mainContainer
-            [ blogIndexContainer
-                [ indexHeader
+            [ styledIndexContainer
+                [ styledIndexHeader
                     [ div [ css [ textAlign center ] ] rendered
                     ]
                 , blogIndexItems posts
@@ -33,30 +33,9 @@ view posts rendered page =
         )
 
 
-indexHeader : List (Html msg) -> Html msg
-indexHeader content =
-    div
-        [ css
-            [ alignItems center
-            , padding (rem 1)
-            , Responsive.tabletUp [ padding (rem 3) ]
-            ]
-        ]
-        content
-
-
 blogIndexItems : List ( PagePath Pages.PathKey, Metadata ) -> Html msg
 blogIndexItems posts =
-    div
-        [ css
-            [ Css.property "display" "grid"
-            , Css.property "grid-template-columns" "1fr"
-            , Css.property "grid-gap" "1rem"
-            , Responsive.tabletUp
-                [ Css.property "grid-template-columns" "1fr 1fr"
-                ]
-            ]
-        ]
+    styledIndexItemsGrid
         (posts
             |> List.filterMap
                 (\( path, metadata ) ->
@@ -87,21 +66,50 @@ blogIndexItems posts =
 blogIndexItem : ( PagePath Pages.PathKey, Head.Metadata.ArticleMetadata ) -> Html msg
 blogIndexItem ( postPath, post ) =
     indexCard ( postPath, post )
-        [ indexCardPart1
-            [ indexCardImage (ImagePath.toString post.image)
+        [ styledIndexCardPart1
+            [ styledIndexCardImage (ImagePath.toString post.image)
             ]
-        , indexCardPart2
+        , styledIndexCardPart2
             [ div []
-                [ indexCardDate [ text (post.published |> formatDate) ]
-                , indexCardTitle [ text post.title ]
-                , indexCardDescription [ text post.description ]
+                [ styledIndexCardDate [ text (post.published |> formatDate) ]
+                , styledIndexCardTitle [ text post.title ]
+                , styledIndexCardDescription [ text post.description ]
                 ]
             ]
         ]
 
 
+
+-- STYLED
+
+
+styledIndexItemsGrid : List (Html msg) -> Html msg
+styledIndexItemsGrid =
+    div
+        [ css
+            [ Css.property "display" "grid"
+            , Css.property "grid-template-columns" "1fr"
+            , Css.property "grid-gap" "1rem"
+            , Responsive.tabletUp
+                [ Css.property "grid-template-columns" "1fr 1fr"
+                ]
+            ]
+        ]
+
+
+styledIndexHeader : List (Html msg) -> Html msg
+styledIndexHeader =
+    div
+        [ css
+            [ alignItems center
+            , padding (rem 1)
+            , Responsive.tabletUp [ padding (rem 3) ]
+            ]
+        ]
+
+
 indexCard : ( PagePath Pages.PathKey, Head.Metadata.ArticleMetadata ) -> List (Html msg) -> Html msg
-indexCard ( postPath, _ ) content =
+indexCard ( postPath, _ ) =
     a
         [ href (PagePath.toString postPath)
         , css
@@ -126,16 +134,15 @@ indexCard ( postPath, _ ) content =
                 ]
             ]
         ]
-        content
 
 
-indexCardPart1 : List (Html msg) -> Html msg
-indexCardPart1 content =
-    div [] content
+styledIndexCardPart1 : List (Html msg) -> Html msg
+styledIndexCardPart1 =
+    div []
 
 
-indexCardPart2 : List (Html msg) -> Html msg
-indexCardPart2 content =
+styledIndexCardPart2 : List (Html msg) -> Html msg
+styledIndexCardPart2 =
     div
         [ css
             [ displayFlex
@@ -145,26 +152,25 @@ indexCardPart2 content =
             , textAlign center
             ]
         ]
-        content
 
 
-indexCardDate : List (Html msg) -> Html msg
-indexCardDate content =
-    div [ css [ fontWeight bold ] ] content
+styledIndexCardDate : List (Html msg) -> Html msg
+styledIndexCardDate =
+    div [ css [ fontWeight bold ] ]
 
 
-indexCardTitle : List (Html msg) -> Html msg
-indexCardTitle content =
-    h2 [ css [ fontSize (rem 2) ] ] content
+styledIndexCardTitle : List (Html msg) -> Html msg
+styledIndexCardTitle =
+    h2 [ css [ fontSize (rem 2) ] ]
 
 
-indexCardDescription : List (Html msg) -> Html msg
-indexCardDescription content =
-    div [ css [ fontSize (rem 1.3) ] ] content
+styledIndexCardDescription : List (Html msg) -> Html msg
+styledIndexCardDescription =
+    div [ css [ fontSize (rem 1.3) ] ]
 
 
-indexCardImage : String -> Html msg
-indexCardImage imagePath =
+styledIndexCardImage : String -> Html msg
+styledIndexCardImage imagePath =
     Styled.image
         [ css
             [ Css.height (pct 100)
@@ -175,11 +181,14 @@ indexCardImage imagePath =
         { description = "", path = imagePath }
 
 
-blogIndexContainer : List (Html msg) -> Html msg
-blogIndexContainer content =
+
+-- CONTAINER
+
+
+styledIndexContainer : List (Html msg) -> Html msg
+styledIndexContainer =
     div
         [ css
             [ maxWidth (px 900)
             ]
         ]
-        content
