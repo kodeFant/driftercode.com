@@ -1,9 +1,8 @@
 module View.Article exposing (view)
 
 import Comment exposing (Comment)
+import Component.Bio exposing (bio)
 import Css exposing (..)
-import Data.Author as Author
-import Design.Icon
 import Head.Metadata exposing (ArticleMetadata, Metadata)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
@@ -27,24 +26,18 @@ view :
 view model count metadata comments page viewForPage =
     Layout.Scaffold.view page.path
         (Styled.mainContainer
-            [ articleContainer
+            [ styledContentContainer
                 [ bio metadata
-                , Styled.heading1 [ css [ textAlign center ] ] [ text metadata.title ]
-                , div
-                    [ css
-                        [ fontSize (rem 2)
-                        , textAlign center
-                        , fontSize (px 25)
-                        ]
-                    ]
+                , Styled.heading1 [ css [ textAlign center, margin2 (rem 1) zero ] ]
+                    [ text metadata.title ]
+                , styledPreamble
                     [ text metadata.description ]
-                , div
-                    [ css [ textAlign center ] ]
-                    [ div [] [ text (publishedDateView <| metadata) ]
-                    , div [] [ text (displayReadingLength count) ]
-                    ]
+                , styledReadingLength
+                    [ text (displayReadingLength count) ]
+                , styledPublishedDate
+                    [ text "Published: ", text (publishedDateView <| metadata) ]
                 , articleImageView metadata.image
-                , div [] viewForPage
+                , article [] viewForPage
                 , Comment.view
                     { commentInfoToggle = CommentInfo
                     , updateCommentForm = UpdateCommentForm
@@ -61,6 +54,10 @@ view model count metadata comments page viewForPage =
                 ]
             ]
         )
+
+
+
+-- UTILS
 
 
 publishedDateView : Head.Metadata.ArticleMetadata -> String
@@ -93,68 +90,53 @@ displayReadingLength wordCount =
         String.fromInt (Basics.round readingLength) ++ " minute read"
 
 
-bio : ArticleMetadata -> Html msg
-bio metadata =
+
+-- METADATA CONTAINER
+
+
+styledPublishedDate : List (Html msg) -> Html msg
+styledPublishedDate =
     div
         [ css
-            [ Css.property "display" "grid"
-            , Css.property "grid-template-columns" "auto 1fr"
-            , Css.property "grid-gap" "1rem"
-            , padding2 (rem 2) (rem 0)
-            ]
-        ]
-        [ Author.view []
-            metadata.author
-        , div
-            [ css
-                [ Css.property "display" "grid"
-                , Css.property "grid-template-columns" "1fr"
-                , Css.property "grid-gap" "0.1rem"
-                , padding2 (px 0) (rem 1)
-                ]
-            ]
-            [ div [ css [ displayFlex, alignItems center ] ]
-                [ span
-                    [ css
-                        [ fontWeight bold
-                        , fontSize (px 24)
-                        , marginRight (rem 1)
-                        ]
-                    ]
-                    [ text metadata.author.name ]
-                , div [ css [ displayFlex, alignItems center ] ]
-                    [ a
-                        [ href ("https://twitter.com/" ++ metadata.author.twitter)
-                        , Html.Styled.Attributes.target "_blank"
-                        , rel "noreferrer noopener"
-                        , css
-                            [ Css.width (px 16)
-                            , marginRight (rem 0.5)
-                            , color (rgba 29 161 242 0.5)
-                            , hover [ color (rgba 29 161 242 0.9) ]
-                            ]
-                        ]
-                        [ Design.Icon.twitter ]
-                    , a
-                        [ href metadata.author.linkedinUrl
-                        , Html.Styled.Attributes.target "_blank"
-                        , rel "noreferrer noopener"
-                        , css
-                            [ Css.width (px 16)
-                            , color (rgba 29 161 242 0.5)
-                            , hover [ color (rgba 29 161 242 0.9) ]
-                            ]
-                        ]
-                        [ Design.Icon.linkedIn ]
-                    ]
-                ]
-            , div [] [ text metadata.author.bio ]
+            [ fontStyle italic
+            , margin2 (rem 1) zero
+            , fontSize (rem 1.1)
+            , textAlign center
             ]
         ]
 
 
-articleContainer : List (Html msg) -> Html msg
-articleContainer content =
-    article
+styledReadingLength : List (Html msg) -> Html msg
+styledReadingLength =
+    div
+        [ css
+            [ textAlign center
+            , marginBottom (rem 3)
+            ]
+        ]
+
+
+
+-- PREAMBLE
+
+
+styledPreamble : List (Html msg) -> Html msg
+styledPreamble =
+    div
+        [ css
+            [ fontSize (rem 2)
+            , textAlign center
+            , fontSize (px 20)
+            , marginBottom (rem 1)
+            ]
+        ]
+
+
+
+-- CONTAINER
+
+
+styledContentContainer : List (Html msg) -> Html msg
+styledContentContainer =
+    div
         [ css [ maxWidth (px 700), Css.width (pct 100), padding (rem 1) ] ]
-        content
