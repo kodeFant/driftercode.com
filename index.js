@@ -10,6 +10,7 @@ pagesInit({
 
 // Google Analytics Usage Tracking
 if (process.env.NODE_ENV === "production") {
+  console.log(process.env.NODE_ENV);
   (function (i, s, o, g, r, a, m) {
     i["GoogleAnalyticsObject"] = r;
     (i[r] =
