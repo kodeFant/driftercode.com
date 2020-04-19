@@ -8,6 +8,8 @@ pagesInit({
   mainElmModule: Elm.Main,
 });
 
+console.log("ENV", process.env.NODE_ENV);
+
 // Google Analytics Usage Tracking
 if (process.env.NODE_ENV === "production") {
   (function (i, s, o, g, r, a, m) {
