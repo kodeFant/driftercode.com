@@ -11,9 +11,9 @@
 }
 ---
 
-In [part 1](blog/slaying-a-ui-antipattern-with-typescript) and [part 2](blog/slaying-a-ui-antipattern-with-typescript-part-2), we have enforced views for all the stages of fetching data on the front end. All thanks to a very simple data structure originally made for Elm.
+In [part 1](blog/slaying-a-ui-antipattern-with-typescript) and [part 2](blog/slaying-a-ui-antipattern-with-typescript-part-2), we enforced views for all the stages of fetching data on the front end.
 
-One thing we need to cover for the app to have the benefits of an Elm app is **decoding**.
+One thing we need to cover for the app to resemble the benefits of an Elm app is **decoding**.
 
 After discovering how well decoding works in TypeScript, I feel dirty when not using it.
 
@@ -33,7 +33,7 @@ Luckily, a library like **Purify** or **fp-ts** can give you these guarantees wi
 
 **In this final part of this series, we will use [Purify](https://gigobyte.github.io/purify/) for decoding. It has become my favourite library for TypeScript.** I prefer it because it's a simple library that gives us a few utilities and functional data structures, and does a great job of it.
 
-[fp-ts](https://gcanti.github.io/fp-ts/) is the main contender. It's very cool but seemingly crams all of Haskell or Scala into TypeScript. It's a powerful library, but it seems to be aimed at those who already are very familiar with a purely functional language.
+[fp-ts](https://gcanti.github.io/fp-ts/) is the main contender. It's very cool but seemingly crams all of Haskell or Scala into TypeScript. It's a powerful library, but I think Purify is a more pragmatic choice, and easier to learn. That's a plus if you work on a team.
 
 - Use the [CodeSandbox](https://codesandbox.io/s/remotedata-with-typescript-and-react-part-2-hlu4v?file=/src/index.tsx) from the previous post as a starter code
 
