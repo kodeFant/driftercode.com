@@ -15,7 +15,7 @@ In [part 1](blog/slaying-a-ui-antipattern-with-typescript) and [part 2](blog/sla
 
 One thing we need to cover for the app to have the benefits of an Elm app is **decoding**.
 
-After I discovered how well decoding works in TypeScript, I feel dirty when not using it.
+After discovering how well decoding works in TypeScript, I feel dirty when not using it.
 
 ## Validating what comes in
 
@@ -33,11 +33,11 @@ Luckily, a library like **Purify** or **fp-ts** can give you these guarantees wi
 
 **In this final part of this series, we will use [Purify](https://gigobyte.github.io/purify/) for decoding. It has become my favourite library for TypeScript.** I prefer it because it's a simple library that gives us a few utilities and functional data structures, and does a great job of it.
 
-[fp-ts](https://gcanti.github.io/fp-ts/) is the main contender, but seemingly crams all of Haskell or Scala into TypeScript. It's a powerful library, but harder to learn and the documentation is not that beginner friendly, in my opinion.
+[fp-ts](https://gcanti.github.io/fp-ts/) is the main contender. It's very cool but seemingly crams all of Haskell or Scala into TypeScript. It's a powerful library, but it seems to be aimed at those who already are very familiar with a purely functional language.
 
 - Use the [CodeSandbox](https://codesandbox.io/s/remotedata-with-typescript-and-react-part-2-hlu4v?file=/src/index.tsx) from the previous post as a starter code
 
-## Make a decoder and turn it into an interface
+## Make a decoder and get a type for free
 
 In the initial code, we have an interface of the **Post** type looking like this:
 
@@ -164,14 +164,14 @@ const Post = Codec.interface({
 
 ## What remains
 
-Another improvement to resemble the language features of Elm in React is immutable state. A low barrier entry is to use the [useImmer hook](https://github.com/immerjs/use-immer) instead of useState.
+Another improvement to resemble the language features of Elm in React is immutable state. A low barrier entry solution is to use the [useImmer hook](https://github.com/immerjs/use-immer) instead of useState.
 
 [Easy Peasy](https://easy-peasy.now.sh/) supports immutability by default with redux under the hood.
 
-Another alternative is [xState](https://github.com/davidkpiano/xstate). I haven't explored it in-depth yet, but I understand it forces you to be very explicit about what states are possible. Sounds great to me!
+Another alternative is [xState](https://github.com/davidkpiano/xstate). I haven't explored it in-depth yet, but I understand it forces you to be very explicit about what states are possible. Sounds awesome!
 
 These tools have good documentations and large communities, so I won't cover the usage of them in this series.
 
-But to get the full benefits and power of Elm on your front-end, it's still best to use Elm. Try it out on a [small component in your React app](https://github.com/cultureamp/react-elm-components) and decide wether you want to continue.
+But to get the full benefits and power of Elm on your front-end, it's still best to use Elm. You can try it out on a [small component in your React app](https://github.com/cultureamp/react-elm-components) and decide wether you like it or not.
 
 ## The End
