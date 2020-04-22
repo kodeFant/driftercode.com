@@ -5,35 +5,35 @@
   "title": "Slaying a UI antipattern with TypeScript and React (part 3)",
   "description": "How to type check data from an external source.",
   "image": "images/article-covers/damsel-in-distress.jpg",
-  "published": "2020-04-24",
-  "draft": true,
+  "published": "2020-04-23",
+  "draft": false,
   "slug": "slaying-a-ui-antipattern-with-typescript-part-3",
 }
 ---
 
-In [part 1](/blog/slaying-a-ui-antipattern-with-typescript) and [part 2](/blog/slaying-a-ui-antipattern-with-typescript-part-2) of this series, we made sure all the relevant views for fetching data are present on the front end. All thanks to a very simple data structure originally made for Elm.
+In [part 1](blog/slaying-a-ui-antipattern-with-typescript) and [part 2](blog/slaying-a-ui-antipattern-with-typescript-part-2), we have enforced views for all the stages of fetching data on the front end. All thanks to a very simple data structure originally made for Elm.
 
-One thing we need to cover for the app to have the benefits of an Elm app is decoding. If you want to make a safe app, I think you will learn to love this.
+One thing we need to cover for the app to have the benefits of an Elm app is **decoding**.
 
-## Why not validate the backend?
+After I discovered how well decoding works in TypeScript, I feel dirty when not using it.
 
-**We do server side validation on web forms. Why doesn't the frontend validate what comes in from the backend?**
+## Validating what comes in
+
+**We do server side validation on web forms. Why shouldn't the frontend validate what comes in from the backend?**
 
 Elm actually forces you to do that, and it contributes to eliminating pretty much all runtime exceptions. When something doesn't check out, it fails fast and loud.
 
-TypeScript lacks this feature as it only type checks what happens in the source code.
+TypeScript lacks this feature as it only type checks what happens in the source code. The interfaces you are writing are strictly speaking just qualified guesses of what you will recieve.
+
+If the api changes without you knowing, TypeScript wont't help you.
 
 Luckily, a library like **Purify** or **fp-ts** can give you these guarantees with little extra effort.
 
 ## Purify the chaos
 
-In this series we will use [Purify](https://gigobyte.github.io/purify/). I prefer it because it's a simple library that gives us functional data structures and does it well. It accepts TypeScript for what it is instead of trying to force it to be Haskell or Scala.
+**In this final part of this series, we will use [Purify](https://gigobyte.github.io/purify/) for decoding. It has become my favourite library for TypeScript.** I prefer it because it's a simple library that gives us a few utilities and functional data structures, and does a great job of it.
 
-[fp-ts](https://gcanti.github.io/fp-ts/) almost gives you Haskell or Scala in TypeScript. It's powerful, but harder to learn and the documentation is not beginner friendly.
-
-I get all I need from Purify and a utility library like [Remeda](https://github.com/remeda/remeda) (a Ramda-like for TypeScript). They both have pretty nice and simple documentation so another developer can get up to speed on your code pretty fast.
-
-If you need something even more functional and safe, just take the leap of faith and move on to [Elm](https://elm-lang.org/) already.
+[fp-ts](https://gcanti.github.io/fp-ts/) is the main contender, but seemingly crams all of Haskell or Scala into TypeScript. It's a powerful library, but harder to learn and the documentation is not that beginner friendly, in my opinion.
 
 - Use the [CodeSandbox](https://codesandbox.io/s/remotedata-with-typescript-and-react-part-2-hlu4v?file=/src/index.tsx) from the previous post as a starter code
 
@@ -77,26 +77,24 @@ const Post = Codec.interface({
 });
 ```
 
-This gives you the decoder. To get the TypeScript interface back, just add this line below it:
+This gives you the decoder. You can extract it into a TypeScript interface just by adding this line below it:
 
 ```tsx
 type Post = GetInterface<typeof Post>;
 ```
 
-That type does the exact same job as the TypeScript interface we deleted earlier and the errors should be gone.
+Yes, the **const and the type are both named `Post`** 🤔. No worries, there are no naming conflicts. TypeScript is smart enough to understand when to use a type and when to use a value.
 
-Yes, the const and the type are both named `Post`. No worries, there is no naming conflict. TypeScript is smart enough to understand when to use a type and when to use a value.
-
-Also add these lines right below.
+Also add these lines right below. This makes a list type so you can validate all the Posts in one operation:
 
 ```jsx
 const PostList = array(Post);
 type PostList = GetInterface<typeof PostList>;
 ```
 
-Replace all occurrences of `Post[]` with `PostList` in the code. That lets us also decode an array of posts.
+Replace all occurrences of **`Post[]`** with **`PostList`** in the code.
 
-## To the hard part
+## Making a type safe fetch request
 
 Now, we only need to modify the **fetchPosts** function a bit.
 
@@ -106,38 +104,39 @@ async function fetchPosts(): Promise<RemoteData<Error, PostList>> {
   try {
     if (!response.ok) throw await response.json();
     const data = await response.json();
-    const decodedData = PostList.decode(data).either(
-      (err) => {
-        return { type: "FAILURE", error: Error(err) } as RemoteData<
-          Error,
-          PostList
-        >;
-      },
-      (successData) => {
+
+    const decodedPosts = PostList.decode(data);
+
+    return decodedPosts.caseOf({
+      Left: (err) =>
+        ({ type: "FAILURE", error: Error(err) } as RemoteData<Error, PostList>),
+      Right: (successData) => {
         return { type: "SUCCESS", data: successData } as RemoteData<
           Error,
           PostList
         >;
-      }
-    );
-
-    return decodedData;
+      },
+    });
   } catch (e) {
     return { type: "FAILURE", error: e };
   }
 }
 ```
 
-Most of this function is similar to the previous series, but in the **decodedData** constant, there is some functional stuff going on. Don't worry if you don't get it all at first.
+The decode function typechecks the data argument every time the app fetches the data.
 
-The **PostList.decode** function takes in the uncertain **data** value from the outside and finds out if the types checks out. It returns an **Either** value which can return one of the two values:
+Don't worry if you don't get it all at first. In my opinion, this is best learned by practical use.
 
-1. **Left**: A container with an error message
+The **PostList.decode** function takes in the uncertain **data** value from the outside and finds out if the types checks out. It returns an **Either** value which only can return one of the two values:
+
+1. **Left**: A container with an error message if the types aren't right
 2. **Right**: A container with the correct and verified **PostList** value.
 
-To turn these values into RemoteData values, we use the **.either** method to map both the left and right value into RemoteData values.
+The **caseOf** function extracts the values out of the **Either** container.
 
-Now, you should have decoding enabled.
+If it doesn't fail, the data inside the app is now guaranteed to have the correct types.
+
+_The convention in functional programming is that the **left** side argument is the error and **right** side is right. **Right is right**._
 
 ## Let's put it to the test
 
@@ -165,12 +164,14 @@ const Post = Codec.interface({
 
 ## What remains
 
-Another improvement to resemble Elm is immutable state. A simple way is to use the [useImmer hook](https://github.com/immerjs/use-immer) instead of useState.
+Another improvement to resemble the language features of Elm in React is immutable state. A low barrier entry is to use the [useImmer hook](https://github.com/immerjs/use-immer) instead of useState.
 
-For more advanced state management, I think [Easy Peasy](https://easy-peasy.now.sh/) is a great alternative built on Redux, but with a simpler API. It's immutable with Immer by default. Another alternative is [xState](https://github.com/davidkpiano/xstate) for being very explicit about possible states.
+[Easy Peasy](https://easy-peasy.now.sh/) supports immutability by default with redux under the hood.
 
-These tools have great documentation and large communities, so I won't cover the usage of them in this series.
+Another alternative is [xState](https://github.com/davidkpiano/xstate). I haven't explored it in-depth yet, but I understand it forces you to be very explicit about what states are possible. Sounds great to me!
 
-But to get the full benefits and power of Elm, it's best to use Elm. Try it out on a small component in your app and decide wether you like it.
+These tools have good documentations and large communities, so I won't cover the usage of them in this series.
+
+But to get the full benefits and power of Elm on your front-end, it's still best to use Elm. Try it out on a [small component in your React app](https://github.com/cultureamp/react-elm-components) and decide wether you want to continue.
 
 ## The End
