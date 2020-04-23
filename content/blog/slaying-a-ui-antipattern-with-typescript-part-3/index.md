@@ -15,7 +15,7 @@ In [part 1](blog/slaying-a-ui-antipattern-with-typescript) and [part 2](blog/sla
 
 One thing we need to cover for the app to resemble the benefits of an Elm app is **decoding**.
 
-After discovering how well decoding works in TypeScript, I feel dirty when not using it.
+After discovering how well decoding works in TypeScript, I almost feel dirty when not using it.
 
 ## Validating what comes in
 
