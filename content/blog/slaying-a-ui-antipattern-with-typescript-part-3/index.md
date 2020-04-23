@@ -27,7 +27,7 @@ TypeScript lacks this feature as it only type checks what happens in the source 
 
 If the api changes without you knowing, TypeScript wont't help you.
 
-Luckily, a library like **Purify** or **fp-ts** can give you these guarantees with little extra effort.
+A library like **Purify** or **fp-ts** can give you these guarantees with little extra effort.
 
 ## Purify the chaos
 
