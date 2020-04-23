@@ -2,8 +2,8 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "Slaying a UI antipattern with TypeScript and React (part 3)",
-  "description": "How to type-check data from an external source.",
+  "title": "How to typecheck data from an external source on the front end",
+  "description": "Be more confident of the data you use in your app. Slaying a UI antipattern with TypeScript and React (part 3).",
   "image": "images/article-covers/damsel-in-distress.jpg",
   "published": "2020-04-23",
   "draft": false,
