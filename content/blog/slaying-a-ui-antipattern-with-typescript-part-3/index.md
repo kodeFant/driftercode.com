@@ -31,9 +31,9 @@ A library like **Purify** or **fp-ts** can give you these guarantees with little
 
 ## Purify the chaos
 
-**In this final part of this series, we will use [Purify](https://gigobyte.github.io/purify/) for decoding. It has become my favourite library for TypeScript.** I prefer it because it's a simple library that gives us a few utilities and functional data structures, and does a great job of it.
+**In this final part of this series, we will use [Purify](https://gigobyte.github.io/purify/) for decoding. It has lately become my favourite library for TypeScript.** It's a pretty simple library that gives us a few utilities and functional data structures, and does a great job of it.
 
-[fp-ts](https://gcanti.github.io/fp-ts/) is the main contender. It's very cool but seemingly crams all of Haskell or Scala into TypeScript. It's a powerful library, but I think Purify is a more pragmatic choice, and easier to learn.
+[fp-ts](https://gcanti.github.io/fp-ts/) is the main contender. It does much of the same but seemingly crams all features of Haskell or Scala into TypeScript. It's a powerful library, but I think Purify is a more pragmatic choice, and easier to learn.
 
 - Use the [CodeSandbox](https://codesandbox.io/s/remotedata-with-typescript-and-react-part-2-hlu4v?file=/src/index.tsx) from the previous post as a starter code
 
