@@ -8,7 +8,6 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Pages
 import Pages.PagePath exposing (PagePath)
-import Styled
 
 
 view : PagePath Pages.PathKey -> Html msg
@@ -55,35 +54,4 @@ view _ =
                     [ text "Blog" ]
                 ]
             ]
-        ]
-
-
-logo : Html msg
-logo =
-    Styled.image
-        [ css
-            [ hover
-                [ animationName logoKeyFrames
-                , animationDuration (ms 200)
-                , Css.property "animation-timing-function" "linear"
-                , Css.property "animation-fill-mode" "forwards"
-                ]
-            ]
-        ]
-        { path = "/images/logo.png", description = "" }
-
-
-logoKeyFrames : Keyframes {}
-logoKeyFrames =
-    keyframes
-        [ ( 0
-          , [ Css.Animations.property "filter" "brightness(1)"
-            , Css.Animations.property "filter" "saturate(1)"
-            ]
-          )
-        , ( 100
-          , [ Css.Animations.property "filter" "brightness(5)"
-            , Css.Animations.property "filter" "saturate(0)"
-            ]
-          )
         ]
