@@ -8,6 +8,7 @@
   "published": "2020-03-17",
   "draft": true,
   "slug": "functional-js-vs-ts",
+  tags: [],
 }
 ---
 

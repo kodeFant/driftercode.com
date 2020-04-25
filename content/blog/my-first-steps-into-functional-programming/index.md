@@ -8,6 +8,7 @@
   "published": "2020-02-27",
   "draft": false,
   "slug": "learning-functional-programming-requires-a-big-leap-of-faith",
+  tags: [],
 }
 ---
 

@@ -8,6 +8,7 @@
   "published": "2020-04-23",
   "draft": false,
   "slug": "slaying-a-ui-antipattern-with-typescript-part-3",
+  "tags": [elm, typescript],
 }
 ---
 
