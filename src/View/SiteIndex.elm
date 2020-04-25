@@ -21,7 +21,7 @@ view :
     -> List (Html msg)
     -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
     -> Html msg
-view indexMeta posts rendered page =
+view indexMeta _ _ page =
     Layout.Scaffold.view page.path
         (div
             [ css [ displayFlex, flexDirection column, alignItems center, Css.width (pct 100) ] ]
