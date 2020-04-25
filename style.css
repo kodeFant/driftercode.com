@@ -1,13 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Rye:wght@400&family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap");
 
-:root {
-  --black: rgb(30, 30, 30);
-  --darkest-gray: rgb(51, 51, 51);
-  --white: #e5e5e5;
-  --light-gray: rgb(200, 200, 200);
-  --lighter-gray: rgb(237, 237, 237);
-}
-
 html {
   box-sizing: border-box;
 }
@@ -20,6 +12,7 @@ html {
 body {
   margin: 0;
   font-family: "Open Sans";
+  background-color: #efefef;
 }
 
 * {

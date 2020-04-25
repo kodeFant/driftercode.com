@@ -12,7 +12,7 @@ import Pages.PagePath exposing (PagePath)
 
 view : PagePath Pages.PathKey -> Html msg -> Bool -> Html msg
 view page content footerVisible =
-    div [ css [ Css.width (pct 100), backgroundColor colors.white ] ]
+    div [ css [ Css.width (pct 100), backgroundColor colors.white, minHeight (vh 100) ] ]
         ([ Layout.Header.view page
          , content
          ]

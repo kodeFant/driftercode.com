@@ -154,7 +154,7 @@ styledIndexHero =
             , Css.width (pct 100)
             , Css.maxWidth (px 1000)
             , marginTop (rem 5)
-            , Css.height (vh 100)
+            , Css.height (pct 100)
             , Css.property "display" "grid"
             , Css.property "grid-template-columns" "1fr"
             , Css.property "grid-gap" "1rem"
@@ -166,6 +166,7 @@ styledIndexHero =
                                                  """
             , Responsive.tabletUp
                 [ marginTop zero
+                , Css.height (vh 100)
                 , Css.property "display" "grid"
                 , Css.property "grid-template-columns" "50% 50%"
                 , Css.property "grid-template-areas" """
