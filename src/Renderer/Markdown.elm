@@ -21,7 +21,7 @@ mainRenderer =
                     Styled.heading1 [] children
 
                 Block.H2 ->
-                    Styled.heading2 [] children
+                    Styled.heading2 [ marginTop (rem 3.5) ] children
 
                 Block.H3 ->
                     Styled.heading3 [] children

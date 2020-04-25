@@ -24,17 +24,26 @@ view :
 view indexMeta _ _ page =
     Layout.Scaffold.view page.path
         (div
-            [ css [ displayFlex, flexDirection column, alignItems center, Css.width (pct 100) ] ]
+            [ css [ displayFlex, flexDirection column, alignItems center, Css.width (pct 100), maxHeight (vh 100) ] ]
             [ styledIndexHero
                 [ styledHeroContent
-                    [ styledMainHeader [ text indexMeta.title ]
-                    , styledSubheading [ text indexMeta.subHeading ]
-                    , div [ css [ padding2 (rem 2.5) zero, fontSize (px 18) ] ]
+                    [ styledTitle [ text indexMeta.title ]
+                    , styledSubTitle [ text indexMeta.subHeading ]
+                    , div
+                        [ css
+                            [ display none
+                            , Responsive.tabletUp
+                                [ padding2 (rem 2.5) zero
+                                , fontSize (px 18)
+                                , display block
+                                ]
+                            ]
+                        ]
                         [ p [] [ text "A budding functional programmer who used to be a journalist." ]
                         , p [] [ text "I’m learning functional programming by blogging about it." ]
                         , p [] [ text "Mathy algebraic slang to be kept at a minimum." ]
                         ]
-                    , div [ css [ displayFlex ] ]
+                    , div [ css [ displayFlex, justifyContent center, marginTop (rem 2), Responsive.tabletUp [ justifyContent flexStart ] ] ]
                         [ Styled.buttonLink
                             [ href indexMeta.buttonLink ]
                             [ text indexMeta.buttonText ]
@@ -44,8 +53,10 @@ view indexMeta _ _ page =
                     [ css
                         [ Css.width auto
                         , Css.maxWidth (pct 100)
-                        , Css.maxHeight (pct 90)
                         , float right
+                        , Css.property "grid-area" "image"
+                        , Responsive.tabletUp [ Css.maxHeight (pct 90) ]
+                        , alignSelf center
                         ]
                     ]
                     { path = ImagePath.toString Pages.images.driftercode, description = "" }
@@ -60,22 +71,31 @@ view indexMeta _ _ page =
 styledHeroContent : List (Html msg) -> Html msg
 styledHeroContent =
     div
-        [ css [ Css.width (pct 100) ] ]
+        [ css [ Css.width (pct 100), Css.property "grid-area" "content" ] ]
 
 
-styledMainHeader : List (Html msg) -> Html msg
-styledMainHeader =
-    Styled.heading1 [ marginTop zero, fontWeight normal, fontSize (px 64) ]
+styledTitle : List (Html msg) -> Html msg
+styledTitle =
+    Styled.heading1
+        [ fontSize (px 32)
+        , textAlign center
+        , Responsive.tabletUp
+            [ fontSize (px 64)
+            , marginTop zero
+            , fontWeight normal
+            , textAlign left
+            ]
+        ]
 
 
-styledSubheading : List (Html msg) -> Html msg
-styledSubheading =
-    div [ css [ fontSize (px 22) ] ]
+styledSubTitle : List (Html msg) -> Html msg
+styledSubTitle =
+    div [ css [ fontSize (px 22), textAlign center, Responsive.tabletUp [ textAlign left ] ] ]
 
 
 socialMediaLinks : Html msg
 socialMediaLinks =
-    div [ css [ displayFlex, paddingBottom (rem 2) ] ]
+    div [ css [ displayFlex, paddingBottom (rem 2), Css.property "grid-area" "some", justifyContent center, Responsive.tabletUp [ justifyContent flexStart ] ] ]
         [ Styled.newTabLink []
             { content = [ styledIconContainer [ marginRight (rem 1) ] [ Icon.twitter ] ]
             , url = "https://twitter.com/" ++ Constants.siteTwitter
@@ -101,7 +121,7 @@ socialMediaLinks =
 
 languageLinks : Html msg
 languageLinks =
-    div [ css [ displayFlex, justifyContent flexEnd, alignItems center, paddingBottom (rem 2) ] ]
+    div [ css [ display none, Responsive.tabletUp [ displayFlex, justifyContent flexEnd, alignItems center, paddingBottom (rem 2), Css.property "grid-area" "language" ] ] ]
         [ span [ css [ fontWeight bold ] ] [ text "Featuring" ]
         , Styled.newTabLink []
             { url = "https://www.typescriptlang.org/"
@@ -131,12 +151,27 @@ styledIndexHero =
     div
         [ css
             [ padding (rem 1)
-            , Css.height (vh 100)
             , Css.width (pct 100)
             , Css.maxWidth (px 1000)
+            , marginTop (rem 5)
+            , Css.height (vh 100)
+            , Css.property "display" "grid"
+            , Css.property "grid-template-columns" "1fr"
+            , Css.property "grid-gap" "1rem"
+            , Css.property "grid-template-areas" """
+                                                 "image"
+                                                 "content"
+                                                 "language"
+                                                 "some"
+                                                 """
             , Responsive.tabletUp
-                [ Css.property "display" "grid"
-                , Css.property "grid-template-columns" "1fr 1fr"
+                [ marginTop zero
+                , Css.property "display" "grid"
+                , Css.property "grid-template-columns" "50% 50%"
+                , Css.property "grid-template-areas" """
+                                                     "content   image"
+                                                     "some      language"
+                                                     """
                 , Css.property "align-items" "center"
                 , Css.property "grid-template-rows" "auto 2rem"
                 ]

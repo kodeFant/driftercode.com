@@ -84,9 +84,9 @@ heading1 styles content =
     h1 [ css ([ fontSize (px 42), fontFamilies [ "Rye" ] ] ++ styles) ] content
 
 
-heading2 : List (Attribute msg) -> List (Html msg) -> Html msg
-heading2 attr content =
-    h2 (attr ++ [ css [ fontSize (px 36), fontFamilies [ "Open Sans" ] ] ]) content
+heading2 : List Style -> List (Html msg) -> Html msg
+heading2 styles content =
+    h2 [ css ([ fontSize (px 36), fontFamilies [ "Open Sans" ] ] ++ styles) ] content
 
 
 heading3 : List (Attribute msg) -> List (Html msg) -> Html msg
