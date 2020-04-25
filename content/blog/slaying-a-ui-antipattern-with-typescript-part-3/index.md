@@ -11,7 +11,7 @@
 }
 ---
 
-In [part 1](blog/slaying-a-ui-antipattern-with-typescript) and [part 2](blog/slaying-a-ui-antipattern-with-typescript-part-2), we enforced views for all the stages of fetching data on the front end.
+In [part 1](blog/slaying-a-ui-antipattern-with-typescript) and [part 2](blog/slaying-a-ui-antipattern-with-typescript-part-2), we enforced views for all the stages of fetching data on the front-end.
 
 One thing we need to cover for the app to resemble the benefits of an Elm app is **decoding**.
 
@@ -19,7 +19,7 @@ After discovering how well decoding works in TypeScript, I almost feel dirty whe
 
 ## Validating what comes in
 
-**We do server side validation on web forms. Why shouldn't the frontend validate what comes in from the backend?**
+**We do server side validation on web forms. Why shouldn't the front-end validate what comes in from the backend?**
 
 Elm actually forces you to do that, and it contributes to eliminating pretty much all runtime exceptions. When something doesn't check out, it fails fast and loud.
 

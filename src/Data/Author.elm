@@ -24,7 +24,7 @@ defaultAuthor : Author
 defaultAuthor =
     { name = "Lars Lillo Ulvestad"
     , avatar = Pages.images.author.lillo
-    , bio = "Developer and digital storyteller. Works as a frontend developer at Kantega."
+    , bio = "Developer and digital storyteller. Works as a front-end developer at Kantega."
     , twitter = Constants.siteTwitter
     , linkedinUrl = Constants.siteLinkedIn
     }
