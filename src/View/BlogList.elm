@@ -102,7 +102,6 @@ indexCard ( postPath, _ ) =
             , color colors.black
             , borderRadius (px 7)
             , Responsive.tabletUp [ border3 (px 4) solid colors.lighterGray ]
-            , fontFamilies [ "Rye" ]
             , fontSize (rem 1)
             , firstOfType
                 [ Responsive.desktopUp
@@ -147,7 +146,7 @@ styledIndexCardDate =
 
 styledIndexCardTitle : List (Html msg) -> Html msg
 styledIndexCardTitle =
-    h2 [ css [ fontSize (rem 2) ] ]
+    h2 [ css [ fontSize (rem 2), fontFamilies [ "Rye" ] ] ]
 
 
 styledIndexCardDescription : List (Html msg) -> Html msg

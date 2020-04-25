@@ -141,6 +141,7 @@ link { destination } body =
                     , css =
                         [ color colors.freshDirt
                         , textDecoration none
+                        , hover [ color colors.darkRed, textDecoration underline ]
                         ]
                     }
 
@@ -151,6 +152,7 @@ link { destination } body =
                     , css =
                         [ color colors.freshDirt
                         , textDecoration none
+                        , hover [ color colors.darkRed, textDecoration underline ]
                         ]
                     }
 
