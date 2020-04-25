@@ -13,7 +13,7 @@ import Pages.StaticHttp as StaticHttp
 import Renderer.View exposing (Rendered)
 import Types exposing (Model, Msg)
 import View.Article
-import View.BlogIndex
+import View.BlogList
 import View.Page
 import View.SiteIndex
 
@@ -94,7 +94,7 @@ pageView model comments siteMetadata page ( count, viewForPage ) =
         Head.Metadata.BlogIndex ->
             { title = "Blog"
             , body =
-                View.BlogIndex.view siteMetadata viewForPage page
+                View.BlogList.view siteMetadata viewForPage page
             }
 
         Head.Metadata.Author author ->

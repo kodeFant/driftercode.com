@@ -20,6 +20,12 @@
     "elm-analyse": "^0.16.5",
     "elm-format": "^0.8.2",
     "elm-pages": "^1.3.0",
-    "http-server": "^0.12.1"
+    "http-server": "^0.12.1",
+    "husky": "^4.2.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "echo HELLO"
+    }
   }
 }

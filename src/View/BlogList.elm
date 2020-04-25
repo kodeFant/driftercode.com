@@ -1,5 +1,6 @@
-module View.BlogIndex exposing (view)
+module View.BlogList exposing (view)
 
+import Constants
 import Css exposing (..)
 import Date
 import Design.Palette exposing (colors)
@@ -174,6 +175,6 @@ styledIndexContainer : List (Html msg) -> Html msg
 styledIndexContainer =
     div
         [ css
-            [ maxWidth (px 900)
+            [ maxWidth Constants.maxWidthLarge
             ]
         ]
