@@ -9,6 +9,7 @@ module Comment exposing
     , initialDeleteCommentForm
     , postComment
     , requestDeleteEmail
+    , submitDeleteCommentForm
     , updateSubmitComment
     , validateCommentForm
     , view
@@ -51,6 +52,7 @@ type alias Comment =
 type alias DeleteCommentForm =
     { email : String
     , sendRequest : WebData String
+    , errors : List DeleteCommentError
     }
 
 
@@ -70,6 +72,10 @@ type CommentField
 
 
 type alias CommentError =
+    ( CommentField, String )
+
+
+type alias DeleteCommentError =
     ( CommentField, String )
 
 
@@ -96,6 +102,7 @@ initialDeleteCommentForm : DeleteCommentForm
 initialDeleteCommentForm =
     { email = ""
     , sendRequest = NotAsked
+    , errors = []
     }
 
 
@@ -231,7 +238,14 @@ deleteForm { updateDeleteCommentForm, commentInfoToggle, requestDeletionEmail } 
             div []
                 [ h3 [ css [ fontSize (px 28) ] ] [ text "Delete Comment" ]
                 , div [] [ text "Want to delete a comment on this page? Fill in you email. You can delete the comment from your email inbox." ]
-                , Styled.emailInput [] { onChange = \value -> updateDeleteCommentForm { deleteCommentForm | email = value }, autoComplete = True, label = "Email address" }
+                , Styled.emailInput []
+                    { onChange =
+                        \value ->
+                            updateDeleteCommentForm
+                                { deleteCommentForm | email = value }
+                    , autoComplete = True
+                    , label = "Email address"
+                    }
                 , div [ css [ displayFlex, justifyContent spaceBetween ] ]
                     [ Styled.dangerButton []
                         { onPress = requestDeletionEmail state.deleteCommentForm.email
@@ -244,6 +258,7 @@ deleteForm { updateDeleteCommentForm, commentInfoToggle, requestDeletionEmail } 
                         , buttonType = "button"
                         }
                     ]
+                , formErrorView deleteCommentForm.errors Email
                 ]
 
         Loading ->
@@ -375,7 +390,7 @@ validateCommentForm =
         ]
 
 
-validateDeleteCommentForm : Validator CommentError DeleteCommentForm
+validateDeleteCommentForm : Validator DeleteCommentError DeleteCommentForm
 validateDeleteCommentForm =
     Validate.all
         [ ifBlank .email ( Email, "Email is required" )
@@ -399,3 +414,21 @@ updateSubmitComment message slug model =
 
         Err err ->
             ( { model | commentForm = { commentForm | errors = err } }, Cmd.none )
+
+
+submitDeleteCommentForm :
+    (WebData String -> msg)
+    -> String
+    -> { r | deleteCommentForm : DeleteCommentForm }
+    -> ( { r | deleteCommentForm : DeleteCommentForm }, Cmd msg )
+submitDeleteCommentForm message email model =
+    let
+        deleteCommentForm =
+            model.deleteCommentForm
+    in
+    case validate validateDeleteCommentForm deleteCommentForm of
+        Ok _ ->
+            ( { model | deleteCommentForm = { deleteCommentForm | sendRequest = Loading } }, requestDeleteEmail message email )
+
+        Err err ->
+            ( { model | deleteCommentForm = { deleteCommentForm | errors = err } }, Cmd.none )

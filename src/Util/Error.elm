@@ -18,7 +18,7 @@ errorToString error =
         BadStatus int ->
             case int of
                 400 ->
-                    "Error 400: Validation error. Please make sure you sent correctly formatted information"
+                    "Error 400: Please verify that you filled in correct and relevant information and try again"
 
                 code ->
                     "Error " ++ String.fromInt code

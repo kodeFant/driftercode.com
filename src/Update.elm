@@ -48,7 +48,8 @@ update msg model =
             ( { model | deleteCommentForm = form }, Cmd.none )
 
         RequestDeletionEmail email ->
-            ( { model | deleteCommentForm = { initialDeleteCommentForm | sendRequest = Loading } }, requestDeleteEmail GotDeletionEmailResponse email )
+            Comment.submitDeleteCommentForm GotDeletionEmailResponse email model
 
+        -- ( { model | deleteCommentForm = { initialDeleteCommentForm | sendRequest = Loading } }, requestDeleteEmail GotDeletionEmailResponse email )
         GotDeletionEmailResponse webData ->
             ( { model | deleteCommentForm = { initialDeleteCommentForm | sendRequest = webData } }, Cmd.none )
