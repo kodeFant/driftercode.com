@@ -10,12 +10,14 @@ module Styled exposing
     , heading6
     , image
     , link
+    , linkedinStyle
     , mainContainer
     , newTabLink
     , paragraph
     , primaryButton
     , textAreaInput
     , textInput
+    , twitterStyle
     )
 
 import Css exposing (..)
@@ -38,69 +40,72 @@ image attr { path, description } =
         []
 
 
-link : List (Attribute msg) -> List (Html msg) -> Html msg
-link attr content =
+type alias LinkOptions msg =
+    { url : String
+    , content : List (Html msg)
+    , css : List Style
+    }
+
+
+link : List (Attribute msg) -> LinkOptions msg -> Html msg
+link attr config =
     a
         (attr
-            ++ [ css
-                    [ color (rgb 255 165 0)
-                    , textDecoration none
-                    , transition [ backgroundColor3 500 0 easeInOut ]
-                    , hover
-                        [ backgroundColor (rgba 0 0 0 0.829)
-                        , color (rgb 255 165 0)
-                        ]
-                    ]
+            ++ [ href config.url
+               , css
+                    config.css
                ]
         )
-        content
+        config.content
 
 
-newTabLink : List (Attribute msg) -> List (Html msg) -> Html msg
-newTabLink attr content =
-    link (attr ++ [ Attr.target "_blank", rel "noreferrer noopener" ]) content
+newTabLink : List (Attribute msg) -> LinkOptions msg -> Html msg
+newTabLink attr linkOptions =
+    link (attr ++ [ Attr.target "_blank", rel "noreferrer noopener" ]) linkOptions
 
 
-mainContainer : List (Html msg) -> Html msg
-mainContainer content =
+mainContainer : List Style -> List (Html msg) -> Html msg
+mainContainer styles content =
     main_
         [ css
-            [ Css.width (pct 100)
-            , displayFlex
-            , justifyContent center
-            ]
+            ([ Css.width (pct 100)
+             , displayFlex
+             , justifyContent center
+             ]
+                ++ styles
+            )
         ]
         content
 
 
-heading1 : List (Attribute msg) -> List (Html msg) -> Html msg
-heading1 attr content =
-    h1 (attr ++ [ css [ fontSize (px 42), fontFamilies [ "Merriweather" ] ] ]) content
+heading1 : List Style -> List (Html msg) -> Html msg
+heading1 styles content =
+    h1 [ css ([ fontSize (px 42), fontFamilies [ "Rye" ] ] ++ styles) ] content
 
 
 heading2 : List (Attribute msg) -> List (Html msg) -> Html msg
 heading2 attr content =
-    h2 (attr ++ [ css [ fontSize (px 36), fontFamilies [ "Merriweather" ] ] ]) content
+    h2 (attr ++ [ css [ fontSize (px 36), fontFamilies [ "Rye" ] ] ]) content
 
 
 heading3 : List (Attribute msg) -> List (Html msg) -> Html msg
 heading3 attr content =
-    h3 (attr ++ [ css [ fontSize (px 32), fontFamilies [ "Merriweather" ] ] ]) content
+    h3 (attr ++ [ css [ fontSize (px 32), fontFamilies [ "Rye" ] ] ]) content
 
 
 heading4 : List (Attribute msg) -> List (Html msg) -> Html msg
 heading4 attr content =
-    h4 (attr ++ [ css [ fontSize (px 28), fontFamilies [ "Merriweather" ] ] ]) content
+    h4 (attr ++ [ css [ fontSize (px 28), fontFamilies [ "Rye" ] ] ]) content
 
 
 heading5 : List (Attribute msg) -> List (Html msg) -> Html msg
 heading5 attr content =
-    h5 (attr ++ [ css [ fontSize (px 24), fontFamilies [ "Merriweather" ] ] ]) content
+    h5 (attr ++ [ css [ fontSize (px 24), fontFamilies [ "Rye" ] ] ]) content
 
 
 heading6 : List (Attribute msg) -> List (Html msg) -> Html msg
 heading6 attr content =
-    h6 (attr ++ [ css [ fontSize (px 20), fontFamilies [ "Merriweather" ] ] ]) content
+    h6 (attr ++ [ css [ fontSize (px 20), fontFamilies [ "Rye" ] ] ]) content
 
 
 paragraph : List (Attribute msg) -> List (Html msg) -> Html msg
@@ -298,3 +303,19 @@ primaryButton attr { onPress, buttonType, label } =
         , buttonType = buttonType
         , label = label
         }
+
+
+twitterStyle : List Style
+twitterStyle =
+    [ marginRight (rem 0.5)
+    , color (rgba 29 161 242 0.5)
+    , hover [ color (rgba 29 161 242 0.9) ]
+    ]
+
+
+linkedinStyle : List Style
+linkedinStyle =
+    [ marginRight (rem 0.5)
+    , color (rgba 29 161 242 0.5)
+    , hover [ color (rgba 29 161 242 0.9) ]
+    ]

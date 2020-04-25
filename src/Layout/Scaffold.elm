@@ -1,6 +1,7 @@
 module Layout.Scaffold exposing (view)
 
 import Css exposing (..)
+import Design.Palette exposing (colors)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Layout.Footer
@@ -9,10 +10,16 @@ import Pages
 import Pages.PagePath exposing (PagePath)
 
 
-view : PagePath Pages.PathKey -> Html msg -> Html msg
-view page content =
-    div [ css [ Css.width (pct 100) ] ]
-        [ Layout.Header.view page
-        , content
-        , Layout.Footer.view
-        ]
+view : PagePath Pages.PathKey -> Html msg -> Bool -> Html msg
+view page content footerVisible =
+    div [ css [ Css.width (pct 100), backgroundColor colors.white ] ]
+        ([ Layout.Header.view page
+         , content
+         ]
+            ++ (if footerVisible == True then
+                    [ Layout.Footer.view ]
+
+                else
+                    []
+               )
+        )

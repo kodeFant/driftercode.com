@@ -6,6 +6,7 @@ import Design.Icon
 import Head.Metadata exposing (ArticleMetadata)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
+import Styled
 
 
 bio : ArticleMetadata -> Html msg
@@ -32,9 +33,9 @@ socialIcons metadata =
             , Html.Styled.Attributes.target "_blank"
             , rel "noreferrer noopener"
             , css
-                [ Css.width (px 16)
-                ]
-            , twitterStyle
+                (Css.width (px 16)
+                    :: Styled.twitterStyle
+                )
             ]
             [ Design.Icon.twitter ]
         , a
@@ -42,29 +43,11 @@ socialIcons metadata =
             , Html.Styled.Attributes.target "_blank"
             , rel "noreferrer noopener"
             , css
-                [ Css.width (px 16)
-                ]
-            , linkedinStyle
+                (Css.width (px 16)
+                    :: Styled.linkedinStyle
+                )
             ]
             [ Design.Icon.linkedIn ]
-        ]
-
-
-twitterStyle : Attribute msg
-twitterStyle =
-    css
-        [ marginRight (rem 0.5)
-        , color (rgba 29 161 242 0.5)
-        , hover [ color (rgba 29 161 242 0.9) ]
-        ]
-
-
-linkedinStyle : Attribute msg
-linkedinStyle =
-    css
-        [ marginRight (rem 0.5)
-        , color (rgba 29 161 242 0.5)
-        , hover [ color (rgba 29 161 242 0.9) ]
         ]
 
 

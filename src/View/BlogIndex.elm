@@ -22,15 +22,16 @@ view :
     -> Html msg
 view posts rendered page =
     Layout.Scaffold.view page.path
-        (Styled.mainContainer
-            [ styledIndexContainer
-                [ styledIndexHeader
-                    [ div [ css [ textAlign center ] ] rendered
+        (div
+            [ css [ displayFlex, flexDirection column, paddingTop (rem 5) ] ]
+            [ Styled.mainContainer []
+                [ styledIndexContainer
+                    [ blogIndexItems posts
                     ]
-                , blogIndexItems posts
                 ]
             ]
         )
+        True
 
 
 blogIndexItems : List ( PagePath Pages.PathKey, Metadata ) -> Html msg
@@ -40,12 +41,6 @@ blogIndexItems posts =
             |> List.filterMap
                 (\( path, metadata ) ->
                     case metadata of
-                        Head.Metadata.Page _ ->
-                            Nothing
-
-                        Head.Metadata.Author _ ->
-                            Nothing
-
                         Head.Metadata.Article meta ->
                             if meta.draft then
                                 Nothing
@@ -53,7 +48,7 @@ blogIndexItems posts =
                             else
                                 Just ( path, meta )
 
-                        Head.Metadata.BlogIndex ->
+                        _ ->
                             Nothing
                 )
             |> List.sortWith
@@ -97,17 +92,6 @@ styledIndexItemsGrid =
         ]
 
 
-styledIndexHeader : List (Html msg) -> Html msg
-styledIndexHeader =
-    div
-        [ css
-            [ alignItems center
-            , padding (rem 1)
-            , Responsive.tabletUp [ padding (rem 3) ]
-            ]
-        ]
-
-
 indexCard : ( PagePath Pages.PathKey, Head.Metadata.ArticleMetadata ) -> List (Html msg) -> Html msg
 indexCard ( postPath, _ ) =
     a
@@ -117,7 +101,7 @@ indexCard ( postPath, _ ) =
             , color colors.black
             , borderRadius (px 7)
             , Responsive.tabletUp [ border3 (px 4) solid colors.lighterGray ]
-            , fontFamilies [ "Merriweather" ]
+            , fontFamilies [ "Rye" ]
             , fontSize (rem 1)
             , firstOfType
                 [ Responsive.desktopUp

@@ -2,6 +2,7 @@ module View.Article exposing (view)
 
 import Comment exposing (Comment)
 import Component.Bio exposing (bio)
+import Constants
 import Css exposing (..)
 import Design.Palette exposing (colors)
 import Head.Metadata exposing (ArticleMetadata, Metadata)
@@ -26,10 +27,10 @@ view :
     -> Html Msg
 view model count metadata comments page viewForPage =
     Layout.Scaffold.view page.path
-        (Styled.mainContainer
+        (Styled.mainContainer [ paddingTop (rem 5) ]
             [ styledContentContainer
                 [ bio metadata
-                , Styled.heading1 [ css [ textAlign center, margin2 (rem 1) zero ] ]
+                , Styled.heading1 [ textAlign center, margin2 (rem 1) zero ]
                     [ text metadata.title ]
                 , styledPreamble
                     [ text metadata.description ]
@@ -56,6 +57,7 @@ view model count metadata comments page viewForPage =
                 ]
             ]
         )
+        True
 
 
 
@@ -142,4 +144,4 @@ styledPreamble =
 styledContentContainer : List (Html msg) -> Html msg
 styledContentContainer =
     div
-        [ css [ maxWidth (px 700), Css.width (pct 100), padding (rem 1) ] ]
+        [ css [ maxWidth Constants.maxWidthDefault, Css.width (pct 100), padding (rem 1), backgroundColor colors.trueWhite ] ]

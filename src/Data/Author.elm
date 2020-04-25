@@ -1,5 +1,6 @@
 module Data.Author exposing (Author, all, decoder, defaultAuthor, view)
 
+import Constants
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
@@ -24,8 +25,8 @@ defaultAuthor =
     { name = "Lars Lillo Ulvestad"
     , avatar = Pages.images.author.lillo
     , bio = "Developer and digital storyteller. Works as a frontend developer at Kantega."
-    , twitter = "larsparsfromage"
-    , linkedinUrl = "https://www.linkedin.com/in/larslilloulvestad/"
+    , twitter = Constants.siteTwitter
+    , linkedinUrl = Constants.siteLinkedIn
     }
 
 

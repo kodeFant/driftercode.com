@@ -8,6 +8,7 @@ type alias PaletteColors =
     , secondary : Color
     , lightGray : Color
     , white : Color
+    , trueWhite : Color
     , darkestGray : Color
     , lighterGray : Color
     , black : Color
@@ -18,6 +19,9 @@ type alias PaletteColors =
     , green : Color
     , green2 : Color
     , error : Color
+    , drifterCoal : Color
+    , offWhite : Color
+    , freshDirt : Color
     }
 
 
@@ -25,7 +29,9 @@ colors : PaletteColors
 colors =
     { primary = rgb 255 165 0 -- rgb(255,165,0)
     , secondary = rgb 235 145 0 -- rgb(235,145,0)
-    , white = rgb 255 255 255 -- rgb(255, 255, 255)
+    , offWhite = Css.hex "#E5E5E5"
+    , white = Css.hex "#EFEFEF"
+    , trueWhite = Css.hex "#FFFFFF"
     , darkestGray = rgb 51 51 51 --rgb(51,51,51)
     , lightGray = rgb 200 200 200 --rgb(200,200,200)
     , lighterGray = rgb 237 237 237 --rgb(237,237,237)
@@ -37,4 +43,6 @@ colors =
     , green = Css.hex "#C8E6C9"
     , green2 = Css.hex "#4CAF50"
     , error = Css.hex "#ffebee"
+    , drifterCoal = Css.hex "#373435"
+    , freshDirt = Css.hex "#745112"
     }

@@ -15,6 +15,7 @@ import Types exposing (Model, Msg)
 import View.Article
 import View.BlogIndex
 import View.Page
+import View.SiteIndex
 
 
 view :
@@ -82,6 +83,12 @@ pageView model comments siteMetadata page ( count, viewForPage ) =
             in
             { title = metadata.title
             , body = View.Article.view model count metadata filteredComments page viewForPage
+            }
+
+        Head.Metadata.SiteIndex indexMeta ->
+            { title = "Home"
+            , body =
+                View.SiteIndex.view indexMeta siteMetadata viewForPage page
             }
 
         Head.Metadata.BlogIndex ->

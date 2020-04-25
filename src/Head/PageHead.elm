@@ -83,6 +83,22 @@ head metadata =
                     , username = Nothing
                     }
 
+        Head.Metadata.SiteIndex _ ->
+            Seo.summaryLarge
+                { canonicalUrlOverride = Nothing
+                , siteName = siteName
+                , image =
+                    { url = images.iconPng
+                    , alt = "elm-pages logo"
+                    , dimensions = Nothing
+                    , mimeType = Nothing
+                    }
+                , description = siteTagline
+                , locale = Nothing
+                , title = "elm-pages blog"
+                }
+                |> Seo.website
+
         Head.Metadata.BlogIndex ->
             Seo.summaryLarge
                 { canonicalUrlOverride = Nothing

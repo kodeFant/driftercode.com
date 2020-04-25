@@ -1,4 +1,4 @@
-module Head.Metadata exposing (ArticleMetadata, Metadata(..), PageMetadata, decoder)
+module Head.Metadata exposing (ArticleMetadata, Index, Metadata(..), PageMetadata, decoder)
 
 import Data.Author
 import Date exposing (Date)
@@ -12,7 +12,16 @@ type Metadata
     = Page PageMetadata
     | Article ArticleMetadata
     | Author Data.Author.Author
+    | SiteIndex Index
     | BlogIndex
+
+
+type alias Index =
+    { title : String
+    , subHeading : String
+    , buttonText : String
+    , buttonLink : String
+    }
 
 
 type alias ArticleMetadata =
@@ -39,6 +48,14 @@ decoder =
                     "page" ->
                         Decode.field "title" Decode.string
                             |> Decode.map (\title -> Page { title = title })
+
+                    "site-index" ->
+                        Decode.map4 Index
+                            (Decode.field "title" Decode.string)
+                            (Decode.field "subHeading" Decode.string)
+                            (Decode.field "buttonText" Decode.string)
+                            (Decode.field "buttonLink" Decode.string)
+                            |> Decode.map SiteIndex
 
                     "blog-index" ->
                         Decode.succeed BlogIndex

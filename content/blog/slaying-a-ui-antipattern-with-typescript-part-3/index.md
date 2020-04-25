@@ -168,7 +168,7 @@ const Post = Codec.interface({
 
 Another improvement to resemble the language features of Elm in React is immutable state. A low barrier entry solution is to use the [useImmer hook](https://github.com/immerjs/use-immer) instead of useState.
 
-[Easy Peasy](https://easy-peasy.now.sh/) supports immutability by default with redux under the hood.
+[Easy Peasy](https://easy-peasy.now.sh/) supports immutability by default with redux and Redux DevTools under the hood.
 
 Another alternative is [xState](https://github.com/davidkpiano/xstate). I haven't explored it in-depth yet, but I understand it forces you to be very explicit about what states are possible. Sounds awesome!
 

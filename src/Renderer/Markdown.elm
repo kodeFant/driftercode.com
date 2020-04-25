@@ -1,7 +1,9 @@
 module Renderer.Markdown exposing (mainRenderer)
 
-import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (..)
+import Css exposing (..)
+import Design.Palette exposing (colors)
+import Html.Styled as Html exposing (..)
+import Html.Styled.Attributes as Attr exposing (..)
 import Json.Encode as Encode
 import Markdown.Block as Block exposing (HeadingLevel(..), ListItem(..), Task(..))
 import Markdown.Html
@@ -38,7 +40,7 @@ mainRenderer =
     , strong =
         \children -> strong [] children
     , emphasis =
-        \children -> em [] children
+        \children -> Html.em [] children
     , codeSpan =
         \content -> code [] [ text content ]
     , link = link
@@ -61,16 +63,16 @@ mainRenderer =
 
                                                 Block.IncompleteTask ->
                                                     input
-                                                        [ disabled True
-                                                        , checked False
+                                                        [ Attr.disabled True
+                                                        , Attr.checked False
                                                         , type_ "checkbox"
                                                         ]
                                                         []
 
                                                 Block.CompletedTask ->
                                                     input
-                                                        [ disabled True
-                                                        , checked True
+                                                        [ Attr.disabled True
+                                                        , Attr.checked True
                                                         , type_ "checkbox"
                                                         ]
                                                         []
@@ -83,7 +85,7 @@ mainRenderer =
             ol
                 (case startingIndex of
                     1 ->
-                        [ start startingIndex ]
+                        [ Attr.start startingIndex ]
 
                     _ ->
                         []
@@ -98,7 +100,7 @@ mainRenderer =
     , html = html
     , codeBlock = codeBlock
     , thematicBreak = hr [] []
-    , table = table []
+    , table = Html.table []
     , tableHeader = thead []
     , tableBody = tbody []
     , tableRow = tr []
@@ -130,28 +132,30 @@ mainRenderer =
 
 link : { title : Maybe String, destination : String } -> List (Html msg) -> Html msg
 link { destination } body =
-    case List.head body of
-        Just bodyElement ->
-            case Pages.isValidRoute destination of
-                Ok _ ->
-                    if String.startsWith "http" destination then
-                        Styled.link
-                            [ href destination
-                            , target "_blank"
-                            ]
-                            [ bodyElement
-                            ]
+    case Pages.isValidRoute destination of
+        Ok _ ->
+            if String.startsWith "http" destination then
+                Styled.newTabLink []
+                    { content = body
+                    , url = destination
+                    , css =
+                        [ color colors.freshDirt
+                        , textDecoration none
+                        ]
+                    }
 
-                    else
-                        Styled.link [ href destination ]
-                            [ bodyElement
-                            ]
+            else
+                Styled.link []
+                    { content = body
+                    , url = destination
+                    , css =
+                        [ color colors.freshDirt
+                        , textDecoration none
+                        ]
+                    }
 
-                Err string ->
-                    text string
-
-        Nothing ->
-            text ""
+        Err string ->
+            text string
 
 
 image : { src : String, alt : String, title : Maybe String } -> Html msg
@@ -183,7 +187,7 @@ editorValue value =
     value
         |> String.trim
         |> Encode.string
-        |> property "editorValue"
+        |> Attr.property "editorValue"
 
 
 html : Markdown.Html.Renderer (List (Html msg) -> Html msg)
@@ -193,7 +197,7 @@ html =
             (\id _ ->
                 iframe
                     [ src ("https://www.youtube.com/embed/" ++ id)
-                    , height 400
+                    , Attr.height 400
                     ]
                     []
             )
