@@ -37,7 +37,7 @@ view indexMeta posts rendered page =
                         , p [] [ text "Mathy algebraic slang to be kept at a minimum." ]
                         ]
                     , div [ css [ displayFlex ] ]
-                        [ buttonLink
+                        [ Styled.buttonLink
                             [ href indexMeta.buttonLink ]
                             [ text indexMeta.buttonText ]
                         ]
@@ -65,14 +65,24 @@ socialMediaLinks =
         [ Styled.newTabLink []
             { content = [ iconContainer [ marginRight (rem 1) ] [ Icon.twitter ] ]
             , url = "https://twitter.com/" ++ Constants.siteTwitter
-            , css = Styled.twitterStyle
+            , css = socialMediaStyle
             }
         , Styled.newTabLink []
             { content = [ iconContainer [ marginRight (rem 1) ] [ Icon.linkedIn ] ]
             , url = Constants.siteLinkedIn
-            , css = Styled.linkedinStyle
+            , css = socialMediaStyle
+            }
+        , Styled.newTabLink []
+            { content = [ iconContainer [ marginRight (rem 1) ] [ Icon.github ] ]
+            , url = Constants.githubLink
+            , css = socialMediaStyle
             }
         ]
+
+
+socialMediaStyle : List Style
+socialMediaStyle =
+    [ color colors.drifterCoal, hover [ color colors.black ] ]
 
 
 languageLinks : Html msg
@@ -95,26 +105,6 @@ languageLinks =
 iconContainer : List Style -> List (Html msg) -> Html msg
 iconContainer styles =
     div [ css ([ Css.height (px 25), Css.width (px 25) ] ++ styles) ]
-
-
-buttonLink : List (Attribute msg) -> List (Html msg) -> Html msg
-buttonLink attr =
-    a
-        (attr
-            ++ [ css
-                    [ backgroundColor colors.freshDirt
-                    , color colors.white
-                    , fontSize (px 20)
-                    , fontWeight bold
-                    , borderRadius (px 50)
-                    , textDecoration none
-                    , padding2 (rem 0.9) (rem 2.5)
-                    , whiteSpace noWrap
-                    , Css.property "transition" "background-color 200ms ease"
-                    , hover [ backgroundColor colors.drifterCoal ]
-                    ]
-               ]
-        )
 
 
 styledIndexHero : List (Html msg) -> Html msg

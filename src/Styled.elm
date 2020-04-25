@@ -1,5 +1,6 @@
 module Styled exposing
     ( button
+    , buttonLink
     , dangerButton
     , emailInput
     , heading1
@@ -21,7 +22,7 @@ module Styled exposing
     )
 
 import Css exposing (..)
-import Css.Transitions exposing (backgroundColor3, easeInOut, transition)
+import Css.Transitions as Transitions exposing (backgroundColor3, easeInOut, transition)
 import Design.Palette exposing (colors)
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes as Attr exposing (..)
@@ -291,7 +292,7 @@ primaryButton attr { onPress, buttonType, label } =
     button
         (attr
             ++ [ css
-                    [ backgroundColor colors.secondary
+                    [ backgroundColor colors.freshDirt
                     , color colors.white
                     , hover
                         [ backgroundColor colors.primary
@@ -319,3 +320,24 @@ linkedinStyle =
     , color (rgba 29 161 242 0.5)
     , hover [ color (rgba 29 161 242 0.9) ]
     ]
+
+
+buttonLink : List (Attribute msg) -> List (Html msg) -> Html msg
+buttonLink attr =
+    a
+        (attr
+            ++ [ css
+                    [ backgroundColor colors.freshDirt
+                    , color colors.white
+                    , fontSize (px 20)
+                    , fontWeight bold
+                    , borderRadius (px 50)
+                    , textDecoration none
+                    , padding2 (rem 0.9) (rem 2.5)
+                    , whiteSpace noWrap
+                    , Transitions.transition [ Transitions.backgroundColor3 200 0 easeInOut ]
+                    , Css.property "transition" "background-color 200ms ease"
+                    , hover [ backgroundColor colors.drifterCoal ]
+                    ]
+               ]
+        )

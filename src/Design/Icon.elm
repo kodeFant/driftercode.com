@@ -1,4 +1,4 @@
-module Design.Icon exposing (linkedIn, twitter)
+module Design.Icon exposing (github, linkedIn, twitter)
 
 import Css exposing (..)
 import FontAwesome.Brands as FaBrands
@@ -13,6 +13,15 @@ twitter =
         (Icon.viewStyled
             [ style "width" "100%" ]
             FaBrands.twitter
+        )
+
+
+github : Html msg
+github =
+    fromUnstyled
+        (Icon.viewStyled
+            [ style "width" "100%" ]
+            FaBrands.github
         )
 
 

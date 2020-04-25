@@ -23,8 +23,7 @@ body {
 }
 
 * {
-  transition: all 200ms ease-in-out;
-  transition: transform 200ms ease-in-out, border-color 600ms ease-in-out;
+  transition: transform 200ms ease-in-out;
   white-space: initial;
 }
 

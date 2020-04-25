@@ -114,7 +114,8 @@ indexCard ( postPath, _ ) =
                     ]
                 ]
             , hover
-                [ border3 (px 4) solid colors.secondary
+                [ border3 (px 4) solid colors.freshDirt
+                , backgroundColor colors.trueWhite
                 ]
             ]
         ]

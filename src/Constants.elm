@@ -1,4 +1,4 @@
-module Constants exposing (canonicalSiteUrl, maxWidthDefault, maxWidthLarge, siteLinkedIn, siteTagline, siteTwitter)
+module Constants exposing (canonicalSiteUrl, githubLink, maxWidthDefault, maxWidthLarge, siteLinkedIn, siteTagline, siteTwitter)
 
 import Css exposing (Px, px)
 
@@ -21,6 +21,11 @@ siteTwitter =
 siteLinkedIn : String
 siteLinkedIn =
     "https://www.linkedin.com/in/larslilloulvestad/"
+
+
+githubLink : String
+githubLink =
+    "https://github.com/kodeFant/driftercode.com"
 
 
 maxWidthLarge : Px
