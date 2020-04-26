@@ -24,44 +24,33 @@ view :
 view indexMeta _ _ page =
     Layout.Scaffold.view page.path
         (div
-            [ css [ displayFlex, flexDirection column, alignItems center, Css.width (pct 100), maxHeight (vh 100) ] ]
-            [ styledIndexHero
+            [ css
+                [ displayFlex
+                , flexDirection column
+                , alignItems center
+                , Css.width (pct 100)
+                , maxHeight (vh 100)
+                ]
+            ]
+            [ styledIndexGrid
                 [ styledHeroContent
                     [ styledTitle [ text indexMeta.title ]
                     , styledSubTitle [ text indexMeta.subHeading ]
-                    , div
-                        [ css
-                            [ display none
-                            , Responsive.tabletUp
-                                [ padding2 (rem 2.5) zero
-                                , fontSize (px 18)
-                                , display block
-                                ]
-                            ]
-                        ]
+                    , styledContent
                         [ p [] [ text "A budding functional programmer who used to be a journalist." ]
                         , p [] [ text "I’m learning functional programming by blogging about it." ]
                         , p [] [ text "Mathy algebraic slang to be kept at a minimum." ]
                         ]
-                    , div [ css [ displayFlex, justifyContent center, marginTop (rem 2), Responsive.tabletUp [ justifyContent flexStart ] ] ]
+                    , styledButtonLinkContainer
                         [ Styled.buttonLink
                             [ href indexMeta.buttonLink ]
                             [ text indexMeta.buttonText ]
                         ]
                     ]
-                , Styled.image
-                    [ css
-                        [ Css.width auto
-                        , Css.maxWidth (pct 100)
-                        , float right
-                        , Css.property "grid-area" "image"
-                        , Responsive.tabletUp [ Css.maxHeight (pct 90) ]
-                        , alignSelf center
-                        ]
-                    ]
+                , styledHeroImage
                     { path = ImagePath.toString Pages.images.driftercode, description = "" }
-                , socialMediaLinks
-                , languageLinks
+                , socialMediaLinksContainer
+                , languageLinksContainer
                 ]
             ]
         )
@@ -88,52 +77,126 @@ styledTitle =
         ]
 
 
+styledHeroImage : { path : String, description : String } -> Html msg
+styledHeroImage =
+    Styled.image
+        [ css
+            [ Css.width auto
+            , Css.maxWidth (pct 100)
+            , float right
+            , Css.property "grid-area" "image"
+            , Responsive.tabletUp [ Css.maxHeight (pct 90) ]
+            , alignSelf center
+            ]
+        ]
+
+
 styledSubTitle : List (Html msg) -> Html msg
 styledSubTitle =
     div [ css [ fontSize (px 22), textAlign center, Responsive.tabletUp [ textAlign left ] ] ]
 
 
-socialMediaLinks : Html msg
-socialMediaLinks =
+styledContent : List (Html msg) -> Html msg
+styledContent =
+    div
+        [ css
+            [ display none
+            , Responsive.tabletUp
+                [ padding2 (rem 2.5) zero
+                , fontSize (px 18)
+                , display block
+                ]
+            ]
+        ]
+
+
+styledButtonLinkContainer : List (Html msg) -> Html msg
+styledButtonLinkContainer =
+    div [ css [ displayFlex, justifyContent center, marginTop (rem 2), Responsive.tabletUp [ justifyContent flexStart ] ] ]
+
+
+type alias SocialMediaLink msg =
+    { url : String
+    , icon : Html msg
+    }
+
+
+socialMediaLinksData : List (SocialMediaLink msg)
+socialMediaLinksData =
+    [ { url = "https://twitter.com/" ++ Constants.siteTwitter, icon = Icon.twitter }
+    , { url = Constants.siteLinkedIn, icon = Icon.linkedIn }
+    , { url = Constants.githubLink, icon = Icon.github }
+    , { url = Constants.rssFeed, icon = Icon.rss }
+    ]
+
+
+socialMediaLinkElement : SocialMediaLink msg -> Html msg
+socialMediaLinkElement link =
+    Styled.newTabLink []
+        { content = [ styledIconContainer [ marginRight (rem 1) ] [ link.icon ] ]
+        , url = link.url
+        , css = socialMediaStyle
+        }
+
+
+socialMediaLinks : List (SocialMediaLink msg) -> List (Html msg)
+socialMediaLinks links =
+    links
+        |> List.map socialMediaLinkElement
+
+
+socialMediaLinksContainer : Html msg
+socialMediaLinksContainer =
     div [ css [ displayFlex, paddingBottom (rem 2), Css.property "grid-area" "some", justifyContent center, Responsive.tabletUp [ justifyContent flexStart ] ] ]
-        [ Styled.newTabLink []
-            { content = [ styledIconContainer [ marginRight (rem 1) ] [ Icon.twitter ] ]
-            , url = "https://twitter.com/" ++ Constants.siteTwitter
-            , css = socialMediaStyle
-            }
-        , Styled.newTabLink []
-            { content = [ styledIconContainer [ marginRight (rem 1) ] [ Icon.linkedIn ] ]
-            , url = Constants.siteLinkedIn
-            , css = socialMediaStyle
-            }
-        , Styled.newTabLink []
-            { content = [ styledIconContainer [ marginRight (rem 1) ] [ Icon.github ] ]
-            , url = Constants.githubLink
-            , css = socialMediaStyle
-            }
-        , Styled.newTabLink []
-            { content = [ styledIconContainer [ marginRight (rem 1) ] [ Icon.rss ] ]
-            , url = Constants.rssFeed
-            , css = socialMediaStyle
-            }
-        ]
+        (socialMediaLinks socialMediaLinksData)
 
 
-languageLinks : Html msg
-languageLinks =
+type alias SupportedLanguage =
+    { name : String
+    , icon : String
+    , link : String
+    }
+
+
+supportedLanguages : List SupportedLanguage
+supportedLanguages =
+    [ { name = "Elm"
+      , icon = ImagePath.toString Pages.images.elm
+      , link = "https://elm-lang.org/"
+      }
+    , { name = "TypeScript"
+      , icon = ImagePath.toString Pages.images.typescript
+      , link = "https://www.typescriptlang.org/"
+      }
+    ]
+
+
+languageLinks : List SupportedLanguage -> List (Html msg)
+languageLinks languages =
+    languages
+        |> List.map
+            (\language ->
+                Styled.newTabLink []
+                    { url = language.link
+                    , content =
+                        [ styledIconContainer [ marginLeft (rem 1) ]
+                            [ Styled.image []
+                                { description = language.name
+                                , path = language.icon
+                                }
+                            ]
+                        ]
+                    , css = []
+                    }
+            )
+
+
+languageLinksContainer : Html msg
+languageLinksContainer =
     div [ css [ display none, Responsive.tabletUp [ displayFlex, justifyContent flexEnd, alignItems center, paddingBottom (rem 2), Css.property "grid-area" "language" ] ] ]
-        [ span [ css [ fontWeight bold ] ] [ text "Featuring" ]
-        , Styled.newTabLink []
-            { url = "https://www.typescriptlang.org/"
-            , content = [ styledIconContainer [ marginLeft (rem 1) ] [ Styled.image [] { description = "TypeScript", path = ImagePath.toString Pages.images.typescript } ] ]
-            , css = []
-            }
-        , Styled.newTabLink []
-            { url = "https://elm-lang.org/"
-            , content = [ styledIconContainer [ marginLeft (rem 1) ] [ Styled.image [] { description = "Elm", path = ImagePath.toString Pages.images.elm } ] ]
-            , css = []
-            }
-        ]
+        (span [ css [ fontWeight bold ] ] [ text "Featuring" ]
+            :: languageLinks supportedLanguages
+        )
 
 
 socialMediaStyle : List Style
@@ -146,14 +209,14 @@ styledIconContainer styles =
     div [ css ([ Css.height (px 25), Css.width (px 25) ] ++ styles) ]
 
 
-styledIndexHero : List (Html msg) -> Html msg
-styledIndexHero =
+styledIndexGrid : List (Html msg) -> Html msg
+styledIndexGrid =
     div
         [ css
             [ padding (rem 1)
             , Css.width (pct 100)
             , Css.maxWidth (px 1000)
-            , marginTop (rem 5)
+            , paddingTop (rem 5)
             , Css.height (pct 100)
             , Css.property "display" "grid"
             , Css.property "grid-template-columns" "1fr"
@@ -164,6 +227,7 @@ styledIndexHero =
                                                  "language"
                                                  "some"
                                                  """
+            , Css.property "grid-template-rows" "auto 2rem 1rem 1 rem"
             , Responsive.tabletUp
                 [ marginTop zero
                 , Css.height (vh 100)

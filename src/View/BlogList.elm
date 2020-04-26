@@ -146,7 +146,7 @@ styledIndexCardDate =
 
 styledIndexCardTitle : List (Html msg) -> Html msg
 styledIndexCardTitle =
-    h2 [ css [ fontSize (rem 2), fontFamilies [ "Rye" ] ] ]
+    h2 [ css [ fontSize (rem 2), fontFamilies [ "Rye" ], fontWeight normal ] ]
 
 
 styledIndexCardDescription : List (Html msg) -> Html msg

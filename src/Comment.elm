@@ -186,7 +186,7 @@ commentView index comment =
 
 commentDialog : List (Html msg) -> Html msg
 commentDialog =
-    div [ css [ padding (rem 1), backgroundColor colors.lighterGray ] ]
+    div [ css [ padding (rem 1), backgroundColor colors.offWhite ] ]
 
 
 commentFormContainer : String -> Config msg -> CommentState -> Html msg

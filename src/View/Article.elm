@@ -30,7 +30,7 @@ view model count metadata comments page viewForPage =
         (Styled.mainContainer [ paddingTop (rem 5) ]
             [ styledContentContainer
                 [ bio metadata
-                , Styled.heading1 [ textAlign center, margin2 (rem 1) zero ]
+                , Styled.heading1 [ textAlign center, margin2 (rem 1) zero, fontWeight normal ]
                     [ text metadata.title ]
                 , styledPreamble
                     [ text metadata.description ]

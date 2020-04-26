@@ -111,7 +111,7 @@ heading6 attr content =
 
 paragraph : List (Attribute msg) -> List (Html msg) -> Html msg
 paragraph attr content =
-    p (attr ++ [ css [ fontSize (rem 1.1), lineHeight (rem 2) ] ]) content
+    p (attr ++ [ css [ fontSize (Css.em 1.1), lineHeight (Css.em 2) ] ]) content
 
 
 {-| Autocomplete Values:
@@ -295,7 +295,7 @@ primaryButton attr { onPress, buttonType, label } =
                     [ backgroundColor colors.freshDirt
                     , color colors.white
                     , hover
-                        [ backgroundColor colors.primary
+                        [ backgroundColor colors.drifterCoal
                         ]
                     ]
                ]

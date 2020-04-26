@@ -4,10 +4,7 @@ import Css exposing (Color, rgb)
 
 
 type alias PaletteColors =
-    { primary : Color
-    , secondary : Color
-    , lightGray : Color
-    , white : Color
+    { white : Color
     , trueWhite : Color
     , darkestGray : Color
     , lighterGray : Color
@@ -27,13 +24,10 @@ type alias PaletteColors =
 
 colors : PaletteColors
 colors =
-    { primary = rgb 255 165 0 -- rgb(255,165,0)
-    , secondary = rgb 235 145 0 -- rgb(235,145,0)
-    , offWhite = Css.hex "#E5E5E5"
+    { offWhite = Css.hex "#E5E5E5"
     , white = Css.hex "#EFEFEF"
     , trueWhite = Css.hex "#FFFFFF"
     , darkestGray = rgb 51 51 51 --rgb(51,51,51)
-    , lightGray = rgb 200 200 200 --rgb(200,200,200)
     , lighterGray = rgb 237 237 237 --rgb(237,237,237)
     , black = rgb 30 30 30 --rgb(30,30,30)
     , red = rgb 200 0 0 --rgb(200,0,0)

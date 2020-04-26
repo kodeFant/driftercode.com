@@ -1,6 +1,6 @@
 module Update exposing (init, update)
 
-import Comment exposing (CommentField(..), initialCommentForm, initialDeleteCommentForm, requestDeleteEmail)
+import Comment exposing (CommentField(..), initialCommentForm, initialDeleteCommentForm)
 import RemoteData exposing (RemoteData(..))
 import Types exposing (Model, Msg(..))
 
@@ -50,6 +50,5 @@ update msg model =
         RequestDeletionEmail email ->
             Comment.submitDeleteCommentForm GotDeletionEmailResponse email model
 
-        -- ( { model | deleteCommentForm = { initialDeleteCommentForm | sendRequest = Loading } }, requestDeleteEmail GotDeletionEmailResponse email )
         GotDeletionEmailResponse webData ->
             ( { model | deleteCommentForm = { initialDeleteCommentForm | sendRequest = webData } }, Cmd.none )
