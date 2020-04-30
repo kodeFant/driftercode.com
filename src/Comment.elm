@@ -147,24 +147,13 @@ view config state slug comments =
 
 commentFormView : Config msg -> String -> CommentState -> Html msg
 commentFormView config slug state =
-    case state.commentForm.sendRequest of
-        NotAsked ->
-            if state.commentInfo == True then
-                commentDialog
-                    [ deleteForm config state ]
+    if state.commentInfo == True then
+        commentDialog
+            [ deleteForm config state ]
 
-            else
-                commentDialog
-                    [ commentFormContainer slug config state ]
-
-        Loading ->
-            div [] [ text "Sending..." ]
-
-        Failure err ->
-            div [] [ text (errorToString err) ]
-
-        Success _ ->
-            div [] [ text "Comment successfully sent. Please verify your comment at the given email, ", strong [] [ text state.commentForm.email, text ", within 24 hours." ] ]
+    else
+        commentDialog
+            [ commentFormContainer slug config state ]
 
 
 commentView : Int -> Comment -> Html msg
@@ -195,35 +184,62 @@ commentFormContainer slug { updateCommentForm, submitComment, commentInfoToggle 
         [ h3
             [ css [ fontSize (px 28) ] ]
             [ text "Leave a comment" ]
-        , Styled.textInput []
+        , Styled.textInput
+            [ Html.Styled.Attributes.disabled
+                (not (commentForm.sendRequest == NotAsked))
+            ]
             { onChange = \value -> updateCommentForm { commentForm | name = value }
             , label = "Your name"
             , autoComplete = Just "name"
             }
         , formErrorView commentForm.errors Name
-        , Styled.emailInput []
+        , Styled.emailInput
+            [ Html.Styled.Attributes.disabled
+                (not (commentForm.sendRequest == NotAsked))
+            ]
             { onChange = \value -> updateCommentForm { commentForm | email = value }
             , label = "Email"
             , autoComplete = False
             }
         , formErrorView commentForm.errors Email
-        , Styled.textAreaInput []
+        , Styled.textAreaInput
+            [ Html.Styled.Attributes.disabled
+                (not (commentForm.sendRequest == NotAsked))
+            ]
             { onChange = \value -> updateCommentForm { commentForm | message = value }
             , label = "Message"
             }
         , formErrorView commentForm.errors Message
-        , div [ css [ displayFlex, justifyContent spaceBetween ] ]
-            [ Styled.primaryButton []
-                { onPress = submitComment slug
-                , label = text "Submit comment"
-                , buttonType = "submit"
-                }
-            , Styled.dangerButton []
-                { onPress = commentInfoToggle (not commentInfo)
-                , label = text "I want to delete a comment"
-                , buttonType = "button"
-                }
-            ]
+        , div [ css [ displayFlex, justifyContent spaceBetween, alignItems center ] ]
+            ((case commentForm.sendRequest of
+                NotAsked ->
+                    [ Styled.primaryButton []
+                        { onPress = submitComment slug
+                        , label = text "Submit comment"
+                        , buttonType = "submit"
+                        }
+                    ]
+
+                Loading ->
+                    [ div [ class "cp-spinner cp-morph" ] [] ]
+
+                Failure _ ->
+                    [ div [] [ text "There was an error 😓. Please try again later" ] ]
+
+                Success _ ->
+                    [ div [ css [ paddingRight (px 16) ] ]
+                        [ div [ css [ fontWeight bold ] ] [ text "Success! 😁" ]
+                        , div [ css [ maxWidth (px 300) ] ] [ text "To confirm your comment, please check your e-mail inbox" ]
+                        ]
+                    ]
+             )
+                ++ [ Styled.dangerButton []
+                        { onPress = commentInfoToggle (not commentInfo)
+                        , label = text "I want to delete a comment"
+                        , buttonType = "button"
+                        }
+                   ]
+            )
         ]
 
 
@@ -265,10 +281,14 @@ deleteForm { updateDeleteCommentForm, commentInfoToggle, requestDeletionEmail } 
             div [] [ text "Sending Request..." ]
 
         Failure err ->
-            div [] [ text (errorToString err) ]
+            div [ css [ lineHeight (rem 2) ] ] [ div [ css [ fontWeight bold ] ] [ text "Failed. Are you sure you have posted any comments with this email?" ], div [ css [ fontStyle italic ] ] [ text (errorToString err) ] ]
 
         Success string ->
-            div [] [ text "Success! Please check your inbox at ", strong [] [ text string ], text " for info about deleting comments." ]
+            div []
+                [ text "Success! Please check your inbox at "
+                , strong [] [ text string ]
+                , text " for info about deleting comments."
+                ]
 
 
 formErrorView : List CommentError -> CommentField -> Html msg

@@ -178,11 +178,11 @@ I currently prefer to just put the RemoteData type and the fold function into my
 
 ## Next up
 
-**That's it for RemoteData, but I will continue with yet another post in this series.**
+**That's it for RemoteData, but there is yet another part to this series.**
 
 I want this code to mimic the advantages of Elm. That will require a few more steps.
 
-Therefore I think we should cover **decoding the incoming data** in the next post.
+In the [next post](blog/slaying-a-ui-antipattern-with-typescript-part-3) we are **decoding the incoming data** in the next post.
 
 Decoding JSON doesn't sound very cool, but it's one of those features in Elm that makes it almost impossible to get run-time exceptions in production.
 

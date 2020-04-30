@@ -24,7 +24,7 @@ export default async function requestDeletionMail(
       response.statusCode = 400;
       response.send(`Something went wrong ${error}`);
     }).ifRight(async (data) => {
-      response.send("Email for deleting comments is sent.");
+      response.send(data[1]);
     });
   } catch (e) {
     response.statusCode = 500;
@@ -58,7 +58,7 @@ async function getFilteredComments(
 }
 
 const sendMail = (request: Request) =>
-  EitherAsync<string, mailgun.messages.SendResponse>(
+  EitherAsync<string, [mailgun.messages.SendResponse, string]>(
     async ({ liftEither, fromPromise }) => {
       const body = await liftEither(
         DeleteRequestBody.decode({ email: request.params.email })
@@ -68,11 +68,14 @@ const sendMail = (request: Request) =>
         await getFilteredComments(body)
       );
 
-      return fromPromise(
-        sendDeletionMail()({
-          toEmail: body.email,
-          comments: filteredComments,
-        })
-      );
+      return [
+        await fromPromise(
+          sendDeletionMail()({
+            toEmail: body.email,
+            comments: filteredComments,
+          })
+        ),
+        body.email,
+      ];
     }
   );
