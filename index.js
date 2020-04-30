@@ -4,6 +4,17 @@ import "./style.css";
 const { Elm } = require("./src/Main.elm");
 const pagesInit = require("elm-pages");
 
+const webMention = document.createElement("link");
+webMention.rel = "webMention";
+webMention.href = "https://webmention.io/driftercode.com/webmention";
+
+const pingback = document.createElement("link");
+pingback.rel = "pingback";
+pingback.href = "https://webmention.io/driftercode.com/xmlrpc";
+
+document.querySelector("head").appendChild(webMention);
+document.querySelector("head").appendChild(pingback);
+
 pagesInit({
   mainElmModule: Elm.Main,
 }).then((app) => {});

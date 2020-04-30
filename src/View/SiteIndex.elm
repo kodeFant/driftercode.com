@@ -132,7 +132,10 @@ socialMediaLinksData =
 
 socialMediaLinkElement : SocialMediaLink msg -> Html msg
 socialMediaLinkElement link =
-    Styled.link [ Attr.target "_blank", rel "noreferrer noopener me" ]
+    Styled.link
+        [ Attr.target "_blank"
+        , rel "noreferrer noopener me"
+        ]
         { content = [ styledIconContainer [ marginRight (rem 1) ] [ link.icon ] ]
         , url = link.url
         , css = socialMediaStyle
