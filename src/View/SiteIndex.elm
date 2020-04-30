@@ -7,7 +7,7 @@ import Design.Palette exposing (colors)
 import Design.Responsive as Responsive
 import Head.Metadata exposing (Index, Metadata(..))
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (..)
+import Html.Styled.Attributes as Attr exposing (..)
 import Layout.Scaffold
 import Pages
 import Pages.ImagePath as ImagePath
@@ -132,7 +132,7 @@ socialMediaLinksData =
 
 socialMediaLinkElement : SocialMediaLink msg -> Html msg
 socialMediaLinkElement link =
-    Styled.newTabLink []
+    Styled.link [ Attr.target "_blank", rel "noreferrer noopener me" ]
         { content = [ styledIconContainer [ marginRight (rem 1) ] [ link.icon ] ]
         , url = link.url
         , css = socialMediaStyle
