@@ -40,9 +40,9 @@ This tutorial can still be useful if you are a beginner wanting to get a hands-o
 
 ## Let's get started!
 
-[Clone the starter repo](https://github.com/kodeFant/elm-in-react-tutorial-starter). It's basically a Parcel starter with React and TypeScript
+[Clone the starter repo](https://github.com/kodeFant/elm-in-react-starter). It's basically a Parcel starter with React and TypeScript.
 
-Create a folder in `src` named "Elm" and create the file `Main.elm`.
+Create a folder in `src` named **Elm** and create the file `Main.elm`.
 
 ```bash
 mkdir src/Elm && touch src/Elm/Main.elm
@@ -128,7 +128,7 @@ Rewrite the **source-directories** property in `elm.json` into this:
 "source-directories": ["src/Elm"],
 ```
 
-Then run `yarn start` again and check [http://localhost:1234](http://localhost:1234).
+Press **Ctrl+c** if the app is running, run `yarn start` again and check [http://localhost:1234](http://localhost:1234).
 
 ![Screenshot of the app so far](/images/archive/elm-in-react/first-elm-in-react.png)
 
@@ -137,6 +137,8 @@ Your app is gradually improving, just by having some Elm in it 😄
 Only thing is, the Elm part is just a simple type-safe Html element, but there is no state in the app below.
 
 Let's fix that.
+
+- [See the diff so far](https://github.com/kodeFant/elm-in-react-complete/commit/05402fb70e6281c4d2a45d203fc05415116931d3)
 
 ## Make Elm own the state
 
@@ -180,37 +182,33 @@ type alias Model =
 
 
 type Msg
-    = Increment
-    | Decrement
+    = Increment Int
+    | Decrement Int
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions _ =
     Sub.none
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Increment ->
-            ( model + 1, Cmd.none )
+        Increment step ->
+            ( model + step, Cmd.none )
 
-        Decrement ->
-
-            ( model - 1, Cmd.none )
-
-
+        Decrement step ->
+            ( model - step, Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ h2 [] [ text "This is an Elm component" ]
-        , div [] [ text ("Count: " ++ (String.fromInt model)) ]
-        , button [onClick Increment] [ text "+" ]
-        , button [onClick Decrement] [ text "-" ]
+        , div [] [ text ("Count: " ++ String.fromInt model) ]
+        , button [ onClick (Increment 1) ] [ text "+" ]
+        , button [ onClick (Decrement 1) ] [ text "-" ]
         ]
-
 ```
 
 To just walk through it simply for beginners, we turn the main component into a [Browser.element](https://package.elm-lang.org/packages/elm/browser/latest/Browser). The html is moved from main into `view`
@@ -232,6 +230,8 @@ Also notice on the bottom right corner, you have gained a powerful time-travelin
 ![Screenshot of the app so far](/images/archive/elm-in-react/elm-debugger.png)
 
 The finish line is closing in. Let's hook the components together.
+
+- [See the diff](https://github.com/kodeFant/elm-in-react-complete/commit/c3735ffe4fdf1658a322761faed9be6064cdfafc)
 
 ## Establish communication lines in Elm
 
@@ -282,7 +282,6 @@ update msg model =
             ( model + step, updateCountInReact (model + step) )
 
         Decrement step ->
-
             ( model - step, updateCountInReact (model - step))
 ```
 
@@ -344,22 +343,20 @@ function ElmComponent({ count, setCount }: ComponentProps) {
 }
 ```
 
-In the `ReactComponent`, we can remove the button logic, as Elm has taken over the state management.
+In the `ReactComponent`, we can remove the update logic, as Elm has taken over the state management.
 
 ```jsx
 function ReactComponent({ count }: ComponentProps) {
-  // const increment = () => setCount(count + 1);
-  // const decrement = () => setCount(count - 1);
   return (
     <div>
       <h2>This is a React Component</h2>
       <div>Count: {count}</div>
-      {/* <button onClick={increment}>+</button>
-      <button onClick={decrement}>-</button> */}
     </div>
   );
 }
 ```
+
+- [See the diff](https://github.com/kodeFant/elm-in-react-complete/commit/a3c8c1f5b946233315216cee1ddc2c617a72919f)
 
 ## The result is in
 
@@ -369,9 +366,11 @@ Now you control the state rendered in both React and Elm from the Elm App.
 
 Exactly how you do it in your own project might vary. A viable path is to start using Elm as the state manager and React as the view renderer. Then you learn lots of the good parts of Elm first.
 
-When Elm owns all state, you can gradually take over the React rendering by expanding the `view` function and eliminating the React views.
+When Elm owns all state, you can gradually take over the React rendering by expanding the `view` function and replace the React views.
 
-You could also make an an [incoming message](https://guide.elm-lang.org/interop/ports.html#incoming-messages-sub) port from React to Elm and pass messages to Elm which then updates the state. I will probably make another post on that subject.
+You could also make an an [incoming message](https://guide.elm-lang.org/interop/ports.html#incoming-messages-sub) port from React to Elm and pass string messages to Elm which then updates the state. I will probably make another post on that subject.
+
+- [Complete code](https://github.com/kodeFant/elm-in-react-complete)
 
 ## Related resources
 
