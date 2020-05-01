@@ -131,8 +131,9 @@ styledPreamble =
         [ css
             [ fontSize (rem 2)
             , textAlign center
-            , fontSize (px 20)
-            , marginBottom (rem 1)
+            , fontSize (px 24)
+            , fontWeight (int 400)
+            , margin2 (rem 2) zero
             ]
         ]
 
