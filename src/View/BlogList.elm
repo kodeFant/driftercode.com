@@ -25,7 +25,8 @@ view posts _ page =
     Layout.Scaffold.view page.path
         (div
             [ css [ displayFlex, flexDirection column, paddingTop (rem 5) ] ]
-            [ Styled.mainContainer []
+            [ Styled.heading1 [ textAlign center ] [ text "Blog articles" ]
+            , Styled.mainContainer []
                 [ styledIndexContainer
                     [ blogIndexItems posts
                     ]
