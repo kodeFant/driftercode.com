@@ -211,7 +211,7 @@ view model =
         ]
 ```
 
-To just walk through it simply for beginners, we turn the main component into a [Browser.element](https://package.elm-lang.org/packages/elm/browser/latest/Browser). The html is moved from main into `view`
+To just walk through it simply for beginners, we turn the main component into a [Browser.element](https://package.elm-lang.org/packages/elm/browser/latest/Browser#elements). The html is moved from main into `view`
 
 - `main` is the entry point of the app
 - `init` sets initial state (of type Model). Also runs initial commands/side-effects (if needed)
