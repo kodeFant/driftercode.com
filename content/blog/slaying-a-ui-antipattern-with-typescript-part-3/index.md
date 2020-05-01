@@ -2,7 +2,7 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "How to typecheck data from an external source",
+  "title": "How to type-check data from an external source",
   "description": "Be able to trust the data you fetch. Slaying a UI antipattern with TypeScript and React (part 3).",
   "image": "images/article-covers/damsel-in-distress.jpg",
   "published": "2020-04-23",

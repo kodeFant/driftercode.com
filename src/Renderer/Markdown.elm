@@ -42,7 +42,25 @@ mainRenderer =
     , emphasis =
         \children -> Html.em [] children
     , codeSpan =
-        \content -> code [] [ text content ]
+        \content ->
+            code
+                [ css
+                    [ backgroundColor colors.lighterGray
+                    , padding2 (Css.em 0.25) (Css.em 0.2)
+                    , display inlineFlex
+                    , fontFamilies [ "Fira Code", "monospace" ]
+                    , fontSize (px 16)
+                    , after
+                        [ letterSpacing (Css.em -0.2)
+                        , Css.property "content" "'\u{00A0}'"
+                        ]
+                    , before
+                        [ letterSpacing (Css.em -0.2)
+                        , Css.property "content" "'\u{00A0}'"
+                        ]
+                    ]
+                ]
+                [ text content ]
     , link = link
     , image = image
     , text =
