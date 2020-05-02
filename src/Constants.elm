@@ -1,4 +1,4 @@
-module Constants exposing (canonicalSiteUrl, rssFeed,githubLink, maxWidthDefault, maxWidthLarge, siteLinkedIn, siteTagline, siteTwitter)
+module Constants exposing (canonicalSiteUrl, githubLink, maxWidthDefault, maxWidthLarge, rssFeed, siteLinkedIn, siteTagline, siteTwitter)
 
 import Css exposing (Px, px)
 
@@ -10,7 +10,7 @@ siteTagline =
 
 canonicalSiteUrl : String
 canonicalSiteUrl =
-    "https://driftercode.com"
+    "https://driftercode.com/"
 
 
 siteTwitter : String

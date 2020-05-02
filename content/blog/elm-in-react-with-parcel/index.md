@@ -148,11 +148,10 @@ When Elm is communicating with TypeScript/JavaScript, it's important to decide w
 
 To me, it makes most sense to have Elm control the state and pass it to React. There could of course be use-cases where it's necessary to control the state with React at first.
 
-_Let me know if you want a tutorial on how to make React own the state. I would also appreciate an explanation on the reasoning why to understand your context._
 
 ## Make Elm stateful
 
-To make the Elm component more interactive, we need to add a bit of stuff to the `Main.elm` module.
+To make the Elm component more interactive, we need to add a bit more stuff to the `Main.elm` module.
 
 ```elm
 module Main exposing (main)
@@ -368,7 +367,7 @@ Exactly how you do it in your own project might vary. A viable path is to start 
 
 When Elm owns all state, you can gradually take over the React rendering by expanding the `view` function and replace the React views.
 
-You could also make an an [incoming message](https://guide.elm-lang.org/interop/ports.html#incoming-messages-sub) port from React to Elm and pass string messages to Elm which then updates the state. I will probably make another post on that subject.
+You could also make an an [incoming message](https://guide.elm-lang.org/interop/ports.html#incoming-messages-sub) port from React to Elm and pass string messages to Elm which then updates the state. That's a bit harder to achieve, but I will probably make another post on that subject.
 
 - [Complete code](https://github.com/kodeFant/elm-in-react-complete)
 

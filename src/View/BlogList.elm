@@ -62,7 +62,7 @@ blogIndexItems posts =
 
 blogIndexItem : ( PagePath Pages.PathKey, Head.Metadata.ArticleMetadata ) -> Html msg
 blogIndexItem ( postPath, post ) =
-    indexCard ( postPath, post )
+    styledIndexCard ( postPath, post )
         [ styledIndexCardPart1
             [ styledIndexCardImage (ImagePath.toString post.image)
             ]
@@ -94,8 +94,8 @@ styledIndexItemsGrid =
         ]
 
 
-indexCard : ( PagePath Pages.PathKey, Head.Metadata.ArticleMetadata ) -> List (Html msg) -> Html msg
-indexCard ( postPath, _ ) =
+styledIndexCard : ( PagePath Pages.PathKey, Head.Metadata.ArticleMetadata ) -> List (Html msg) -> Html msg
+styledIndexCard ( postPath, _ ) =
     a
         [ href (PagePath.toString postPath)
         , css
@@ -104,6 +104,7 @@ indexCard ( postPath, _ ) =
             , borderRadius (px 7)
             , Responsive.tabletUp [ border3 (px 4) solid colors.lighterGray ]
             , fontSize (rem 1)
+            , overflow Css.hidden
             , firstOfType
                 [ Responsive.desktopUp
                     [ Css.property "display" "grid"

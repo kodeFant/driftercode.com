@@ -35,6 +35,7 @@ image attr { path, description } =
         ([ src path
          , alt description
          , css [ Css.width (pct 100) ]
+         , Attr.attribute "loading" "lazy"
          ]
             ++ attr
         )
