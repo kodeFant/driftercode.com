@@ -2,21 +2,21 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "Make a React component with Elm (in Parcel)",
+  "title": "Make a React component in Elm (with Parcel)",
   "description": "Try Elm in production without rewriting your whole app.",
   "image": "images/article-covers/elm-in-react.png",
   "published": "2020-05-07",
-  "draft": true,
+  "draft": false,
   "slug": "elm-in-react-with-parcel",
   tags: [],
 }
 ---
 
-**JavaScript developers are increasingly becoming envious of the advantages of Elm.**
+**I always think of Elm at some point when working up a JavaScript headache.**
 
 Zero run-time errors, world-class error messages and a strongly typed language are amazing features when making complex and stable software. Nothing in JavaScript or TypeScript can match it.
 
-There are ways to achieve many of the features of Elm in a React app, but in practice it is much harder.
+There are ways to achieve many of the features of Elm in a React app, but in practice it is much harder earned.
 
 **When escape hatches are present, we as humans will use them. When code discipline is enforced by the language, our mental load is decreased.**
 
@@ -24,19 +24,21 @@ Elm enables us to make complex apps without losing sleep.
 
 ## Gradual adoption with Parcel
 
-Rewriting a large app to Elm should be done gradually. Replace one simple component and decide whether you like it, or need it.
+Rewriting a large app from a JavaScript framework to Elm should be done gradually. Replace one simple component and decide whether you like it, or need it.
 
 **The Elm creator Evan Czaplicki has written some [guidelines on gradual introduction](https://elm-lang.org/news/how-to-use-elm-at-work) if you are serious about trying Elm in production.**
 
-In this guide, I will use the Parcel bundler instead of Create React App. There are already a few Webpack oriented tutorials out there (links at the bottom).
+In this guide, I will use the Parcel bundler instead of Create React App (Webpack). There are already a few Webpack oriented tutorials out there (links at the bottom).
 
 I also want to show how to do it with function components and TypeScript.
 
 Parcel has built-in support for Elm, so there is not much configuration to it.
 
+Implementing Elm in React is actually deceptively simple. As long as you know how, of course.
+
 **NOTE: I won't explain much of the Elm stuff. It is best covered in the [official introduction](https://guide.elm-lang.org/).**
 
-This tutorial can still be useful if you are a beginner wanting to get a hands-on feel of Elm.
+Although it's an advanced topic, this tutorial can be useful for seasoned React developers wanting to get a hands-on feel of Elm.
 
 ## Let's get started!
 
@@ -148,7 +150,6 @@ When Elm is communicating with TypeScript/JavaScript, it's important to decide w
 
 To me, it makes most sense to have Elm control the state and pass it to React. There could of course be use-cases where it's necessary to control the state with React at first.
 
-
 ## Make Elm stateful
 
 To make the Elm component more interactive, we need to add a bit more stuff to the `Main.elm` module.
@@ -217,7 +218,7 @@ To just walk through it simply for beginners, we turn the main component into a 
 - `subscriptions` lets you subscribe to data that changes, like JavaScript, but we will not use it here
 - `update` updates the **model**, it's like a reducer, but better
 - `view` now takes in the **model**, displays it and is able to send messages (Msg) to to update
-- `Model` is the type definition for the state model. In this case, it's just an integer
+- `Model` is the type definition for the state model. In this case, it's just an integer. Normally it's a record with lots of data.
 - `Msg` is a collection of messages to dispatch to update, comparable to Redux actions
 
 Now, you have two components with state working independently of each other.
@@ -234,13 +235,15 @@ The finish line is closing in. Let's hook the components together.
 
 ## Establish communication lines in Elm
 
-We will now make Elm talk with TypeScript. React will set the initial value and Elm will be the source of truth for the state.
+We will now make Elm talk with JavaScript. React will set the initial value and Elm will be the source of truth for the state.
 
 First, we will put the word `port` in front of the top module declaration like this:
 
 ```elm
 port module Main exposing (main)
 ```
+
+This states that the Main module can communicate with JavaScript outside of the Elm application.
 
 Then we will add a port command that we will send to React. And a `Flags` type for defining the initial state coming from React.
 
@@ -252,9 +255,9 @@ type alias Flags =
     Int
 ```
 
-We also need to tell the `main` and `init` function to take in flags from TypeScript. We do that by updating the type definitions.
+We also need to tell the `main` and `init` function to take in flags from the React JavaScript side. We do that by updating the type definitions.
 
-And we take the flags in init and set them as the initial state.
+And we take the flags in init and set them as the initial state for the Elm app.
 
 ```elm
 main : Program Flags Model Msg
@@ -292,7 +295,7 @@ The Elm logic is finished, but the app will not work until we have adjusted the 
 
 When using TypeScript, we need to update the type definitions for the flags and ports we just made. Doing it manually is just painful.
 
-We will use a package called [elm-typescript-interop](https://github.com/dillonkearns/elm-typescript-interop) made by the very productive package author Dillon Kearns.
+We will use a package called [elm-typescript-interop](https://github.com/dillonkearns/elm-typescript-interop) made by the very productive package author Dillon Kearns ([elm-pages](https://package.elm-lang.org/packages/dillonkearns/elm-pages/latest/), [elm-graphql](https://package.elm-lang.org/packages/dillonkearns/elm-graphql/latest/), [elm-markdown](https://package.elm-lang.org/packages/dillonkearns/elm-markdown/latest/)).
 
 In `package.json`, just add this script. There is no need to install it:
 
@@ -367,7 +370,9 @@ Exactly how you do it in your own project might vary. A viable path is to start 
 
 When Elm owns all state, you can gradually take over the React rendering by expanding the `view` function and replace the React views.
 
-You could also make an an [incoming message](https://guide.elm-lang.org/interop/ports.html#incoming-messages-sub) port from React to Elm and pass string messages to Elm which then updates the state. That's a bit harder to achieve, but I will probably make another post on that subject.
+You could also make an an [incoming message](https://guide.elm-lang.org/interop/ports.html#incoming-messages-sub) port from React to Elm and pass string messages to Elm which then updates the state.
+
+You might also want Elm to set the initial state. That's a bit harder to achieve, but I will publish another post on this subject in a couple of weeks.
 
 - [Complete code](https://github.com/kodeFant/elm-in-react-complete)
 
