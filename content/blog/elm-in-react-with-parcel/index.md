@@ -20,7 +20,7 @@ There are ways to achieve many of the features of Elm in a React app, but in pra
 
 **When escape hatches are present, we as humans will use them. When code discipline is enforced by the language, our mental load is decreased.**
 
-Elm enables us to make complex apps without losing sleep.
+Elm enables us to work with complexity without losing sleep.
 
 ## Gradual adoption with Parcel
 
