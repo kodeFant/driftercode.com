@@ -38,7 +38,7 @@ Implementing Elm in React is actually deceptively simple. As long as you know ho
 
 **NOTE: I won't explain much of the Elm stuff. It is best covered in the [official introduction](https://guide.elm-lang.org/).**
 
-Although it's an advanced topic, this tutorial can be useful for seasoned React developers wanting to get a hands-on feel of Elm.
+Although this is an advanced topic, this tutorial can be useful for seasoned React developers wanting to get a hands-on feel of Elm.
 
 ## Let's get started!
 
@@ -50,7 +50,7 @@ Create a folder in `src` named **Elm** and create the file `Main.elm`.
 mkdir src/Elm && touch src/Elm/Main.elm
 ```
 
-We start with just the hard-coded markup.
+We will start with some hard-coded markup.
 
 Insert this into the `Main.elm` file:
 
@@ -235,7 +235,7 @@ The finish line is closing in. Let's hook the components together.
 
 ## Establish communication lines in Elm
 
-We will now make Elm talk with JavaScript. React will set the initial value and Elm will be the source of truth for the state.
+We will now make Elm talk with JavaScript. React will set the initial value, but Elm will be the source of truth for the state.
 
 First, we will put the word `port` in front of the top module declaration like this:
 
@@ -255,7 +255,7 @@ type alias Flags =
     Int
 ```
 
-We also need to tell the `main` and `init` function to take in flags from the React JavaScript side. We do that by updating the type definitions.
+We also need to tell the `main` and `init` function to take in flags from the JavaScript side. We do that by updating the type definitions.
 
 And we take the flags in init and set them as the initial state for the Elm app.
 
@@ -370,9 +370,7 @@ Exactly how you do it in your own project might vary. A viable path is to start 
 
 When Elm owns all state, you can gradually take over the React rendering by expanding the `view` function and replace the React views.
 
-You could also make an an [incoming message](https://guide.elm-lang.org/interop/ports.html#incoming-messages-sub) port from React to Elm and pass string messages to Elm which then updates the state.
-
-You might also want Elm to set the initial state. That's a bit harder to achieve, but I will publish another post on this subject in a couple of weeks.
+You could also make an an [incoming message](https://guide.elm-lang.org/interop/ports.html#incoming-messages-sub) port from React to Elm and pass string messages to Elm which then updates the state. I plan on making another post on this subject in a couple of weeks.
 
 - [Complete code](https://github.com/kodeFant/elm-in-react-complete)
 
