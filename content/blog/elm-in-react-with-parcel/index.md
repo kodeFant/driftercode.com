@@ -245,7 +245,7 @@ port module Main exposing (main)
 
 This states that the Main module can communicate with JavaScript outside of the Elm application.
 
-Then we will add a port command that we will send to React. And a `Flags` type for defining the initial state coming from React.
+Then we will add a port command that we will send to React, and a `Flags` type for defining the initial state coming from React.
 
 ```elm
 port updateCountInReact : Int -> Cmd msg
