@@ -5,7 +5,7 @@ const { Elm } = require("./src/Main.elm");
 const pagesInit = require("elm-pages");
 
 const webMention = document.createElement("link");
-webMention.rel = "webMention";
+webMention.rel = "webmention";
 webMention.href = "https://webmention.io/driftercode.com/webmention";
 
 const pingback = document.createElement("link");
