@@ -2,7 +2,7 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "Make a React component in Elm (with Parcel)",
+  "title": "How to use Elm in a React app (with Parcel)",
   "description": "Try Elm in production without rewriting your whole app.",
   "image": "images/article-covers/elm-in-react.png",
   "published": "2020-05-07",
