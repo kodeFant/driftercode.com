@@ -5,7 +5,7 @@
   "title": "100 days of Haskell, day 1",
   "description": "The intimidating power of Haskell shall be mine in 100 days.",
   "image": "images/article-covers/hundred-days-haskell.png",
-  "published": "2020-08-20",
+  "published": "2020-08-19",
   "draft": false,
   "slug": "hundred-days-of-haskell",
   tags: [],
