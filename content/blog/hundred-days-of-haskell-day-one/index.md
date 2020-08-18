@@ -12,9 +12,9 @@
 }
 ---
 
-During the last couple of years, I have taught myself a fair bit of programming languages like JavaScript, PHP, TypeScript, Elm, Dart, Elixir and some Python and Java.
+During the last couple of years, I have taught myself a fair share of programming languages like JavaScript, PHP, TypeScript, Elm, Dart, Elixir and some Python and Java.
 
-Elm, a language written in Haskell, has become my favorite language so far. It made me appreciate functional programming and strict static typing. I even found the quality of my JavaScript code improving (at least in my opinion 😄).
+Elm, a language written in Haskell, has become my favorite language so far. It made me appreciate functional programming and strict static typing. I even found the quality of my JavaScript code improving.
 
 I recently learned Elixir and Phoenix for doing FP on the server and made a pet project with it. It was a great experience, but I still find myself missing the strict compiler guarantees. I tried the Elixir Dialyzer for typings. It's good, but it is not as bullet proof as Elm and Haskell types.
 
@@ -28,9 +28,11 @@ I am one of those programmers who have tried starting to learn Haskell a couple 
 
 **Haskell feels intimidating, but I don't beliveve it really is that hard.**
 
-I think the main reason I flee from it is that none of the learning resources captivate me. The coding tutorials are mostly teaching me to write small programs I have little interests in.
+I think the main reason I flee from it is that none of the learning resources captivate me.
 
-Making tic tac toe in the REPL is probably fun if you have all the free time in the world, but I want to make real applications, and I want to become productive as soon as possible. Some guides even do lots of examples with advanced non-practical math stuff. I'm just don't care about doing math exercises with Haskell. I think many web developers can relate.
+Making tic tac toe in the REPL is probably fun if you have all the free time in the world, but I want to make real applications, and I want to become productive as soon as possible.
+
+Some Haskell guides even do lots of examples with advanced non-practical math stuff. I just don't care about doing math exercises with Haskell. I think many web developers can relate.
 
 With Elixir there are so many awesome resources teaching you how to build complex web services that are directly transferable to real-life projects.
 
@@ -44,7 +46,7 @@ I had a great time going through the [IHP tutorial](https://ihp.digitallyinduced
 
 Inspired by the project, I bought myself a new Haskell book. I think I already regret that buy 😄 It looks just as uninspiring as every other guide (no real web applications), but I might give it a try.
 
-I will probably mainly use IHP to boost this Haskell challenge to make web stuff.
+I will probably mainly use IHP for this Haskell challenge to make more or less useful web stuff.
 
 ## One hour of Haskell a day
 
