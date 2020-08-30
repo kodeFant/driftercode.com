@@ -12,19 +12,19 @@
 }
 ---
 
-During the last couple of years, I have taught myself a fair share of programming languages like JavaScript, PHP, TypeScript, Elm, Dart, Elixir and some Python and Java.
+I have taught myself and used a fair share of programming languages the last couple of years. JavaScript, TypeScript, Elm, Elixir, Dart, and some PHP, Python and Java.
 
-Elm, a language written in Haskell, has become my favorite language so far. It made me appreciate functional programming and strict static typing. I even found the quality of my JavaScript code improving.
+Elm, a language written in Haskell, has become my favorite language so far. It made me appreciate functional programming and strict static typing. I even found the quality of my JavaScript code improving and getting cleaner.
 
-I recently learned Elixir and Phoenix for doing FP on the server and made a pet project with it. It was a great experience, but I still find myself missing the strict compiler guarantees. I tried the Elixir Dialyzer for typings. It's good, but it is not as bullet proof as Elm and Haskell types.
+I recently learned Elixir and Phoenix because I wanted to do functional programming on the server and made a pet project with it. It was a good experience, but I still find myself missing the strict compiler guarantees of Elm. I tried the Elixir Dialyzer for typings. It's good, but it is not as bullet proof as Elm and Haskell types.
 
-I could gladly continue writing apps in Elixir, but I would like to compare it with Haskell before I decide my favorite backend language.
+I will possibly continue writing my apps in Elixir, but I would like to compare it with the Haskell Experience before I decide my favorite backend language.
 
 _**By the way,** I am eagerly following [Gleam](https://gleam.run/), a statically typed functional language that compiles to Erlang. If you find it as interesting as I do, you could [sponsor it on Github](https://github.com/sponsors/lpil) to give the author time to develop it._
 
 ## Intimidating boredom
 
-I am one of those programmers who have tried starting to learn Haskell a couple of times, but failed.
+I am one of those programmers who starting learning Haskell a couple of times and failed.
 
 **Haskell feels intimidating, but I don't beliveve it really is that hard.**
 

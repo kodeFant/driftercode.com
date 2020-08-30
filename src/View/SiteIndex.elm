@@ -167,6 +167,14 @@ supportedLanguages =
       , icon = ImagePath.toString Pages.images.elm
       , link = "https://elm-lang.org/"
       }
+    , { name = "Haskell"
+      , icon = ImagePath.toString Pages.images.haskell
+      , link = "https://www.haskell.org/"
+      }
+    , { name = "Elixir"
+      , icon = ImagePath.toString Pages.images.elixir
+      , link = "https://elixir-lang.org/"
+      }
     , { name = "TypeScript"
       , icon = ImagePath.toString Pages.images.typescript
       , link = "https://www.typescriptlang.org/"
