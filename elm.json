@@ -28,7 +28,7 @@
       "zwilias/json-decode-exploration": "6.0.0"
     },
     "indirect": {
-      "Skinney/murmur3": "2.0.8",
+      "Skinney/murmur3": "2.0.7",
       "billstclair/elm-xml-eeue56": "1.0.1",
       "dmy/elm-imf-date-time": "1.0.1",
       "elm/bytes": "1.0.8",
