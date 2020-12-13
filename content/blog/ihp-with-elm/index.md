@@ -37,12 +37,12 @@ static/packages
 
 ## Install Node
 
-In your `default.nix` file in the root folder, add `NodeJS` to `otherDeps`:
+In your `default.nix` file in the root folder, add `NodeJS` and `elm` to `otherDeps`:
 
 ```nix
 otherDeps = p: with p; [
     # Native dependencies, e.g. imagemagick
-    nodejs
+    nodejs elmPackages.elm
 ];
 ```
 
@@ -84,7 +84,7 @@ In the root `package.json` file, add these scripts:
 ```json
 "scripts": {
     ... 
-    "bootstrap": "npm install && lerna run bootstrap",
+    "bootstrap": "npm install && lerna bootstrap",
     "start": "lerna run start --stream",
     "build": "lerna run build --stream"
 },
@@ -217,12 +217,14 @@ Go to the `Makefile` in the project root and append this line to the list of `JS
 JS_FILES += static/packages/user-notes/index.js
 ```
 
-and the build script at the bottom of the Makefile
+And put this at the bottom of the file.
 
 ```Makefile
 static/packages/user-notes/index.js:
-	NODE_ENV=production npm ci
-	NODE_ENV=production npm build
+	NODE_ENV=production npm run bootstrap
+	NODE_ENV=production npm run build
 ```
+
+**Make requires tab characters instead of 4 spaces in the second line. Make sure you’re using a tab character when pasting this into the file**
 
 It should now be ready to ship to for example IHP Cloud.
