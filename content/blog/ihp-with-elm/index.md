@@ -268,7 +268,7 @@ Then replace the `start` script in `package.json` and add accordingly:
 
 With that you can now run both the IHP app and the JavaScript app with this single command.
 
-```
+```bash
 npm start
 ```
 
