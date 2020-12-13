@@ -54,7 +54,7 @@ view model count metadata comments page viewForPage =
                 --     }
                 --     metadata.slug
                 --     comments
-                -- ]
+                ]
             ]
         )
         True
