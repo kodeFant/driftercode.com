@@ -41,6 +41,20 @@ view model count metadata comments page viewForPage =
                     ]
                 , articleImageView metadata.image
                 , article [] viewForPage
+                -- , Comment.view
+                --     { commentInfoToggle = CommentInfo
+                --     , updateCommentForm = UpdateCommentForm
+                --     , updateDeleteCommentForm = UpdateDeleteCommentForm
+                --     , submitComment = SubmitComment
+                --     , requestDeletionEmail = RequestDeletionEmail
+                --     }
+                --     { commentForm = model.commentForm
+                --     , commentInfo = model.commentInfo
+                --     , deleteCommentForm = model.deleteCommentForm
+                --     }
+                --     metadata.slug
+                --     comments
+                -- ]
             ]
         )
         True
