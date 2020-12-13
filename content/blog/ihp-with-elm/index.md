@@ -22,7 +22,7 @@ Now I have it all, with SSR included and an amazing developer experience 😍
 
 It even has the pipe operator (`|>`) included making it even more similar to the Elm syntax.
 
-**Disclaimer: This tutorial should work for Mac and Linux. If you develop on Windows, it will might not work without some tweaks on your own**
+**Disclaimer: This tutorial should work for Mac and Linux. If you develop on Windows, it might not work without some tweaks on your own**
 
 ## Thing I don't use Elm for in IHP
 
