@@ -273,3 +273,7 @@ npm start
 ```
 
 And quit with **(ctrl+c)** as always.
+
+## Next up
+
+I want to take this application further in future posts showing you how to interact between IHP and Elm, and how use Elm within protected boundaries (requiring authentication). Stay tuned if these are topics that intrigue you 😊
