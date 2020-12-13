@@ -80,6 +80,7 @@ pageView model comments siteMetadata page ( count, viewForPage ) =
                 filteredComments =
                     comments
                         |> List.filter (\comment -> comment.path == metadata.slug)
+                        |> List.reverse
             in
             { title = metadata.title
             , body = View.Article.view model count metadata filteredComments page viewForPage
