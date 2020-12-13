@@ -12,13 +12,13 @@
 }
 ---
 
-Elm was my gateway drug in to type-safe functional programming. It's such a good tool for making robust frontends. Writing big projects in React and TypeScript honestly bums me out because of it.
+[Elm](https://elm-lang.org/) was my gateway drug in to type-safe functional programming. It's such a good tool for making robust frontends. Writing big projects in React and TypeScript honestly bums me out because of it.
 
 I have always wanted have to have the equivalent type-safe joy on the backend like I have with Elm.
 
 Now I have it all, with SSR included and an amazing developer experience 😍
 
-**IHP is a new web framework that has opened a wide door for the web development community to get into Haskell.** Like Rails and Laravel, it's great for quick prototyping, well documented and easy to use.
+**[IHP](https://ihp.digitallyinduced.com/) is a new web framework that has opened a wide door for the web development community to get into Haskell.** Like Rails and Laravel, it's great for quick prototyping, well documented and easy to use.
 
 It even has the pipe operator (`|>`) included making it even more similar to the Elm syntax.
 
