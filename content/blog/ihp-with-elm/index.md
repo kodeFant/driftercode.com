@@ -115,10 +115,13 @@ As you see, Elm has not been loaded, because we haven't written any Elm yet. Let
 
 Create a new package folder, initiate it as it's own node project and create the necessary source files.
 
+In short, do this:
+
 ```
 mkdir packages/user-notes
 cd packages/user-notes
-touch index.js Main.elm
+mkdir src
+touch src/index.js src/Main.elm
 npm init -y
 ```
 
@@ -133,8 +136,8 @@ Add the `start` and `build` scripts into the **user-notes** `package.json`:
 
 ```json
   "scripts": {
-    "start": "parcel watch index.js --out-dir ../../static/packages/user-notes",
-    "build": "parcel build index.js --out-dir ../../static/packages/user-notes"
+    "start": "parcel watch src/index.js --out-dir ../../static/packages/user-notes",
+    "build": "parcel build src/index.js --out-dir ../../static/packages/user-notes"
   },
 ```
 
