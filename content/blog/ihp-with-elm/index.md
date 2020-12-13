@@ -2,7 +2,7 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "How to use Elm with IHP",
+  "title": "How to setup Elm with IHP",
   "description": "Get Elm with hot reloading on top of IHP, the new framework that makes Haskell a cool kid in web dev.",
   "image": "images/article-covers/haskell-elm.png",
   "published": "2020-12-13",
@@ -87,7 +87,7 @@ npm init -y
 elm init
 ```
 
-For this tutorial, we will rename the `src` folder to `elm`.
+For this tutorial, we will rename the `src` folder that elm generated into `elm`.
 
 ```bash
 mv src elm
