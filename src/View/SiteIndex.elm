@@ -37,8 +37,8 @@ view indexMeta _ _ page =
                     [ styledTitle [ text indexMeta.title ]
                     , styledSubTitle [ text indexMeta.subHeading ]
                     , styledContent
-                        [ p [] [ text "A budding functional programmer who used to be a journalist." ]
-                        , p [] [ text "I’m learning functional programming by blogging about it." ]
+                        [ p [] [ text "A functional programming enthusiast who used to be a journalist." ]
+                        , p [] [ text "Learning functional programming by blogging about it." ]
                         , p [] [ text "Mathy algebraic slang to be kept at a minimum." ]
                         ]
                     , styledButtonLinkContainer
@@ -171,10 +171,10 @@ supportedLanguages =
       , icon = ImagePath.toString Pages.images.haskell
       , link = "https://www.haskell.org/"
       }
-    , { name = "Elixir"
-      , icon = ImagePath.toString Pages.images.elixir
-      , link = "https://elixir-lang.org/"
-      }
+    -- , { name = "Elixir"
+    --   , icon = ImagePath.toString Pages.images.elixir
+    --   , link = "https://elixir-lang.org/"
+    --   }
     , { name = "TypeScript"
       , icon = ImagePath.toString Pages.images.typescript
       , link = "https://www.typescriptlang.org/"
