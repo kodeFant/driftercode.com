@@ -12,7 +12,7 @@
 }
 ---
 
-[Elm](https://elm-lang.org/) was my gateway drug in to type-safe functional programming. It's such a good tool for making robust frontends. Writing big projects in React and TypeScript honestly bums me out because of it.
+[Elm](https://elm-lang.org/) was my gateway drug into type-safe functional programming. It's such a good tool for making robust frontends. Writing big projects in React and TypeScript honestly bums me out because of it.
 
 I have always wanted have to have the equivalent type-safe joy on the backend like I have with Elm.
 
