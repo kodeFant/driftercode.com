@@ -38,7 +38,7 @@ view indexMeta _ _ page =
                     , styledSubTitle [ text indexMeta.subHeading ]
                     , styledContent
                         [ p [] [ text "A functional programming enthusiast who used to be a journalist." ]
-                        , p [] [ text "Learning functional programming by blogging about it." ]
+                        , p [] [ text "Learning functional programming by writing about it." ]
                         , p [] [ text "Mathy algebraic slang to be kept at a minimum." ]
                         ]
                     , styledButtonLinkContainer

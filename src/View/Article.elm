@@ -41,6 +41,8 @@ view model count metadata comments page viewForPage =
                     ]
                 , articleImageView metadata.image
                 , article [] viewForPage
+                , p[][text "Got a comment? ", a [href "https://twitter.com/larsparsfromage"][text "Drop me a tweet"]]
+
                 -- , Comment.view
                 --     { commentInfoToggle = CommentInfo
                 --     , updateCommentForm = UpdateCommentForm
