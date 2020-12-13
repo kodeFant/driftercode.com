@@ -80,7 +80,7 @@ To update your local environment, close the server **(ctrl+c)** and run
 nix-shell --run 'make -B .envrc'
 ```
 
-Then initialize the Node project and elm at the project root.
+Then initialize Node.js and elm at the project root.
 
 ```bash
 npm init -y
