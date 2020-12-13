@@ -12,15 +12,15 @@
 }
 ---
 
-Elm was my gateway drug in to type-safe functional programming. It's such a good tool for making robust frontends. Writing big projects in React and TypeScript bums me out because of it.
+Elm was my gateway drug in to type-safe functional programming. It's such a good tool for making robust frontends. Writing big projects in React and TypeScript honestly bums me out because of it.
 
 I have always wanted have to have the equivalent type-safe joy on the backend like I have with Elm.
 
 Now I have it all, with SSR included and an amazing developer experience 😍
 
-**IHP is a new web framework that has opened a wide door for the web development community to get into Haskell.** It's great for quick prototyping, well documented and easy to use.
+**IHP is a new web framework that has opened a wide door for the web development community to get into Haskell.** Like Rails and Laravel, it's great for quick prototyping, well documented and easy to use.
 
-It even has the pipe operator (`|>`) included making it be even more similar to the Elm syntax.
+It even has the pipe operator (`|>`) included making it even more similar to the Elm syntax.
 
 **Disclaimer: This tutorial should work for Mac and Linux. If you develop on Windows, it will might not work without some tweaks on your own**
 
@@ -43,7 +43,7 @@ So unless you really want to write a full Single Page App, Elm should be used wi
 
 ## Create a new IHP Project
 
-If you haven't used IHP before, make sure you have it installed. [It's surprisingly easy to get going](https://ihp.digitallyinduced.com/Guide/installation.html).
+If you haven't installed IHP already, make sure you do. [It's surprisingly easy to get going](https://ihp.digitallyinduced.com/Guide/installation.html).
 
 Start a fresh IHP project for this tutorial. Luckily, it couldn't be easier as soon as IHP is properly installed.
 
@@ -125,7 +125,7 @@ As you see, Elm has not been loaded, because we naturally haven't written any El
 
 ## Setting up Elm
 
-Install `node-elm-compiler` for compiling and `elm-hot` for hot reloading in development. Parcel is a "zero config" JavaScript bundler.
+Install `node-elm-compiler` for compiling and `elm-hot` for hot reloading in development. `parcel-bundler` is a "zero config" JavaScript bundler.
 
 ```bash
 npm install node-elm-compiler parcel-bundler
