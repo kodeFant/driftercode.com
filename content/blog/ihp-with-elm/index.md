@@ -2,7 +2,7 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "How to setup Elm with IHP",
+  "title": "How to setup IHP with Elm",
   "description": "Get Elm with hot reloading on top of IHP, the new framework that makes Haskell a cool kid in web dev.",
   "image": "images/article-covers/haskell-elm.png",
   "published": "2020-12-13",
