@@ -6,7 +6,7 @@
   "description": "Get Elm with hot reloading on top of an easy to use Haskell framework.",
   "image": "images/article-covers/hundred-days-haskell.png",
   "published": "2020-12-13",
-  "draft": false,
+  "draft": true,
   "slug": "ihp-with-elm",
   tags: [],
 }
