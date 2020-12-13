@@ -25,6 +25,16 @@ ihp-new ihp-with-elm
 
 To verify the app is working, `cd ihp-with-elm` and run `./start`.
 
+## Update .gitignore
+
+Let's update `.gitignore` as soon as possible to avoid pushing unwanted stuff into git.
+
+```
+.cache
+elm-stuff
+static/packages
+```
+
 ## Install Node
 
 In your `default.nix` file in the root folder, add `NodeJS` to `otherDeps`:
