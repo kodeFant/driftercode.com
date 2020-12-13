@@ -24,22 +24,6 @@ It even has the pipe operator (`|>`) included making it even more similar to the
 
 **Disclaimer: This tutorial should work for Mac and Linux. If you develop on Windows, it might not work without some tweaks on your own**
 
-## Thing I don't use Elm for in IHP
-
-IHP gives you HTML templating (HSX) with pure functions, very similar to Elm. In that regard it's partially overlapping with Elm.
-
-It can be a blurry line for beginners, so here are my recommendations for how to set those lines.
-
-- Use HSX for **basic HTML**, even if it requires a couple of lines of JavaScript. I would for example write a basic hamburger menu in HSX/HTML.
-- Use HSX for **forms**. Forms are pretty much always a bigger pain written in app code. If you have been living in the Single Page App world for a while, you will realize forms written in normal HTML is not that bad. IHP gives you a convenient way of writing forms with server-side validation.
-- Use Elm for the **advanced UI stuff** requiring heavy use of DOM manipulation. Elm shines in writing user interfaces with high complexity. If the lines of JavaScript are getting too many, turn to Elm!
-- Do you want the content to have **SSR** for search engine optimization? Use HSX.
-
-So unless you really want to write a full Single Page App, Elm should be used with restraint in IHP, for only specific supercharged parts of the site.
-
-**Most sites are actually better off outputting just HTML and CSS.**
-
-[Dill](https://dill.network), my first IHP app has no Single Page App functionality at all. Not even a bundler like Webpack or Parcel. It's pure Haskell templates basically written in HTML, CSS and a litte JavaScript. (There _are_ a couple of JS libraries included like Turbolinks)
 
 ## Create a new IHP Project
 
@@ -273,6 +257,23 @@ npm start
 ```
 
 And quit with **(ctrl+c)** as always.
+
+## Thing I don't use Elm for in IHP
+
+IHP gives you HTML templating (HSX) with pure functions, very similar to Elm. In that regard it's partially overlapping with Elm.
+
+It can be a blurry line for beginners, so here are my recommendations for how to set those lines.
+
+- Use HSX for **basic HTML**, even if it requires a couple of lines of JavaScript. I would for example write a basic hamburger menu in HSX/HTML.
+- Use HSX for **forms**. Forms are pretty much always a bigger pain written in app code. If you have been living in the Single Page App world for a while, you will realize forms written in normal HTML is not that bad. IHP gives you a convenient way of writing forms with server-side validation.
+- Use Elm for the **advanced UI stuff** requiring heavy use of DOM manipulation. Elm shines in writing user interfaces with high complexity. If the lines of JavaScript are getting too many, turn to Elm!
+- Do you want the content to have **SSR** for search engine optimization? Use HSX.
+
+So unless you really want to write a full Single Page App, Elm should be used with restraint in IHP, for only specific supercharged parts of the site.
+
+**Most sites are actually better off outputting just HTML and CSS.**
+
+[Dill](https://dill.network), my first IHP app has no Single Page App functionality at all. Not even a bundler like Webpack or Parcel. It's pure Haskell templates basically written in HTML, CSS and a litte JavaScript. (There _are_ a couple of JS libraries included like Turbolinks)
 
 ## Next up
 
