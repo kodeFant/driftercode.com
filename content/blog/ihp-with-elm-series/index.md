@@ -16,7 +16,7 @@ A series in the making about using making highly interactive widgets in IHP with
 
 ## Table of contents
 
-1. [How to setup IHP with Elm](/blog/ihp-with-elm)
+1. [How to setup IHP with Elm](blog/ihp-with-elm)
 2. Set flags from IHP to your Elm widget (in progress)
 3. Run several Elm widgets at once
 4. Make your Elm widgets interact with IHP
