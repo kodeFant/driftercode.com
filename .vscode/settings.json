@@ -19,5 +19,6 @@
         "remotedata",
         "typeof",
         "webcomponentsjs"
-    ]
+    ],
+    "nixEnvSelector.nixShellConfig": "${workspaceRoot}/default.nix"
 }
