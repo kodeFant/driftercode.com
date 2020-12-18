@@ -48,11 +48,11 @@ Run `npm start` and go to [localhost:8001/Tables](http://localhost:8001/Tables).
 
 Right click and select `Add Table` in the context menu. Name the table `books`.
 
-Image
+![Elm not running](/images/archive/ihp-with-elm/create-books-table.gif)
 
 Right click and add columns to the database until you have these exact fields:
 
-Image
+![Elm not running](/images/archive/ihp-with-elm/books-table.png)
 
 Try to match these fields excactly to avoid getting into a confusing situation later :)
 
