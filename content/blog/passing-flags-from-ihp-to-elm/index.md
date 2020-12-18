@@ -88,9 +88,9 @@ You will now have generated all you need to view, update, create and delete book
 
 Just a couple of small adjustments before we proceeed:
 
-Let's just make a checkbox field for the boolean value.
+Let's just use a checkbox field for the `hasRead` value and a datepicker for the `publishedAt` value.
 
-In the files `New.hs` and `Edit.hs` in the `/Web/Controller/View/Books/` folder, replace these two fields:
+In both `New.hs` and `Edit.hs` in the `/Web/Controller/View/Books/` folder, replace these two fields:
 
 ```haskell
 {{textField #hasRead}}
@@ -104,7 +104,7 @@ to
 {{dateField #publishedAt}}
 ```
 
-Let's also take a short visit to the Controller at `/Web/Controller/Books.hs` and add let's make sure that the nullable type is null when the field is empty so that we can get `Nothing` instead of an empty string if it's not filled out.
+Let's also take a short visit to the Controller at `/Web/Controller/Books.hs` and add let's make sure that the nullable value `review` turns into `Nothing` if empty.
 
 ```haskell
 buildBook book = book
