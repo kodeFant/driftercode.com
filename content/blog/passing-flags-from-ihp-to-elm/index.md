@@ -12,30 +12,39 @@
 }
 ---
 
-Setting initial values in Elm is easy because you have the opportunity to define flags during the initialization of Elm. That saves you from fetching those initial values from a separate endpoint.
+When initializing an Elm app through JavaScript, you have access to set initial values into the app with something called [flags](https://guide.elm-lang.org/interop/flags.html).
 
-For this part of the series, I want to show you some techniques for loading these values immediately as soon as the page has loaded.
+For this part of the series, I want to show you some techniques for loading these values called flags directly from IHP as soon as the page has loaded.
 
-This will also be the first step towards using Elm as a widget loader. As mentioned in the last post, replacing IHP's templates with a full Elm application is opting out of the amazing features of IHP.
+**And what's even cooler, we will also enable you to generate Haskell types to Elm without writing any decoders or encoders manually 😍**
 
-Regular server-rendered HTML is faster and gives you that SSR everyone is talking about without the added complexity of something like NextJS. Only when you think "I need Elm for this", use Elm. If you can do without, it's in my opinion simpler and better to just use HTML.
+- This is a **part 2** of the series [IHP with Elm](https://driftercode.com/blog/ihp-with-elm-series)
 
-All this being said, these examples will be very simple to reduce the chance of confusion.
+## Starting out simple
 
-## This is going to be long
+Elm should not be used for everything in an IHP app. IHP gives you server-side rendering and a great framework for forms. Let's keep that.
 
-Take a good breath. There is quite some things to do here. But you are on your way to make a cool system for implementing Elm views wherever you want in you Applications with auto-generated types. How cool is that?
+**Use Elm only when you start to think "I really need Elm for this".** That will keep the complexity down and let you use Elm for what it's great at.
 
-If you haven't done [part 1](blog/ihp-with-elm) of this series, do so. Or you could [clone how far we have come so far](https://github.com/kodeFant/ihp-with-elm/tree/setup-elm-in-ihp) (Remember to do an `npm install` in that case).
+All this being said, these examples will be simple and easily solvable with IHP alone to keep the complexity low while learning.
 
-**Remember to run you scripts inside `nix-shell`. Some commands does not work outside that environment.**
+## Continue from part one
+
+If you haven't done [part 1](blog/ihp-with-elm) of this series, do so.
+
+**If you don't want to do that**, you could [download the source code](https://github.com/kodeFant/ihp-with-elm) and run 
+```bash
+g checkout tags/setup-elm-in-ihp -b setup-elm-in-ihp
+```
+
+to follow along without doing the initial setup. Remember to do an `npm install` in that case.
 
 
 ## Create a Haskell type
 
 To demonstrate how we can insert different datatypes into Elm, let's create a relatively complex data model.
 
-Run `npm start` and go to [htts://localhost:8001/Tables](htts://localhost:8001/Tables).
+Run `npm start` and go to [localhost:8001/Tables](http://localhost:8001/Tables).
 
 Right click and select `Add Table` in the context menu. Name the table `books`.
 
@@ -89,7 +98,7 @@ to
 {{dateField #publishedAt}}
 ```
 
-Let's also take a short visit to the Controller at `/Web/Controller/Books.hs` and add let's make sure that the nullable type is null when the field is empty so we get a real Maybe.
+Let's also take a short visit to the Controller at `/Web/Controller/Books.hs` and add let's make sure that the nullable type is null when the field is empty so that we can get `Nothing` instead of an empty string if it's not filled out.
 
 ```haskell
 buildBook book = book
@@ -124,7 +133,7 @@ defaultLayout inner = H.docTypeHtml ! A.lang "en" $ [hsx|
 |]
 ```
 
-It's important to have this script at the bottom and not at the top with the other scripts.
+It's important to have this script at the bottom and not at the top with the other scripts. It won't run otherwise.
 
 Secondly, let's replace what we wrote in the previous part of the series in `/Web/View/Static/Welcome.hs`, just to have some nice linking to the Books.
 
@@ -141,20 +150,7 @@ instance View WelcomeView where
 |]
 ```
 
-```hs
-module Web.View.Static.Welcome where
-import Web.View.Prelude
-
-data WelcomeView = WelcomeView
-
-instance View WelcomeView where
-    html WelcomeView = [hsx|
-    <h1>The books app</h1>
-    <a href={BooksAction}>See all my books</a>
-|]
-```
-
-## Install `haskell-to-elm`
+## Install haskell-to-elm
 
 `haskell-to-elm` will let us generate Elm types from Haskell types, including encoders and decoders.
 
@@ -190,7 +186,9 @@ touch Application/Lib/DerivingViaElm.hs
 
 In `Application/Lib/DerivingViaElm.hs`, we are just inserting some logic for reducing boilerplate to `haskell-to-elm`. Just pasting in [this gist](https://gist.github.com/kodeFant/4513c07a78f35e0a879b0f3dd31efd9f) should do it. You can treat this like a library addition and you won't be touching it apart from importing it into the next file we are creating.
 
-Create the **Haskell to Elm types** file.
+## Turn IHP types into JSON serializable types
+
+Create the Haskell to Elm types file
 
 ```
 touch Web/JsonTypes.hs
@@ -234,6 +232,8 @@ bookToJSON book =
         publishedAt = get #publishedAt book
     }
 ```
+
+This is some extra work, but you also get to control what fields that will be sent into Elm. Not all values are relevant all the time. Ans some values should not be shared like password hashes and email adresses.
 
 ## Make a widget entry-point
 
@@ -304,7 +304,7 @@ Elm.Main.init({
 });
 ```
 
-The value passed into the `data-flags` attribute is serialized and ready to be shot right through JavaScript and directly into Elm.
+The value passed into the `data-flags` attribute is serialized and ready to be sendt right through JavaScript and directly into Elm.
 
 ## Autogenerate types
 
@@ -452,4 +452,10 @@ init flags =
     )
 ```
 
-Go to [localhost:8000/books](http://localhost:8000/books) and press show. You should see where Elm starts and begins with the <🌳> tag. Pretty cool. 
+Go to [localhost:8000/books](http://localhost:8000/books) and press `Show` on any book you have created. You should see where Elm starts and begins with the `<elm🌳>` tag. Pretty cool. 
+
+Please not that this usecase would be just as well solved with IHP, but I'm keeping the examples as simple as possible. The advanced elm related stuff is best suited for a separate elm tutorial.
+
+## Next up
+
+We have created only one widget, but in the next post I will show you how to create another widget to show you how I make only one Elm app support an unlimited amount of widgets. Most of the groundwork is done, so we can hit the ground running in the next post.
