@@ -48,15 +48,17 @@ Run `npm start` and go to [localhost:8001/Tables](http://localhost:8001/Tables).
 
 Right click and select `Add Table` in the context menu. Name the table `books`.
 
+**Just like this:**
+
 ![Elm not running](/images/archive/ihp-with-elm/create-books-table.gif)
 
 Right click and add columns to the database until you have these exact fields:
 
 ![Elm not running](/images/archive/ihp-with-elm/books-table.png)
 
-Try to match these fields excactly to avoid getting into a confusing situation later :)
+Try to match these fields excactly to avoid getting into a confusing situation later 🙂
 
-Double check `Schema.sql` file to ensure the table schema looks like this.
+Double check `Schema.sql` file to ensure the table schema looks like this below. You can also safely just paste this snippet into the **Schema.sql** file.
 
 ```bash
 -- Your database schema. Use the Schema Designer at http://localhost:8001/ to add some tables.
@@ -77,6 +79,10 @@ When all the fields are filled in, press `Update DB`. This should update the dat
 Stay in the `localhost:8001` admin panel and select `Codegen` in the menu to the left.
 
 Select `Controller`, name it `Books` and click `Preview` and click `Generate`.
+
+**Like this:**
+
+![Elm not running](/images/archive/ihp-with-elm/books-table.png)
 
 You will now have generated all you need to view, update, create and delete books. Pretty cool!
 
