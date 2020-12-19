@@ -26,7 +26,7 @@ Elm should not be used for everything in an IHP app. IHP gives you server-side r
 
 If you are looking for pure Elm Single Page App with a JSON api, [haskell-servant](https://www.servant.dev/) is probably a more logical way to go.
 
-**Use Elm only when you start to think "I really need Elm for this".** That will keep the complexity down and let you use Elm for what it's great for.
+**In IHP, use Elm only when you start to think "I really need Elm for this".** That will keep the complexity down and let you use Elm for what it's great for.
 
 All this being said, the example in this tutorial is made extremely simple to make the process easier to follow.
 
@@ -34,12 +34,12 @@ All this being said, the example in this tutorial is made extremely simple to ma
 
 If you haven't done [part 1](blog/ihp-with-elm) of this series, do so first.
 
-**If you don't want to do that**, you could [download the source project](https://github.com/kodeFant/ihp-with-elm) and run 
+**If you don't want to do that**, you could [clone the soruce](https://github.com/kodeFant/ihp-with-elm) and checkout to this tab to follow along:
 ```bash
 g checkout tags/setup-elm-in-ihp -b setup-elm-in-ihp
 ```
 
-Remember to do a `npm install` before running the application.
+Remember to do `npm install` before running the application.
 
 
 ## Create a Haskell type
@@ -60,7 +60,7 @@ Right click and add columns to the database until you have these exact fields:
 
 Try to match these fields excactly to avoid getting into a confusing situation later 🙂
 
-Double check `Schema.sql` file to ensure the table schema looks like this below. You can also safely just paste this snippet into the **Schema.sql** file.
+To be guaranteed an excact copy of this table, you can also safely paste this snippet into the **Schema.sql** file.
 
 ```bash
 -- Your database schema. Use the Schema Designer at http://localhost:8001/ to add some tables.
@@ -74,7 +74,7 @@ CREATE TABLE books (
 );
 ```
 
-When all the fields are filled in, press `Update DB`. This should update the database.
+When all the fields are filled in, press `Update DB`. This should update the database with the new table.
 
 ## Generate Controller and Views
 
@@ -183,16 +183,91 @@ Also add the required Elm packages required by `haskell-to-elm`. I recommend usi
 elm-json install elm/json NoRedInk/elm-json-decode-pipeline elm-community/maybe-extra elm/time rtfeldman/elm-iso8601-date-strings
 ```
 
-## Reduce boilerplate for Haskell to Elm types
+## Reduce boilerplate for Haskell-to-Elm types
 
-Now, let's create a couple of new files. First some code to reduce the boilerplate
+Following these instructions will make it easier to add `haskell-to-elm` types later on.
+
+Create a folder named `Lib` and make a new Haskell file:
 
 ```
 mkdir Application/Lib
 touch Application/Lib/DerivingViaElm.hs
 ```
 
-In `Application/Lib/DerivingViaElm.hs`, we are just inserting some logic for reducing boilerplate to `haskell-to-elm`. Just pasting in [this gist](https://gist.github.com/kodeFant/4513c07a78f35e0a879b0f3dd31efd9f) should do it. You can treat this like a library addition and you won't really be changing it.
+Paste this code into `Application/Lib/DerivingViaElm.hs`.
+
+```haskell
+module Application.Lib.DerivingViaElm where
+
+import IHP.Prelude
+import qualified Data.Aeson as Aeson
+import qualified Data.Text as Text
+import qualified Generics.SOP as SOP
+import GHC.Generics (Generic, Rep)
+import qualified Language.Elm.Name as Name
+import Language.Haskell.To.Elm
+
+-- This reduces boilerplate when making Haskell types that are serializable to Elm
+-- Derived from: https://github.com/folq/haskell-to-elm
+
+newtype ElmType (name :: Symbol) a
+  = ElmType a
+
+instance
+  (Generic a, Aeson.GToJSON Aeson.Zero (Rep a)) =>
+  Aeson.ToJSON (ElmType name a)
+  where
+  toJSON (ElmType a) =
+    Aeson.genericToJSON Aeson.defaultOptions {Aeson.fieldLabelModifier = dropWhile (== '_')} a
+
+instance
+  (Generic a, Aeson.GFromJSON Aeson.Zero (Rep a)) =>
+  Aeson.FromJSON (ElmType name a)
+  where
+  parseJSON =
+    fmap ElmType . Aeson.genericParseJSON Aeson.defaultOptions {Aeson.fieldLabelModifier = dropWhile (== '_')}
+
+instance
+  (SOP.HasDatatypeInfo a, SOP.All2 HasElmType (SOP.Code a), KnownSymbol name) =>
+  HasElmType (ElmType name a)
+  where
+  elmDefinition =
+    Just
+      $ deriveElmTypeDefinition @a defaultOptions {fieldLabelModifier = dropWhile (== '_')}
+      $ fromString $ symbolVal $ Proxy @name
+
+instance
+  (SOP.HasDatatypeInfo a, HasElmType a, SOP.All2 (HasElmDecoder Aeson.Value) (SOP.Code a), HasElmType (ElmType name a), KnownSymbol name) =>
+  HasElmDecoder Aeson.Value (ElmType name a)
+  where
+  elmDecoderDefinition =
+    Just
+      $ deriveElmJSONDecoder
+        @a
+        defaultOptions {fieldLabelModifier = dropWhile (== '_')}
+        Aeson.defaultOptions {Aeson.fieldLabelModifier = dropWhile (== '_')}
+      $ Name.Qualified moduleName $ lowerName <> "Decoder"
+    where
+      Name.Qualified moduleName name = fromString $ symbolVal $ Proxy @name
+      lowerName = Text.toLower (Text.take 1 name) <> Text.drop 1 name
+
+instance
+  (SOP.HasDatatypeInfo a, HasElmType a, SOP.All2 (HasElmEncoder Aeson.Value) (SOP.Code a), HasElmType (ElmType name a), KnownSymbol name) =>
+  HasElmEncoder Aeson.Value (ElmType name a)
+  where
+  elmEncoderDefinition =
+    Just
+      $ deriveElmJSONEncoder
+        @a
+        defaultOptions {fieldLabelModifier = dropWhile (== '_')}
+        Aeson.defaultOptions {Aeson.fieldLabelModifier = dropWhile (== '_')}
+      $ Name.Qualified moduleName $ lowerName <> "Encoder"
+    where
+      Name.Qualified moduleName name = fromString $ symbolVal $ Proxy @name
+      lowerName = Text.toLower (Text.take 1 name) <> Text.drop 1 name
+
+
+```
 
 ## Turn IHP types into JSON serializable types
 
@@ -202,7 +277,7 @@ Create the file where the elm-compatible types will live.
 touch Web/JsonTypes.hs
 ```
 
-In `Web/JsonTypes.hs` we will create types that can be directly serialized into both JSON and Elm decoders. For starters, make a `BookJSON` type and a function for making the type from an IHP type.
+In `Web/JsonTypes.hs` we will create types that can be directly serialized into both JSON and Elm decoders. For starters, we will make a `BookJSON` type and a function for creating it from the IHP generated `Book`.
 
 
 ```haskell
@@ -243,11 +318,11 @@ bookToJSON book =
 
 This is some extra work, but you also get to control what fields that will be sent into Elm. And you get generic JSON serializing at the same time. 
 
-Not all values are relevant all the time. And some values should not be shared through the API's and frontend, like password hashes and email adresses, so this would be a good practice anyway.
+Not all values are relevant all the time. And some values should not be shared through the API's and frontend, like password hashes and email adresses, so this is a good practice anyway.
 
 ## Make a widget entry-point
 
-A logical place to write the entrypoints for the Elm widget entrypoints is `Application/Helpers/View.hs`
+A logical place to write the entrypoints for the Elm widget is `Application/Helpers/View.hs` as functions exposed here are accessible in all view modules.
 
 ```haskell
 module Application.Helper.View (
@@ -276,9 +351,9 @@ bookWidget book = [hsx|
         flags :: BLS.ByteString = encode bookData
 ```
 
-Not much code, but lots of power in here. Use the normal IHP type and insert it here, and this widget will pass the JSON encoded data to Elm
+Not much code, but lots of power in here. Use the normal IHP type as an argument, and this widget will convert the type and encode the value for sending it to Elm.
 
-Let's use this `bookWidget` function in the `/Web/View/Books/Show.hs`:
+Let's add this `bookWidget` t `/Web/View/Books/Show.hs`:
 
 ```haskell
 module Web.View.Books.Show where
@@ -318,7 +393,7 @@ The value passed into the `data-flags` attribute is serialized and ready to be s
 
 ## Autogenerate types
 
-Now it's time for the fun stuff. We need to go back to [http://localhost:8001](http://localhost:8001) and generate a script and select `Codegen` in the left menu and then `Script`. Type `GenerateElmTypes`, select `Preview` and then `Generate`.
+Now it's time for the fun stuff. We need to go back to [http://localhost:8001](http://localhost:8001) and generate a script and select `Codegen` in the left menu and then `Script`. Type `GenerateElmTypes`, select `Preview` and then `Generate`. 
 
 **Like this:**
 
@@ -466,10 +541,10 @@ init flags =
     )
 ```
 
-Go to [localhost:8000/Books](http://localhost:8000/Books) and press `Show` on any book you have created. You should see where Elm starts and begins with the `<elm🌳>` tag.
+Go to [localhost:8000/Books](http://localhost:8000/Books) and press `Show` on any book you have created. You should see where Elm starts and begins with the `<elm🌳>` tag. The Elm logic is handling every type as it was in Haskell, from `Bool` to `Maybe String` etc.
 
 ## Next up
 
-We have created only one widget, but in the next post I will show you how to support an unlimited amount of widgets.
+We have created only one widget, but in the next post I will show you how to support an unlimited amount of widgets that will operate separately.
 
 Most of the groundwork is done, so we can hit the ground running in the next post.
