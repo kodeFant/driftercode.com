@@ -22,15 +22,11 @@ And what's even cooler, we will also enable you to **generate Haskell types to E
 
 ## Starting out simple
 
-IHP is a full-stack web framework, and Elm should not be used for absolutely everything view-related in an IHP app.
-
-IHP gives you routing, server-side rendering, easy authentication and great forms utilites with server-side validation in a typesafe way. I would not opt out of these features just for writing everything in Elm.
-
-If you don't need these features and prefer making a pure Elm Single Page App with a headless JSON api, [haskell-servant](https://www.servant.dev/) is possibly a more logical way to go.
+IHP is a full-stack web framework, and Elm should as mentioned in the previous post not be used for absolutely everything view-related in an IHP app.
 
 **In IHP, use Elm only when you start to think "I actually need Elm".** That will keep the complexity down and let you use Elm for what it's great for.
 
-All this being said, the example in this tutorial is made extremely simple to make the process easier to follow.
+All this being said, the examples in this tutorial are made extremely simple to make the process easier to follow.
 
 ## Continue from part one
 
@@ -42,7 +38,7 @@ If you haven't done [part 1](blog/ihp-with-elm) of this series, do so first.
 g checkout tags/ihp-with-elm -b setup-elm-in-ihp
 ```
 
-Remember to do `npm install` before running the application.
+Remember to do `npm install` to install JS dependencies.
 
 ## Create a Haskell type
 
@@ -76,7 +72,9 @@ CREATE TABLE books (
 );
 ```
 
-When all the fields defined, remember to press `Save` down in the bottom. It's a bit hidden, so hard to miss. Now, press `Update DB` in the IHP dashboard. This should update the database with the new table.
+When all the fields defined, remember to press `Save` down in the bottom. It's a bit hidden, so easy to miss.
+
+After saving, press `Update DB` in the IHP dashboard. This should update the database with the new table.
 
 ## Generate Controller and Views
 
@@ -138,7 +136,7 @@ scripts = do
     |]
 ```
 
-Remember to defer prod.js an the elm file for them to load correctly.
+Note that we are using **defer** on prod.js and the elm file for Elm to load properly.
 
 Secondly, let's replace what we wrote in the previous part of the series in `/Web/View/Static/Welcome.hs`, just to have a practical link to the Books.
 
@@ -264,11 +262,13 @@ instance
       lowerName = Text.toLower (Text.take 1 name) <> Text.drop 1 name
 ```
 
+You probably won't ever do any changes in this script, but it saves us from lots of boilerplate when creating *Haskell to Elm types*.
+
 ## Turn IHP types into JSON serializable types
 
 Create the file where the elm-compatible types will live.
 
-```
+```bash
 touch Web/JsonTypes.hs
 ```
 
@@ -310,11 +310,11 @@ bookToJSON book =
     }
 ```
 
-This is some extra work, but you also get to control what fields that will be sent into Elm. And you get generic serializing for you API endpoints the same time.
+This is some extra work, but you also get to control what fields that will be exposed to the outside world here. And you get generic serializing for you API endpoints the same time.
 
 ## Make a widget entry-point
 
-A logical place to write the entrypoints for the Elm widget is `Application/Helpers/View.hs` as functions exposed here are accessible in all view modules.
+A logical place to write the entrypoints for this Elm widget is `Application/Helpers/View.hs` as functions exposed here are accessible in all view modules.
 
 ```haskell
 module Application.Helper.View (
@@ -343,9 +343,25 @@ bookWidget book = [hsx|
         flags :: BLS.ByteString = encode bookData
 ```
 
-Not much code, but lots of power in here. Use the normal IHP type as an argument, and this widget will convert the type and encode the value for sending it to Elm.
+Not much code, but lots going on if you look closely. `bookWidget` uses the normal IHP type as an argument, and will convert the type and encode the value for sending it to Elm.
 
-Let's add this `bookWidget` t `/Web/View/Books/Show.hs`:
+Now we need to jump to the `elm/index.js` file and pass in the `data-flags` attribute from the widget.
+
+```tsx
+import { Elm } from "./Main.elm";
+
+const node = document.querySelector(".elm");
+const flags = node.dataset.flags ? JSON.parse(node.dataset.flags) : null;
+
+Elm.Main.init({
+  node,
+  flags,
+});
+```
+
+The value passed into the `data-flags` attribute is serialized and ready to be sent right through JavaScript and directly into Elm.
+
+Let's put this `bookWidget` into `/Web/View/Books/Show.hs`:
 
 ```haskell
 module Web.View.Books.Show where
@@ -366,21 +382,6 @@ instance View ShowView where
     |]
 ```
 
-Now we need to jump to the `elm/index.js` file and pass in the `data-flags` attribute.
-
-```tsx
-import { Elm } from "./Main.elm";
-
-const node = document.querySelector(".elm");
-const flags = node.dataset.flags ? JSON.parse(node.dataset.flags) : null;
-
-Elm.Main.init({
-  node,
-  flags,
-});
-```
-
-The value passed into the `data-flags` attribute is serialized and ready to be sent right through JavaScript and directly into Elm.
 
 ## Autogenerate types
 
@@ -388,7 +389,7 @@ Now it's time for the fun stuff. We need to go back to [localhost:8001](http://l
 
 **Like this:**
 
-![Elm not running](/images/archive/ihp-with-elm/generate-elm-script.gif)
+![Generate Elm Script](/images/archive/ihp-with-elm/generate-elm-script.gif)
 
 IHP will have created an boilerplate for an executable for you.
 
@@ -429,11 +430,10 @@ nix-shell --run './Application/Script/GenerateElmTypes.hs'
 
 Voila! If everything has gone well so far, you should have a file named `elm/Api/Generated.elm`. Inspect it with great joy. You didn't need to write any of this manually in Elm.
 
-Let's make a `npm run gen-types` script in `package.json` and we might as well run it at the `start` command as well to update it regularly.
+Let's make a `npm run gen-types` script for it in `package.json` and we might as well run it at the `npm start` command to update it regularly.
 
 ```json
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "run-dev-elm": "parcel watch elm/index.js --out-dir static/elm",
     "run-dev-ihp": "./start",
     "gen-types": "nix-shell --run './Application/Script/GenerateElmTypes.hs'",
