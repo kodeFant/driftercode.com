@@ -260,4 +260,4 @@ So unless you really want to write a full Single Page App, Elm should be used wi
 
 ## Next up
 
-I want to take this application further in future posts showing you how to interact between IHP and Elm, and how use Elm within protected boundaries (requiring authentication). Read on to [part 2](https://driftercode.com/blog/ihp-with-elm-series) if these are topics that intrigue you 😊
+I want to take this application further in future posts showing you how to interact between IHP and Elm, and how use Elm within protected boundaries (requiring authentication). [Read on to part 2 if these are topics that intrigue you 😊](blog/passing-flags-from-ihp-to-elm) 
