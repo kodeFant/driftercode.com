@@ -122,7 +122,7 @@ Then go to [http://localhost:8000/Books](http://localhost:8000/Books) to create 
 
 We are adding the Elm Script globally because we are going to use it as a general purpose widget engine.
 
-Navigate to `Web/View/Layout.hs` and add the elm script **<script src="/elm/index.js"></script>** to the scripts in development and remove the unused scripts for development as well.
+Navigate to `Web/View/Layout.hs` and add the elm script `<script src="/elm/index.js"></script>` to the scripts in development and remove the unused scripts for development as well.
 
 ```hs
 scripts :: Html
