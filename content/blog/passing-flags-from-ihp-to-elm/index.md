@@ -130,6 +130,7 @@ scripts = do
         <script id="livereload-script" src="/livereload.js"></script>
         <script src="/vendor/flatpickr.js"></script>
         <script src="/helpers.js"></script>
+        <script src="/vendor/morphdom-umd.min.js"></script>
         <script defer src="/elm/index.js"></script>
     |]
     when isProduction [hsx|

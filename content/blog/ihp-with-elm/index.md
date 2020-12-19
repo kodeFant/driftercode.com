@@ -222,6 +222,7 @@ Go to the `Makefile` in the project root and remove all unused JavaScript files 
 
 ```makefile
 JS_FILES += ${IHP}/static/vendor/flatpickr.js
+JS_FILES += ${IHP}/static/vendor/morphdom-umd.min.js
 JS_FILES += ${IHP}/static/helpers.js
 JS_FILES += static/elm/index.js
 ```
