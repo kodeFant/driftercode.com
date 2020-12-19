@@ -106,7 +106,7 @@ to
 {{dateField #publishedAt}}
 ```
 
-Let's also take a short visit to the Controller at `/Web/Controller/Books.hs` and add let's make sure that the nullable value `review` turns into `Nothing` if empty.
+Let's also take a short visit to the Books Controller `/Web/Controller/Books.hs` and make sure the nullable value `review` turns into `Nothing` if empty.
 
 ```haskell
 buildBook book = book
@@ -118,7 +118,7 @@ Go to [http://localhost:8000/Books](http://localhost:8000/Books) to create a cou
 
 ## Some small changes in the hsx templates
 
-First, navigate to `Web/View/Layout.hs` and add the elm script at the bottom in the body tag.
+First, navigate to `Web/View/Layout.hs` and add the elm script at the **bottom** in the body tag.
 
 ```hs
 defaultLayout :: Html -> Html
@@ -171,7 +171,7 @@ In order to generate Elm types from IHP, add the `haskell-to-elm` package to **h
   ];
 ```
 
-To update your local environment, close the server (ctrl+c) and run
+To update your local environment, close the server **(ctrl+c)** and run
 
 ```bash
 nix-shell --run 'make -B .envrc'
@@ -241,7 +241,9 @@ bookToJSON book =
     }
 ```
 
-This is some extra work, but you also get to control what fields that will be sent into Elm. And you get generic JSON serializing at the same time. Not all values are relevant all the time. And some values should not be shared like password hashes and email adresses, so this would be a good practice anyway.
+This is some extra work, but you also get to control what fields that will be sent into Elm. And you get generic JSON serializing at the same time. 
+
+Not all values are relevant all the time. And some values should not be shared through the API's and frontend, like password hashes and email adresses, so this would be a good practice anyway.
 
 ## Make a widget entry-point
 
@@ -320,7 +322,7 @@ Now it's time for the fun stuff. We need to go back to [http://localhost:8001](h
 
 **Like this:**
 
-![Elm not running](/images/archive/ihp-with-elm/create-books-table.gif)
+![Elm not running](/images/archive/ihp-with-elm/generate-elm-script.gif)
 
 IHP will have generated an executable script for you.
 
@@ -468,6 +470,6 @@ Go to [localhost:8000/Books](http://localhost:8000/Books) and press `Show` on an
 
 ## Next up
 
-We have created only one widget, but in the next post I will show you how to create another widget to show you how I make only one Elm app support an unlimited amount of widgets.
+We have created only one widget, but in the next post I will show you how to support an unlimited amount of widgets.
 
 Most of the groundwork is done, so we can hit the ground running in the next post.
