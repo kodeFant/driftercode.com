@@ -12,7 +12,7 @@
 }
 ---
 
-_This is a **part 1** of the series [IHP with Elm](https://driftercode.com/blog/ihp-with-elm-series)_
+_This is **part 1** of the series [IHP with Elm](https://driftercode.com/blog/ihp-with-elm-series)_
 
 [Elm](https://elm-lang.org/) was my gateway drug into type-safe functional programming. It's such a good tool for making robust frontends. Writing big projects in React and TypeScript honestly bums me out because of it.
 

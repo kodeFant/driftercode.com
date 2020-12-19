@@ -12,7 +12,7 @@
 }
 ---
 
-_This is a **part 2** of the series [IHP with Elm](https://driftercode.com/blog/ihp-with-elm-series)_
+_This is **part 2** of the series [IHP with Elm](https://driftercode.com/blog/ihp-with-elm-series)_
 
 When initializing Elm, you have access to set initial values into the app through something called [flags](https://guide.elm-lang.org/interop/flags.html).
 
