@@ -14,7 +14,7 @@
 
 When initializing an Elm app through JavaScript, you have access to set initial values into the app with something called [flags](https://guide.elm-lang.org/interop/flags.html).
 
-For this part of the series, I want to show you some techniques for loading these values called flags directly from IHP as soon as the page has loaded.
+For this part of the series, I want to show you a technique for loading these values called flags directly from IHP into Elm.
 
 **And what's even cooler, we will also enable you to generate Haskell types to Elm without writing any decoders or encoders manually 😍**
 
@@ -22,11 +22,13 @@ For this part of the series, I want to show you some techniques for loading thes
 
 ## Starting out simple
 
-Elm should not be used for everything in an IHP app. IHP gives you server-side rendering and a great framework for forms. Let's keep that.
+Elm should not be used for everything in an IHP app. IHP gives you server-side rendering, easy authentication and a great framework for forms. Keeping that is good for making your life easier. 
 
-**Use Elm only when you start to think "I really need Elm for this".** That will keep the complexity down and let you use Elm for what it's great at.
+If you are looking for pure Elm Single Page App with a JSON api, [haskell-servant](https://www.servant.dev/) is probably a more logical way to go.
 
-All this being said, these examples will be simple and easily solvable with IHP alone to keep the complexity low while learning.
+**Use Elm only when you start to think "I really need Elm for this".** That will keep the complexity down and let you use Elm for what it's great for.
+
+All this being said, the example in this tutorial is very simple to make the process easier to follow.
 
 ## Continue from part one
 
@@ -175,7 +177,7 @@ To update your local environment, close the server (ctrl+c) and run
 nix-shell --run 'make -B .envrc'
 ```
 
-Also add the required Elm packages needed by `haskell-to-elm`. I recommend [elm-json](https://github.com/zwilias/elm-json) to install elm packages from the command line.
+Also add the required Elm packages required by `haskell-to-elm`. I recommend using the cli-tool [elm-json](https://github.com/zwilias/elm-json) to install elm packages.
 
 ```bash
 elm-json install elm/json NoRedInk/elm-json-decode-pipeline elm-community/maybe-extra elm/time rtfeldman/elm-iso8601-date-strings
@@ -190,17 +192,17 @@ mkdir Application/Lib
 touch Application/Lib/DerivingViaElm.hs
 ```
 
-In `Application/Lib/DerivingViaElm.hs`, we are just inserting some logic for reducing boilerplate to `haskell-to-elm`. Just pasting in [this gist](https://gist.github.com/kodeFant/4513c07a78f35e0a879b0f3dd31efd9f) should do it. You can treat this like a library addition and you won't be touching it apart from importing it into the next file we are creating.
+In `Application/Lib/DerivingViaElm.hs`, we are just inserting some logic for reducing boilerplate to `haskell-to-elm`. Just pasting in [this gist](https://gist.github.com/kodeFant/4513c07a78f35e0a879b0f3dd31efd9f) should do it. You can treat this like a library addition and you won't really be changing it.
 
 ## Turn IHP types into JSON serializable types
 
-Create the Haskell to Elm types file
+Create the file where the elm-compatible types will live.
 
 ```
 touch Web/JsonTypes.hs
 ```
 
-In `Web/JsonTypes.hs` we will create types that can be directly serialized into both Json and Elm decoders. For starters, make a `CompanyJSON` file and a function for converting a `Company` type.
+In `Web/JsonTypes.hs` we will create types that can be directly serialized into both JSON and Elm decoders. For starters, make a `BookJSON` type and a function for making the type from an IHP type.
 
 
 ```haskell
@@ -239,7 +241,7 @@ bookToJSON book =
     }
 ```
 
-This is some extra work, but you also get to control what fields that will be sent into Elm. Not all values are relevant all the time. Ans some values should not be shared like password hashes and email adresses.
+This is some extra work, but you also get to control what fields that will be sent into Elm. And you get generic JSON serializing at the same time. Not all values are relevant all the time. And some values should not be shared like password hashes and email adresses, so this would be a good practice anyway.
 
 ## Make a widget entry-point
 
@@ -272,7 +274,7 @@ bookWidget book = [hsx|
         flags :: BLS.ByteString = encode bookData
 ```
 
-Not much code, but lots of power in here. Use the normal IHP type and insert it here, and this widget will pass the encoded version to Elm
+Not much code, but lots of power in here. Use the normal IHP type and insert it here, and this widget will pass the JSON encoded data to Elm
 
 Let's use this `bookWidget` function in the `/Web/View/Books/Show.hs`:
 
@@ -310,15 +312,19 @@ Elm.Main.init({
 });
 ```
 
-The value passed into the `data-flags` attribute is serialized and ready to be sendt right through JavaScript and directly into Elm.
+The value passed into the `data-flags` attribute is serialized and ready to be sent right through JavaScript and directly into Elm.
 
 ## Autogenerate types
 
 Now it's time for the fun stuff. We need to go back to [http://localhost:8001](http://localhost:8001) and generate a script and select `Codegen` in the left menu and then `Script`. Type `GenerateElmTypes`, select `Preview` and then `Generate`.
 
+**Like this:**
+
+![Elm not running](/images/archive/ihp-with-elm/create-books-table.gif)
+
 IHP will have generated an executable script for you.
 
-Write the export logic for generating Elm types in `/Application/Script/GenerateElmTypes.hs`:
+Fill in the export logic for generating Elm types in `/Application/Script/GenerateElmTypes.hs`:
 
 ```haskell
 #!/usr/bin/env run-script
@@ -458,10 +464,10 @@ init flags =
     )
 ```
 
-Go to [localhost:8000/books](http://localhost:8000/books) and press `Show` on any book you have created. You should see where Elm starts and begins with the `<elm🌳>` tag. Pretty cool. 
-
-Please not that this usecase would be just as well solved with IHP, but I'm keeping the examples as simple as possible. The advanced elm related stuff is best suited for a separate elm tutorial.
+Go to [localhost:8000/Books](http://localhost:8000/Books) and press `Show` on any book you have created. You should see where Elm starts and begins with the `<elm🌳>` tag.
 
 ## Next up
 
-We have created only one widget, but in the next post I will show you how to create another widget to show you how I make only one Elm app support an unlimited amount of widgets. Most of the groundwork is done, so we can hit the ground running in the next post.
+We have created only one widget, but in the next post I will show you how to create another widget to show you how I make only one Elm app support an unlimited amount of widgets.
+
+Most of the groundwork is done, so we can hit the ground running in the next post.
