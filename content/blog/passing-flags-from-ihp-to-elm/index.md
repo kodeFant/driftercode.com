@@ -12,21 +12,23 @@
 }
 ---
 
-When initializing an Elm app through JavaScript, you have access to set initial values into the app through something called [flags](https://guide.elm-lang.org/interop/flags.html).
+_This is a **part 2** of the series [IHP with Elm](https://driftercode.com/blog/ihp-with-elm-series)_
 
-For this part of the series, I want to show you a technique for loading these values called flags directly from IHP into Elm.
+When initializing Elm, you have access to set initial values into the app through something called [flags](https://guide.elm-lang.org/interop/flags.html).
 
-**And what's even cooler, we will also enable you to generate Haskell types to Elm without writing any decoders or encoders manually 😍**
+For this part of the series, I want to show you a technique for loading these values called flags directly from IHP into Elm in a type-safe way.
 
-- This is a **part 2** of the series [IHP with Elm](https://driftercode.com/blog/ihp-with-elm-series)
+And what's even cooler, we will also enable you to **generate Haskell types to Elm** without writing any decoders or encoders manually 😍
 
 ## Starting out simple
 
-Elm should not be used for everything in an IHP app. IHP gives you server-side rendering, easy authentication and a great framework for forms. Keeping that is good and improves your quality of life as a developer. 
+IHP is a full-stack web framework, and Elm should not be used for absolutely everything view-related in an IHP app.
 
-If you are looking for pure Elm Single Page App with a JSON api, [haskell-servant](https://www.servant.dev/) is probably a more logical way to go.
+IHP gives you routing, server-side rendering, easy authentication and great forms utilites with server-side validation in a typesafe way. I would not opt out of these features just for writing everything in Elm.
 
-**In IHP, use Elm only when you start to think "I really need Elm for this".** That will keep the complexity down and let you use Elm for what it's great for.
+If you don't need these features and prefer making a pure Elm Single Page App with a headless JSON api, [haskell-servant](https://www.servant.dev/) is possibly a more logical way to go.
+
+**In IHP, use Elm only when you start to think "I actually need Elm".** That will keep the complexity down and let you use Elm for what it's great for.
 
 All this being said, the example in this tutorial is made extremely simple to make the process easier to follow.
 
@@ -35,18 +37,18 @@ All this being said, the example in this tutorial is made extremely simple to ma
 If you haven't done [part 1](blog/ihp-with-elm) of this series, do so first.
 
 **If you don't want to do that**, you could [clone the soruce](https://github.com/kodeFant/ihp-with-elm) and checkout to this tab to follow along:
+
 ```bash
 g checkout tags/setup-elm-in-ihp -b setup-elm-in-ihp
 ```
 
 Remember to do `npm install` before running the application.
 
-
 ## Create a Haskell type
 
 To demonstrate how we can insert different datatypes into Elm, let's create a relatively complex database table.
 
-Run `npm start` and go to [localhost:8001/Tables](http://localhost:8001/Tables).
+Run the app with `npm start` and go to [localhost:8001/Tables](http://localhost:8001/Tables).
 
 Right click and select `Add Table` in the context menu. Name the table `books`.
 
@@ -60,7 +62,7 @@ Right click and add columns to the database until you have these exact fields:
 
 Try to match these fields excactly to avoid getting into a confusing situation later 🙂
 
-To be guaranteed an excact copy of this table, you can also safely paste this snippet into the **Schema.sql** file.
+As a shortcut for this tutorial, you can also safely paste this snippet into your **Schema.sql** file. It will do the same.
 
 ```bash
 -- Your database schema. Use the Schema Designer at http://localhost:8001/ to add some tables.
@@ -74,11 +76,11 @@ CREATE TABLE books (
 );
 ```
 
-When all the fields are filled in, press `Update DB`. This should update the database with the new table.
+When all the fields defined, press `Update DB` in the IHP dashboard. This should update the database with the new table.
 
 ## Generate Controller and Views
 
-Stay in the `localhost:8001` admin panel and select `Codegen` in the menu to the left.
+Stay in the `localhost:8001` admin dashboard and select `Codegen` in the menu to the left.
 
 Select `Controller`, name it `Books` and click `Preview` and click `Generate`.
 
@@ -106,7 +108,7 @@ to
 {{dateField #publishedAt}}
 ```
 
-Let's also take a short visit to the Books Controller `/Web/Controller/Books.hs` and make sure the nullable value `review` turns into `Nothing` if empty.
+Let's also take a short visit to the Books Controller `/Web/Controller/Books.hs` and make sure the nullable value `review` turns into `Nothing` if empty instead of `Just ""`.
 
 ```haskell
 buildBook book = book
@@ -118,7 +120,7 @@ Go to [http://localhost:8000/Books](http://localhost:8000/Books) to create a cou
 
 ## Some small changes in the hsx templates
 
-First, navigate to `Web/View/Layout.hs` and add the elm script at the **bottom** in the body tag.
+First, navigate to `Web/View/Layout.hs` and add the elm script **<script src="/elm/index.js"></script>** at the **bottom** in the body tag.
 
 ```hs
 defaultLayout :: Html -> Html
@@ -140,8 +142,6 @@ defaultLayout inner = H.docTypeHtml ! A.lang "en" $ [hsx|
 </body>
 |]
 ```
-
-It's important to have this script at the bottom and not at the top with the other scripts. It won't run otherwise.
 
 Secondly, let's replace what we wrote in the previous part of the series in `/Web/View/Static/Welcome.hs`, just to have some nice linking to the Books.
 
@@ -187,7 +187,7 @@ elm-json install elm/json NoRedInk/elm-json-decode-pipeline elm-community/maybe-
 
 Following these instructions will make it easier to add `haskell-to-elm` types later on.
 
-Create a folder named `Lib` and make a new Haskell file:
+Create a folder named `Application/Lib` and create a new Haskell module:
 
 ```
 mkdir Application/Lib
@@ -279,13 +279,12 @@ touch Web/JsonTypes.hs
 
 In `Web/JsonTypes.hs` we will create types that can be directly serialized into both JSON and Elm decoders. For starters, we will make a `BookJSON` type and a function for creating it from the IHP generated `Book`.
 
-
 ```haskell
 {-# language DeriveAnyClass #-}
 
 module Web.JsonTypes where
 
-import Generated.Types 
+import Generated.Types
 import IHP.ControllerPrelude
 import qualified Data.Aeson as Aeson
 import GHC.Generics (Generic)
@@ -302,7 +301,7 @@ data BookJSON = BookJSON
   , review :: Maybe Text
   , publishedAt :: UTCTime
   } deriving (Generic, SOP.Generic, SOP.HasDatatypeInfo)
-    deriving (Aeson.ToJSON, Aeson.FromJSON, HasElmType, HasElmDecoder Aeson.Value, HasElmEncoder Aeson.Value) 
+    deriving (Aeson.ToJSON, Aeson.FromJSON, HasElmType, HasElmDecoder Aeson.Value, HasElmEncoder Aeson.Value)
     via ElmType "Api.Generated.Book" BookJSON
 
 bookToJSON :: (?context :: ControllerContext) => Book -> BookJSON
@@ -316,9 +315,7 @@ bookToJSON book =
     }
 ```
 
-This is some extra work, but you also get to control what fields that will be sent into Elm. And you get generic JSON serializing at the same time. 
-
-Not all values are relevant all the time. And some values should not be shared through the API's and frontend, like password hashes and email adresses, so this is a good practice anyway.
+This is some extra work, but you also get to control what fields that will be sent into Elm. And you get generic serializing for you API endpoints the same time.
 
 ## Make a widget entry-point
 
@@ -381,7 +378,7 @@ Now we need to jump to the JavaScript file at `elm/index.js` and do some minor t
 import { Elm } from "./Main.elm";
 
 const node = document.querySelector(".elm");
-const flags = node.dataset.flags ? JSON.parse(node.dataset.flags) : null
+const flags = node.dataset.flags ? JSON.parse(node.dataset.flags) : null;
 
 Elm.Main.init({
   node,
@@ -393,13 +390,13 @@ The value passed into the `data-flags` attribute is serialized and ready to be s
 
 ## Autogenerate types
 
-Now it's time for the fun stuff. We need to go back to [http://localhost:8001](http://localhost:8001) and generate a script and select `Codegen` in the left menu and then `Script`. Type `GenerateElmTypes`, select `Preview` and then `Generate`. 
+Now it's time for the fun stuff. We need to go back to [http://localhost:8001](http://localhost:8001) and generate a script and select `Codegen` in the left menu and then `Script`. Type `GenerateElmTypes`, select `Preview` and then `Generate`.
 
 **Like this:**
 
 ![Elm not running](/images/archive/ihp-with-elm/generate-elm-script.gif)
 
-IHP will have generated an executable script for you.
+IHP will have created an boilerplate for an executable for you.
 
 Fill in the export logic for generating Elm types in `/Application/Script/GenerateElmTypes.hs`:
 
