@@ -12,7 +12,7 @@
 }
 ---
 
-When initializing an Elm app through JavaScript, you have access to set initial values into the app with something called [flags](https://guide.elm-lang.org/interop/flags.html).
+When initializing an Elm app through JavaScript, you have access to set initial values into the app through something called [flags](https://guide.elm-lang.org/interop/flags.html).
 
 For this part of the series, I want to show you a technique for loading these values called flags directly from IHP into Elm.
 
@@ -22,29 +22,29 @@ For this part of the series, I want to show you a technique for loading these va
 
 ## Starting out simple
 
-Elm should not be used for everything in an IHP app. IHP gives you server-side rendering, easy authentication and a great framework for forms. Keeping that is good for making your life easier. 
+Elm should not be used for everything in an IHP app. IHP gives you server-side rendering, easy authentication and a great framework for forms. Keeping that is good and improves your quality of life as a developer. 
 
 If you are looking for pure Elm Single Page App with a JSON api, [haskell-servant](https://www.servant.dev/) is probably a more logical way to go.
 
 **Use Elm only when you start to think "I really need Elm for this".** That will keep the complexity down and let you use Elm for what it's great for.
 
-All this being said, the example in this tutorial is very simple to make the process easier to follow.
+All this being said, the example in this tutorial is made extremely simple to make the process easier to follow.
 
 ## Continue from part one
 
-If you haven't done [part 1](blog/ihp-with-elm) of this series, do so.
+If you haven't done [part 1](blog/ihp-with-elm) of this series, do so first.
 
-**If you don't want to do that**, you could [download the source code](https://github.com/kodeFant/ihp-with-elm) and run 
+**If you don't want to do that**, you could [download the source project](https://github.com/kodeFant/ihp-with-elm) and run 
 ```bash
 g checkout tags/setup-elm-in-ihp -b setup-elm-in-ihp
 ```
 
-to follow along without doing the initial setup. Remember to do an `npm install` in that case.
+Remember to do a `npm install` before running the application.
 
 
 ## Create a Haskell type
 
-To demonstrate how we can insert different datatypes into Elm, let's create a relatively complex data model.
+To demonstrate how we can insert different datatypes into Elm, let's create a relatively complex database table.
 
 Run `npm start` and go to [localhost:8001/Tables](http://localhost:8001/Tables).
 
@@ -84,7 +84,7 @@ Select `Controller`, name it `Books` and click `Preview` and click `Generate`.
 
 **Like this:**
 
-![Elm not running](/images/archive/ihp-with-elm/books-table.png)
+![Elm not running](/images/archive/ihp-with-elm/make-controller.gif)
 
 You will now have generated all you need to view, update, create and delete books. Pretty cool!
 
