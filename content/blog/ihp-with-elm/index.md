@@ -94,7 +94,7 @@ Go to `Web/View/Static/Welcome.hs` and replace all the html inside the HSX in `V
 ```hs
 instance View WelcomeView where
     html WelcomeView = [hsx|
-        <h1>User notes</h1>
+        <h1>The Book App</h1>
         <div class="elm">Elm app not loaded 💩</div>
         <script src="elm/index.js"></script>
     |]
@@ -112,7 +112,7 @@ Install `node-elm-compiler` for compiling and `elm-hot` for hot reloading in dev
 
 ```bash
 npm install node-elm-compiler parcel-bundler
-npm install elm-hot --save-dev
+npm install elm-hot concurrently --save-dev
 ```
 
 You could do it all without a bundler like Parcel. IHP discourages bundlers, and I agree that it's not always necessary.
@@ -138,7 +138,6 @@ Elm.Main.init({
 Finally, lets' insert the code for `elm/Main.elm`!
 
 ```elm
-
 module Main exposing (main)
 
 import Browser
@@ -187,17 +186,27 @@ init _ =
     )
 ```
 
-Add the `start` and `build` scripts into the `package.json`:
+Add the scripts for building the app both in production and development into `package.json`:
+
+Then replace the `start` script in `package.json` and add accordingly:
 
 ```json
   "scripts": {
-    ...
-    "start": "parcel watch elm/index.js --out-dir static/elm",
+    "run-dev-elm": "parcel watch elm/index.js --out-dir static/elm",
+    "run-dev-ihp": "./start",
+    "start": "concurrently --raw \"npm:run-dev-*\"",
     "build": "parcel build elm/index.js --out-dir static/elm"
   },
 ```
 
-You should now be able to run `npm start` in one terminal and `./start` in another terminal.
+With that you can now run both the IHP app and the JavaScript simultaneously with this single command in development.
+
+```bash
+npm start
+```
+
+And quit with **(ctrl+c)** as always.
+
 
 There you should have it! Elm in Haskell with hot reloading and the Elm debugger is ready for you in the bottom right corner. Beautiful!
 
@@ -207,13 +216,19 @@ There you should have it! Elm in Haskell with hot reloading and the Elm debugger
 
 When pushing your IHP app to production, you need to make sure that it builds the Elm applications.
 
-Go to the `Makefile` in the project root and append this line to the list of `JS_FILES`:
+Go to the `Makefile` in the project root and remove all unused JavaScript files until these are your only `JS_FILES`:
 
 ```makefile
+JS_FILES += ${IHP}/static/vendor/flatpickr.js
+JS_FILES += ${IHP}/static/helpers.js
 JS_FILES += static/elm/index.js
 ```
 
-And put this at the bottom of the Makefile.
+We're keeping `flatpickr` because we are using the datepicker, but other than that, Turbolinks seems to complicate the Elm loading and jQuery gives us nothing Elm can't give us. 
+
+We're keeping bootstrap css just so we don't need to do any styling for this tutorial.
+
+Put this code at the bottom of the `Makefile` to build Elm in production.
 
 ```makefile
 static/elm/index.js:
@@ -225,37 +240,6 @@ It should now be ready to ship to production for example to IHP Cloud.
 
 For a complete overview of what has been done, see the [diff on my demo-repo](https://github.com/kodeFant/ihp-with-elm/commit/485726d51b0c167e27e660d9696f0d289378314a).
 
-## Bonus: Run IHP and the frontend in one command
-
-Running two commands to start up the service can be difficult for a very lazy developer.
-
-`concurrently` is a tool that lets you spawn and kill multiple commands as one.
-
-Install it as a developer dependency through npm:
-
-```bash
-npm install concurrently --save-dev
-```
-
-Then replace the `start` script in `package.json` and add accordingly:
-
-```json
-  "scripts": {
-    ...
-    "run-dev-elm": "parcel watch elm/index.js --out-dir static/elm",
-    "run-dev-ihp": "./start",
-    "start": "concurrently --raw \"npm:run-dev-*\"",
-    ...
-  },
-```
-
-With that you can now run both the IHP app and the JavaScript simultaneously with this single command.
-
-```bash
-npm start
-```
-
-And quit with **(ctrl+c)** as always.
 
 ## Things I don't use Elm for in IHP
 

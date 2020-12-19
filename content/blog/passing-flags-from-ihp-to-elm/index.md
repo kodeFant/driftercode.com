@@ -2,11 +2,11 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "Passing values from IHP to Elm",
-  "description": "Pass Haskell data directly to your Elm widget.",
+  "title": "How to initialize data from IHP directly to Elm",
+  "description": "Generate types, encoders and decoders for Elm automatically in IHP.",
   "image": "images/article-covers/haskell-elm.png",
   "published": "2020-12-17",
-  "draft": true,
+  "draft": false,
   "slug": "pass-data-from-ihp-to-elm",
   tags: [],
 }
@@ -36,7 +36,7 @@ All this being said, the example in this tutorial is made extremely simple to ma
 
 If you haven't done [part 1](blog/ihp-with-elm) of this series, do so first.
 
-**If you don't want to do that**, you could [clone the soruce](https://github.com/kodeFant/ihp-with-elm) and checkout to this tab to follow along:
+**If you don't want to**, you could [clone the soruce](https://github.com/kodeFant/ihp-with-elm) and checkout to this tab to follow along:
 
 ```bash
 g checkout tags/setup-elm-in-ihp -b setup-elm-in-ihp
@@ -54,15 +54,15 @@ Right click and select `Add Table` in the context menu. Name the table `books`.
 
 **Just like this:**
 
-![Elm not running](/images/archive/ihp-with-elm/create-books-table.gif)
+![Creating table named books](/images/archive/ihp-with-elm/create-books-table.gif)
 
 Right click and add columns to the database until you have these exact fields:
 
-![Elm not running](/images/archive/ihp-with-elm/books-table.png)
+![Fields for the books type](/images/archive/ihp-with-elm/books-table.png)
 
 Try to match these fields excactly to avoid getting into a confusing situation later 🙂
 
-As a shortcut for this tutorial, you can also safely paste this snippet into your **Schema.sql** file. It will do the same.
+As a shortcut for this tutorial, you can also select the `Code Edit` toggle in the top left corner and safely paste this snippet into it:
 
 ```bash
 -- Your database schema. Use the Schema Designer at http://localhost:8001/ to add some tables.
@@ -70,13 +70,13 @@ CREATE TABLE books (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
     page_count INT NOT NULL,
-    has_read BOOLEAN DEFAULT false NOT NULL,
     review TEXT DEFAULT NULL,
+    has_read BOOLEAN DEFAULT false NOT NULL,
     published_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
 ```
 
-When all the fields defined, press `Update DB` in the IHP dashboard. This should update the database with the new table.
+When all the fields defined, remember to press `Save` down in the bottom. It's a bit hidden, so hard to miss. Now, press `Update DB` in the IHP dashboard. This should update the database with the new table.
 
 ## Generate Controller and Views
 
@@ -86,7 +86,7 @@ Select `Controller`, name it `Books` and click `Preview` and click `Generate`.
 
 **Like this:**
 
-![Elm not running](/images/archive/ihp-with-elm/make-controller.gif)
+![Create Controller named Books](/images/archive/ihp-with-elm/make-controller.gif)
 
 You will now have generated all you need to view, update, create and delete books. Pretty cool!
 
@@ -97,18 +97,18 @@ Let's just use a checkbox field for the `hasRead` value and a datepicker for the
 In both `New.hs` and `Edit.hs` in the `/Web/Controller/View/Books/` folder, replace these two fields:
 
 ```haskell
-{{textField #hasRead}}
-{{textField #publishedAt}}
+{(textField #hasRead)}
+{(textField #publishedAt)}
 ```
 
 to
 
 ```haskell
-{{checkboxField #hasRead}}
-{{dateField #publishedAt}}
+{(checkboxField #hasRead)}
+{(dateField #publishedAt)}
 ```
 
-Let's also take a short visit to the Books Controller `/Web/Controller/Books.hs` and make sure the nullable value `review` turns into `Nothing` if empty instead of `Just ""`.
+Let's also take a short visit to the Books Controller `/Web/Controller/Books.hs` and the buildBook function at the bottom. Make sure the nullable value `review` turns into `Nothing` if empty instead of `Just ""`.
 
 ```haskell
 buildBook book = book
@@ -116,34 +116,31 @@ buildBook book = book
     |> emptyValueToNothing #review
 ```
 
-Go to [http://localhost:8000/Books](http://localhost:8000/Books) to create a couple of Books with some varying values.
+Then go to [http://localhost:8000/Books](http://localhost:8000/Books) to create just a couple of Books with some varying values.
 
 ## Some small changes in the hsx templates
 
-First, navigate to `Web/View/Layout.hs` and add the elm script **<script src="/elm/index.js"></script>** at the **bottom** in the body tag.
+We are adding the Elm Script globally because we are going to use it as a general purpose widget engine.
+
+Navigate to `Web/View/Layout.hs` and add the elm script **<script src="/elm/index.js"></script>** to the scripts in development and remove the unused scripts for development as well.
 
 ```hs
-defaultLayout :: Html -> Html
-defaultLayout inner = H.docTypeHtml ! A.lang "en" $ [hsx|
-<head>
-    {metaTags}
-
-    {stylesheets}
-    {scripts}
-
-    <title>App</title>
-</head>
-<body>
-    <div class="container mt-4">
-        {renderFlashMessages}
-        {inner}
-       <script src="/elm/index.js"></script>
-    </div>
-</body>
-|]
+scripts :: Html
+scripts = do
+    when isDevelopment [hsx|
+        <script id="livereload-script" src="/livereload.js"></script>
+        <script src="/vendor/flatpickr.js"></script>
+        <script src="/helpers.js"></script>
+        <script defer src="/elm/index.js"></script>
+    |]
+    when isProduction [hsx|
+        <script defer src="/prod.js"></script>
+    |]
 ```
 
-Secondly, let's replace what we wrote in the previous part of the series in `/Web/View/Static/Welcome.hs`, just to have some nice linking to the Books.
+Remember to defer prod.js an the elm file for them to load correctly.
+
+Secondly, let's replace what we wrote in the previous part of the series in `/Web/View/Static/Welcome.hs`, just to have a practical link to the Books.
 
 ```hs
 module Web.View.Static.Welcome where
@@ -177,7 +174,7 @@ To update your local environment, close the server **(ctrl+c)** and run
 nix-shell --run 'make -B .envrc'
 ```
 
-Also add the required Elm packages required by `haskell-to-elm`. I recommend using the cli-tool [elm-json](https://github.com/zwilias/elm-json) to install elm packages.
+Also add the required Elm packages required by `haskell-to-elm`. I i highly recommend the cli-tool [elm-json](https://github.com/zwilias/elm-json) to install elm packages.
 
 ```bash
 elm-json install elm/json NoRedInk/elm-json-decode-pipeline elm-community/maybe-extra elm/time rtfeldman/elm-iso8601-date-strings
@@ -265,8 +262,6 @@ instance
     where
       Name.Qualified moduleName name = fromString $ symbolVal $ Proxy @name
       lowerName = Text.toLower (Text.take 1 name) <> Text.drop 1 name
-
-
 ```
 
 ## Turn IHP types into JSON serializable types
@@ -369,10 +364,9 @@ instance View ShowView where
         <h1>Show Book</h1>
         {bookWidget book}
     |]
-
 ```
 
-Now we need to jump to the JavaScript file at `elm/index.js` and do some minor tweaks.
+Now we need to jump to the `elm/index.js` file and pass in the `data-flags` attribute.
 
 ```tsx
 import { Elm } from "./Main.elm";
@@ -390,7 +384,7 @@ The value passed into the `data-flags` attribute is serialized and ready to be s
 
 ## Autogenerate types
 
-Now it's time for the fun stuff. We need to go back to [http://localhost:8001](http://localhost:8001) and generate a script and select `Codegen` in the left menu and then `Script`. Type `GenerateElmTypes`, select `Preview` and then `Generate`.
+Now it's time for the fun stuff. We need to go back to [localhost:8001](http://localhost:8001) and generate a script and select `Codegen` in the left menu and then `Script`. Type `GenerateElmTypes`, select `Preview` and then `Generate`.
 
 **Like this:**
 
@@ -434,6 +428,20 @@ nix-shell --run './Application/Script/GenerateElmTypes.hs'
 ```
 
 Voila! If everything has gone well so far, you should have a file named `elm/Api/Generated.elm`. Inspect it with great joy. You didn't need to write any of this manually in Elm.
+
+Let's make a `npm run gen-types` script in `package.json` and we might as well run it at the `start` command as well to update it regularly.
+
+```json
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run-dev-elm": "parcel watch elm/index.js --out-dir static/elm",
+    "run-dev-ihp": "./start",
+    "gen-types": "nix-shell --run './Application/Script/GenerateElmTypes.hs'",
+    "start": "npm run gen-types && concurrently --raw \"npm:run-dev-*\"",
+    "build": "parcel build elm/index.js --out-dir static/elm"
+  },
+```
+
 
 ## Write some Elm
 
@@ -538,10 +546,11 @@ init flags =
     )
 ```
 
-Go to [localhost:8000/Books](http://localhost:8000/Books) and press `Show` on any book you have created. You should see where Elm starts and begins with the `<elm🌳>` tag. The Elm logic is handling every type as it was in Haskell, from `Bool` to `Maybe String` etc.
+Go to [localhost:8000/Books](http://localhost:8000/Books) and press `Show` on any book you have created. You should see where Elm starts and begins with the `<elm🌳>` tag. The Elm logic is handling every type as it was defined in Haskell, from `Bool` to even `Maybe String`.
+
 
 ## Next up
 
 We have created only one widget, but in the next post I will show you how to support an unlimited amount of widgets that will operate separately.
 
-Most of the groundwork is done, so we can hit the ground running in the next post.
+Most of the groundwork is done, so the following posts will be a bit simpler and we will do some more advanced Elm stuff.
