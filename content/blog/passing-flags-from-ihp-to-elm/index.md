@@ -5,7 +5,7 @@
   "title": "How to initialize data from IHP directly to Elm",
   "description": "Generate types, encoders and decoders for Elm automatically in IHP.",
   "image": "images/article-covers/haskell-elm.png",
-  "published": "2020-12-17",
+  "published": "2020-12-19",
   "draft": false,
   "slug": "pass-data-from-ihp-to-elm",
   tags: [],
