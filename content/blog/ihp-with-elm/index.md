@@ -12,6 +12,8 @@
 }
 ---
 
+_This is a **part 1** of the series [IHP with Elm](https://driftercode.com/blog/ihp-with-elm-series)_
+
 [Elm](https://elm-lang.org/) was my gateway drug into type-safe functional programming. It's such a good tool for making robust frontends. Writing big projects in React and TypeScript honestly bums me out because of it.
 
 I have always wanted have to have the equivalent type-safe joy on the backend like I have with Elm.
@@ -258,4 +260,4 @@ So unless you really want to write a full Single Page App, Elm should be used wi
 
 ## Next up
 
-I want to take this application further in future posts showing you how to interact between IHP and Elm, and how use Elm within protected boundaries (requiring authentication). Stay tuned if these are topics that intrigue you 😊
+I want to take this application further in future posts showing you how to interact between IHP and Elm, and how use Elm within protected boundaries (requiring authentication). Read on to [part 2](https://driftercode.com/blog/ihp-with-elm-series) if these are topics that intrigue you 😊
