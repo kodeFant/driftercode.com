@@ -39,7 +39,7 @@ If you haven't done [part 1](blog/ihp-with-elm) of this series, do so first.
 **If you don't want to**, you could [clone the soruce](https://github.com/kodeFant/ihp-with-elm) and checkout to this tab to follow along:
 
 ```bash
-g checkout tags/setup-elm-in-ihp -b setup-elm-in-ihp
+g checkout tags/ihp-with-elm -b setup-elm-in-ihp
 ```
 
 Remember to do `npm install` before running the application.
