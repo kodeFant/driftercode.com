@@ -548,6 +548,8 @@ init flags =
 
 Go to [localhost:8000/Books](http://localhost:8000/Books) and press `Show` on any book you have created. You should see where Elm starts and begins with the `<elm🌳>` tag. The Elm logic is handling every type as it was defined in Haskell, from `Bool` to even `Maybe String`.
 
+To get a complete overview of the changes, see the [diff compared what we did in the previous post](https://github.com/kodeFant/ihp-with-elm/compare/ihp-with-elm...pass-data-from-ihp-to-elm)
+
 
 ## Next up
 
