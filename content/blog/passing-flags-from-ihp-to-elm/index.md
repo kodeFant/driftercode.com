@@ -419,7 +419,7 @@ run = do
 
     Directory.createDirectoryIfMissing False "elm/Api"
 
-    forM_ (HashMap.toList modules) $ \(_moduleName, contents) ->
+    forEach (HashMap.toList modules) $ \(_moduleName, contents) ->
         writeFile "elm/Api/Generated.elm" (show contents)
 ```
 
