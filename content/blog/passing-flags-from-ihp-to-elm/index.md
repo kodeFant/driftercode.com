@@ -35,7 +35,8 @@ If you haven't done [part 1](blog/ihp-with-elm) of this series, do so first.
 **If you don't want to**, you could [clone the soruce](https://github.com/kodeFant/ihp-with-elm) and checkout to this tab to follow along:
 
 ```bash
-g checkout tags/ihp-with-elm -b setup-elm-in-ihp
+git clone https://github.com/kodeFant/ihp-with-elm.git
+git checkout tags/ihp-with-elm -b setup-elm-in-ihp
 ```
 
 Remember to do `npm install` to install JS dependencies.
