@@ -36,7 +36,7 @@ If you haven't done [part 1](blog/ihp-with-elm) of this series, do so first.
 
 ```bash
 git clone https://github.com/kodeFant/ihp-with-elm.git
-git checkout tags/ihp-with-elm -b setup-elm-in-ihp
+git checkout tags/2-ihp-with-elm -b setup-elm-in-ihp
 ```
 
 Remember to do `npm install` to install JS dependencies.
@@ -93,7 +93,7 @@ Just a couple of small adjustments before we proceeed:
 
 Let's just use a checkbox field for the `hasRead` value and a datepicker for the `publishedAt` value.
 
-In both `New.hs` and `Edit.hs` in the `/Web/Controller/View/Books/` folder, replace these two fields:
+In **both** `New.hs` and `Edit.hs` in the `/Web/Controller/View/Books/` folder, replace these two fields:
 
 ```haskell
 {(textField #hasRead)}
@@ -316,36 +316,58 @@ This is some extra work, but you also get to control what fields that will be ex
 
 ## Make a widget entry-point
 
-A logical place to write the entrypoints for this Elm widget is `Application/Helpers/View.hs` as functions exposed here are accessible in all view modules.
+A logical place to write the entrypoints for this Elm widget is `Application/Helper/View.hs` as functions exposed here are accessible in all view modules.
+
+We will also define a `Widget` type that will be like a register for all new widgets.
 
 ```haskell
+{-# language DeriveAnyClass #-}
+
 module Application.Helper.View (
     -- To use the built in login:
     -- module IHP.LoginSupport.Helper.View
-    bookWidget
+    bookWidget,
+    Widget(..)
+
 ) where
 
 -- Here you can add functions which are available in all your views
 import IHP.ViewPrelude
 import Generated.Types
-import Data.ByteString.Lazy as BLS
-import Data.Aeson
+import Data.Aeson as Aeson
 import Web.JsonTypes
+import qualified Generics.SOP as SOP
+import GHC.Generics
+import Language.Haskell.To.Elm
 
--- To use the built in login:
--- import IHP.LoginSupport.Helper.View
+data Widget
+  = BookWidget BookJSON
+  deriving (Generic, Aeson.ToJSON, SOP.Generic, SOP.HasDatatypeInfo)
+
+-- haskell-to-elm instances for the Widget type
+
+instance HasElmType Widget where
+  elmDefinition =
+    Just $ deriveElmTypeDefinition @Widget Language.Haskell.To.Elm.defaultOptions "Api.Generated.Widget"
+
+instance HasElmDecoder Aeson.Value Widget where
+  elmDecoderDefinition =
+    Just $ deriveElmJSONDecoder @Widget Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions "Api.Generated.widgetDecoder"
+
+instance HasElmEncoder Aeson.Value Widget where
+  elmEncoderDefinition =
+    Just $ deriveElmJSONEncoder @Widget Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions "Api.Generated.widgetEncoder"
 
 bookWidget :: Book -> Html
 bookWidget book = [hsx|
-    <div data-type={widgetName} data-flags={flags} class="elm"></div>
+    <div  data-flags={encode bookData} class="elm"></div>
 |]
     where
-        widgetName :: BLS.ByteString = "Book"
-        bookData :: BookJSON = bookToJSON book
-        flags :: BLS.ByteString = encode bookData
+        bookData :: Widget  = BookWidget $ bookToJSON book
+
 ```
 
-Not much code, but lots going on if you look closely. `bookWidget` uses the normal IHP type as an argument, and will convert the type and encode the value for sending it to Elm.
+`bookWidget` takes in the IHP `Book` type as an argument, converts to the `BookJSON` type and wraps it inside a `Widget`.
 
 Now we need to jump to the `elm/index.js` file and pass in the `data-flags` attribute from the widget.
 
@@ -409,12 +431,13 @@ import Data.Text.IO
 import Web.JsonTypes
 import qualified System.Directory as Directory
 import qualified Data.HashMap.Lazy as HashMap
+import Application.Helper.View
 
 run :: Script
 run = do
     let
         definitions = Simplification.simplifyDefinition <$>
-                        jsonDefinitions @BookJSON
+                        jsonDefinitions @Widget <> jsonDefinitions @BookJSON
 
         modules = Pretty.modules definitions
 
@@ -550,7 +573,7 @@ init flags =
 
 Go to [localhost:8000/Books](http://localhost:8000/Books) and press `Show` on any book you have created. You should see where Elm starts and begins with the `<elm🌳>` tag. The Elm logic is handling every type as it was defined in Haskell, from `Bool` to even `Maybe String`.
 
-To get a complete overview of the changes, see the [diff compared what we did in the previous post](https://github.com/kodeFant/ihp-with-elm/compare/ihp-with-elm...pass-data-from-ihp-to-elm)
+To get a complete overview of the changes, see the [diff compared what we did in the previous post](https://github.com/kodeFant/ihp-with-elm/compare/2-ihp-with-elm...3-pass-data-from-ihp-to-elm)
 
 
 ## Next up

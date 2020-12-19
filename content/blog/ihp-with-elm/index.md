@@ -241,7 +241,7 @@ static/elm/index.js:
 
 It should now be ready to ship to production for example to IHP Cloud.
 
-For a complete overview of what has been done, see the [diff from a fresh IHP install](https://github.com/kodeFant/ihp-with-elm/compare/initial...ihp-with-elma).
+For a complete overview of what has been done, see the [diff from a fresh IHP install](https://github.com/kodeFant/ihp-with-elm/compare/1-initial...2-ihp-with-elm).
 
 
 ## Things I don't use Elm for in IHP
