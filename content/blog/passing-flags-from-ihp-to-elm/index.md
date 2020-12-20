@@ -38,9 +38,8 @@ If you haven't done [part 1](blog/ihp-with-elm) of this series, do so first.
 git clone https://github.com/kodeFant/ihp-with-elm.git
 cd ihp-with-elm
 git checkout tags/2-ihp-with-elm -b pass-data-from-ihp-to-elm
+npm install
 ```
-
-Remember to do `npm install` to install JS dependencies.
 
 ## Create a Haskell type
 
@@ -75,6 +74,8 @@ CREATE TABLE books (
 ```
 
 When all the fields defined, remember to press `Save` down in the bottom. It's a bit hidden, so easy to miss.
+
+![Pasting in schema](/images/archive/ihp-with-elm/makeschemacode.gif)
 
 After saving, press `Update DB` in the IHP dashboard. This should update the database with the new table.
 
@@ -267,7 +268,7 @@ instance
       lowerName = Text.toLower (Text.take 1 name) <> Text.drop 1 name
 ```
 
-You probably won't ever do any changes in this script, but it saves us from lots of boilerplate when creating *Haskell to Elm types*.
+You probably won't ever do any changes in this script, but it saves us from lots of boilerplate when creating _Haskell to Elm types_.
 
 ## Turn IHP types into JSON serializable types
 
@@ -409,7 +410,6 @@ instance View ShowView where
     |]
 ```
 
-
 ## Autogenerate types
 
 Now it's time for the fun stuff. We need to go back to [localhost:8001](http://localhost:8001) and generate a script and select `Codegen` in the left menu and then `Script`. Type `GenerateElmTypes`, select `Preview` and then `Generate`.
@@ -469,7 +469,6 @@ Let's make a `npm run gen-types` script for it in `package.json` and we might as
     "build": "parcel build elm/index.js --out-dir static/elm"
   },
 ```
-
 
 ## Write some Elm
 
@@ -595,13 +594,16 @@ widgetFlagToModel widget =
 
 ```
 
-Go to [localhost:8000/Books](http://localhost:8000/Books) and press `Show` on any book you have created. You should see where Elm starts and begins with the `<elm🌳>` tag. The Elm logic is handling every type as it was defined in Haskell, from `Bool` to even `Maybe String`.
+Go to [localhost:8000/Books](http://localhost:8000/Books) and press `Show` on any book you have created. You should see where Elm starts and begins with the `<elm🌳>` tag.
+
+![A sample of the Elm component](/images/archive/ihp-with-elm/showbook.png)
+
+The Elm logic is handling every type as it was defined in Haskell, from `Bool` to even `Maybe String`.
 
 To get a complete overview of the changes, see the [diff compared what we did in the previous post](https://github.com/kodeFant/ihp-with-elm/compare/2-ihp-with-elm...3-pass-data-from-ihp-to-elm)
-
 
 ## Next up
 
 We have created only one widget, but in the next post I will show you how to support an unlimited amount of widgets that will operate separately.
 
-Most of the groundwork is done, so the following posts will be a bit simpler and we will do some more advanced Elm stuff.
+Most of the groundwork is done, so the following posts will be a bit simpler. We will create another widget for searching a list of books.
