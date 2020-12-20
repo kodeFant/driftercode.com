@@ -15,6 +15,10 @@ pingback.href = "https://webmention.io/driftercode.com/xmlrpc";
 document.querySelector("head").appendChild(webMention);
 document.querySelector("head").appendChild(pingback);
 
+const adsenseCode = `<script data-ad-client="ca-pub-6495242829238439" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>`
+document.querySelector("head").insertAdjacentElement("beforeend", adsenseCode)
+
+
 pagesInit({
   mainElmModule: Elm.Main,
 }).then((app) => {});
