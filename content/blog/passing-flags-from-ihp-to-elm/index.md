@@ -83,7 +83,7 @@ Just a couple of small adjustments before we proceeed:
 
 Let's just use a checkbox field for the `hasRead` value and a datepicker for the `publishedAt` value.
 
-In **both** `New.hs` and `Edit.hs` in the `/Web/Controller/View/Books/` folder, replace these two fields:
+In **both** `New.hs` and `Edit.hs` in the `/Web/View/Books/` folder, replace these two fields:
 
 ```haskell
 {(textField #hasRead)}
