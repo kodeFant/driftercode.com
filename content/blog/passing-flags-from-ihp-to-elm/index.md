@@ -67,6 +67,8 @@ Remember to press `Save` down in the bottom. It's a bit hidden, so easy to miss.
 
 After saving, press `Update DB` in the IHP dashboard. This should update the database with the new table.
 
+This will have automatically created the type `Book`. Let's create a controller for it next.
+
 ## Generate Controller and Views
 
 Stay in the `localhost:8001` admin dashboard and select `Codegen` in the menu to the left.
@@ -445,6 +447,10 @@ nix-shell --run './Application/Script/GenerateElmTypes.hs'
 ```
 
 Voila! If everything has gone well so far, you should have a file named `elm/Api/Generated.elm`. Inspect it with great joy. You didn't need to write any of this manually in Elm.
+
+**What a beauty!**
+
+![Generated Elm types](/images/archive/ihp-with-elm/generated-code.gif)
 
 Let's make a `npm run gen-types` script for it in `package.json` and we might as well run it at the `npm start` command to update it regularly.
 
