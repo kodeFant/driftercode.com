@@ -41,7 +41,7 @@ git checkout tags/2-ihp-with-elm -b pass-data-from-ihp-to-elm
 npm install
 ```
 
-## Create a Haskell type
+## Create an IHP database type
 
 To demonstrate how we can insert different datatypes into Elm, let's create a relatively complex database table.
 
