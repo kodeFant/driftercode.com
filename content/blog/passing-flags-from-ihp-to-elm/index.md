@@ -67,6 +67,8 @@ Remember to press `Save` down in the bottom. It's a bit hidden, so easy to miss.
 
 After saving, press `Update DB` in the IHP dashboard. This should update the database with the new table.
 
+This will have automatically created the type `Book`. Let's create a controller for it next.
+
 ## Generate Controller and Views
 
 Stay in the `localhost:8001` admin dashboard and select `Codegen` in the menu to the left.
