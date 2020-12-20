@@ -47,19 +47,7 @@ To demonstrate how we can insert different datatypes into Elm, let's create a re
 
 Run the app with `npm start` and go to [localhost:8001/Tables](http://localhost:8001/Tables).
 
-Right click and select `Add Table` in the context menu. Name the table `books`.
-
-**Just like this:**
-
-![Creating table named books](/images/archive/ihp-with-elm/create-books-table.gif)
-
-Right click and add columns to the database until you have these exact fields:
-
-![Fields for the books type](/images/archive/ihp-with-elm/books-table.png)
-
-Try to match these fields excactly to avoid getting into a confusing situation later 🙂
-
-As a shortcut for this tutorial, you can also select the `Code Edit` toggle in the top left corner and safely paste this snippet into it:
+Select the `Code Edit` toggle in the top left corner and paste this snippet into the code area:
 
 ```bash
 -- Your database schema. Use the Schema Designer at http://localhost:8001/ to add some tables.
@@ -73,7 +61,7 @@ CREATE TABLE books (
 );
 ```
 
-When all the fields defined, remember to press `Save` down in the bottom. It's a bit hidden, so easy to miss.
+Remember to press `Save` down in the bottom. It's a bit hidden, so easy to miss.
 
 ![Pasting in schema](/images/archive/ihp-with-elm/makeschemacode.gif)
 
