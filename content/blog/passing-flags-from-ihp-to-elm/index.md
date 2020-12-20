@@ -458,6 +458,10 @@ nix-shell --run './Application/Script/GenerateElmTypes.hs'
 
 Voila! If everything has gone well so far, you should have a file named `elm/Api/Generated.elm`. Inspect it with great joy. You didn't need to write any of this manually in Elm.
 
+**What a beauty!**
+
+![Generated Elm types](/images/archive/ihp-with-elm/generated-code.gif)
+
 Let's make a `npm run gen-types` script for it in `package.json` and we might as well run it at the `npm start` command to update it regularly.
 
 ```json
