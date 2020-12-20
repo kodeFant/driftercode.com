@@ -36,7 +36,8 @@ If you haven't done [part 1](blog/ihp-with-elm) of this series, do so first.
 
 ```bash
 git clone https://github.com/kodeFant/ihp-with-elm.git
-git checkout tags/2-ihp-with-elm -b setup-elm-in-ihp
+cd ihp-with-elm
+git checkout tags/2-ihp-with-elm -b pass-data-from-ihp-to-elm
 ```
 
 Remember to do `npm install` to install JS dependencies.
@@ -173,6 +174,8 @@ To update your local environment, close the server **(ctrl+c)** and run
 ```bash
 nix-shell --run 'make -B .envrc'
 ```
+
+If you are on vscode, you might need to reload catch the updates for the editor plugins.
 
 Also add the required Elm packages required by `haskell-to-elm`. I i highly recommend the cli-tool [elm-json](https://github.com/zwilias/elm-json) to install elm packages.
 
