@@ -475,14 +475,14 @@ Let's finish up this tutorial by rewriting the `Main.elm` to decode the flags an
 ```elm
 module Main exposing (main)
 
-import Api.Generated exposing (Book, bookDecoder)
+import Api.Generated exposing (Book, Widget(..), widgetDecoder)
 import Browser
 import Html exposing (Html, div, h1, h2, p, pre, text)
 import Json.Decode as D
 
 
 type Model
-    = BookView Book
+    = BookModel Book
     | ErrorModel String
 
 
@@ -517,7 +517,7 @@ widgetView model =
         ErrorModel errorMsg ->
             errorView errorMsg
 
-        BookView book ->
+        BookModel book ->
             bookView book
 
 
@@ -534,7 +534,15 @@ bookView book =
             [ text "Pages: "
             , book.pageCount |> String.fromInt |> text
             ]
-        , p [] [ text (if book.hasRead == True then "You have read this book" else "You have not read this book") ]
+        , p []
+            [ text
+                (if book.hasRead == True then
+                    "You have read this book"
+
+                 else
+                    "You have not read this book"
+                )
+            ]
         , p [] [ showReview book.review ]
         ]
 
@@ -561,14 +569,27 @@ main =
 
 init : D.Value -> ( Model, Cmd Msg )
 init flags =
-    ( case D.decodeValue bookDecoder flags of
-        Ok model ->
-            BookView model
+    ( initialModel flags
+    , Cmd.none
+    )
+
+
+initialModel : D.Value -> Model
+initialModel flags =
+    case D.decodeValue widgetDecoder flags of
+        Ok widget ->
+            widgetFlagToModel widget
 
         Err error ->
             ErrorModel (D.errorToString error)
-    , Cmd.none
-    )
+
+
+widgetFlagToModel : Widget -> Model
+widgetFlagToModel widget =
+    case widget of
+        BookWidget book ->
+            BookModel book
+
 ```
 
 Go to [localhost:8000/Books](http://localhost:8000/Books) and press `Show` on any book you have created. You should see where Elm starts and begins with the `<elm🌳>` tag. The Elm logic is handling every type as it was defined in Haskell, from `Bool` to even `Maybe String`.
