@@ -368,7 +368,6 @@ import Language.Haskell.To.Elm
 
 data Widget
   = BookWidget BookJSON
-  | BookSearchWidget [BookJSON]
   deriving ( Generic
            , Aeson.ToJSON
            , SOP.Generic
