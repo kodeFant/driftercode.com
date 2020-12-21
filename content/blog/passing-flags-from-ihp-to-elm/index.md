@@ -381,17 +381,20 @@ data Widget
 instance HasElmType Widget where
   elmDefinition =
     Just $ "Api.Generated.Widget" 
-              |> deriveElmTypeDefinition @Widget Language.Haskell.To.Elm.defaultOptions 
+              |> deriveElmTypeDefinition @Widget 
+                Language.Haskell.To.Elm.defaultOptions 
 
 instance HasElmDecoder Aeson.Value Widget where
   elmDecoderDefinition =
     Just $ "Api.Generated.widgetDecoder"
-              |> deriveElmJSONDecoder @Widget Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions 
+              |> deriveElmJSONDecoder @Widget 
+                Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions 
 
 instance HasElmEncoder Aeson.Value Widget where
   elmEncoderDefinition =
     Just $ "Api.Generated.widgetEncoder" 
-              |> deriveElmJSONEncoder @Widget Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions 
+              |> deriveElmJSONEncoder @Widget 
+                Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions 
 
 -- Widgets
 
