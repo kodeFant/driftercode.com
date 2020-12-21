@@ -436,18 +436,23 @@ Let's put this `bookWidget` into `/Web/View/Books/Show.hs`:
 module Web.View.Books.Show where
 import Web.View.Prelude
 
-data ShowView = ShowView { book :: Book }
+data ShowView = ShowView { book :: Book, books :: [Book] }
 
 instance View ShowView where
     html ShowView { .. } = [hsx|
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href={BooksAction}>Books</a></li>
-                <li class="breadcrumb-item active">Show Book</li>
+                <li class="breadcrumb-item">
+                    <a href={BooksAction}>Books</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    Show Book
+                </li>
             </ol>
         </nav>
         <h1>Show Book</h1>
         {bookWidget book}
+        {bookSearchWidget books}
     |]
 ```
 
