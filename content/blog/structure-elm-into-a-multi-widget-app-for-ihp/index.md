@@ -24,7 +24,7 @@ A simplified version of [Richard Feldmans's RealWord Example app](https://github
 
 If you haven't done [part 2](blog/passing-flags-from-ihp-to-elm) of this series, do so first.
 
-**If you don't want to**, you could [clone the soruce](https://github.com/kodeFant/ihp-with-elm) and checkout to this tag to follow along:
+**If you don't want to**, you could [clone the project source](https://github.com/kodeFant/ihp-with-elm) and checkout to this tag to follow along:
 
 ```bash
 git clone https://github.com/kodeFant/ihp-with-elm.git
