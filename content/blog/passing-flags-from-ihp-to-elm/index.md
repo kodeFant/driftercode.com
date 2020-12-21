@@ -453,7 +453,6 @@ instance View ShowView where
         </nav>
         <h1>Show Book</h1>
         {bookWidget book}
-        {bookSearchWidget books}
     |]
 ```
 
