@@ -403,7 +403,6 @@ bookWidget book = [hsx|
 |]
     where
         bookData :: Widget  = BookWidget $ bookToJSON book
-
 ```
 
 `bookWidget` takes in the IHP `Book` type as an argument, converts to the `BookJSON` type and wraps it inside a `Widget`.
