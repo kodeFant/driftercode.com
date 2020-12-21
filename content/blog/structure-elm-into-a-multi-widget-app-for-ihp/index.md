@@ -20,6 +20,19 @@ Since we are planning on creating an application supporting multiple isolated wi
 
 A simplified version of [Richard Feldmans's RealWord Example app](https://github.com/rtfeldman/elm-spa-example) is a great architecture for this use-case.
 
+## Continue from part one
+
+If you haven't done [part 2](blog/passing-flags-from-ihp-to-elm) of this series, do so first.
+
+**If you don't want to**, you could [clone the soruce](https://github.com/kodeFant/ihp-with-elm) and checkout to this tag to follow along:
+
+```bash
+git clone https://github.com/kodeFant/ihp-with-elm.git
+cd ihp-with-elm
+git checkout tags/3-pass-data-from-ihp-to-elm -b structure-elm-into-a-multi-widget-app
+npm install
+```
+
 ## Separating the BookWidget module
 
 Inside the `elm` folder, let's create a sub-folder named `Widget`, and a module inside named `Book.elm`

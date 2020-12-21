@@ -32,7 +32,7 @@ All this being said, the examples in this tutorial are made extremely simple to 
 
 If you haven't done [part 1](blog/ihp-with-elm) of this series, do so first.
 
-**If you don't want to**, you could [clone the soruce](https://github.com/kodeFant/ihp-with-elm) and checkout to this tab to follow along:
+**If you don't want to**, you could [clone the soruce](https://github.com/kodeFant/ihp-with-elm) and checkout to this tag to follow along:
 
 ```bash
 git clone https://github.com/kodeFant/ihp-with-elm.git
@@ -179,7 +179,7 @@ Following these instructions will make it easier to add `haskell-to-elm` types l
 
 Create a folder named `Application/Lib` and create a new Haskell module:
 
-```
+```bash
 mkdir Application/Lib
 touch Application/Lib/DerivingViaElm.hs
 ```

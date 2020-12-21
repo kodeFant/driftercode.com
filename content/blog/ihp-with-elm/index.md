@@ -207,12 +207,10 @@ With that you can now run both the IHP app and the JavaScript simultaneously wit
 npm start
 ```
 
-And quit with **(ctrl+c)** as always.
-
-
 There you should have it! Elm in Haskell with hot reloading and the Elm debugger is ready for you in the bottom right corner. Beautiful!
 
 ![Elm running](/images/archive/ihp-with-elm/elm-loaded.jpg)
+
 
 ## Build for production
 
