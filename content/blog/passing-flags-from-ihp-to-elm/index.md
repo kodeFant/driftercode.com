@@ -437,7 +437,7 @@ Let's put this `bookWidget` into `/Web/View/Books/Show.hs`:
 module Web.View.Books.Show where
 import Web.View.Prelude
 
-data ShowView = ShowView { book :: Book, books :: [Book] }
+data ShowView = ShowView { book :: Book }
 
 instance View ShowView where
     html ShowView { .. } = [hsx|
