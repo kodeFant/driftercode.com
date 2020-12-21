@@ -12,7 +12,7 @@
 }
 ---
 
-_This is **part 3** of the series [IHP with Elm](https://driftercode.com/blog/ihp-with-elm-series)_
+_This is **part 4** of the series [IHP with Elm](https://driftercode.com/blog/ihp-with-elm-series)_
 
 We have Elm set up in IHP, initialized values from flags and we are just going through the final part of making our Elm widgets fully interoperable with IHP: **HTTP requests**.
 
@@ -28,9 +28,10 @@ This tutorial only needs one additional package, the official `elm/http`, so let
 elm-json install elm/http
 ```
 
-## Make the Book index output JSON in addition to HTMl
+## Support json response from /Books
 
-Thanks to what we have done so far, making the index view of `Book` is very simple.
+The `/Books` endpoint currently delivers HTML by default, but we can easily make it return JSON as well.
+
 
 Add this import in the top of `/Application/View/Books/Index.hs`
 
@@ -66,7 +67,10 @@ instance View IndexView where
 
     json IndexView {..} = toJSON (books |> map bookToJSON)
 ```
-A List of `Book` maps into a List of the `BookJSON` type we defined in the previous post and turns it into JSON.
+
+It's nice that we can use the same type that we defined for the Elm flags.
+
+A list of `Book` now maps into a list of the `BookJSON` type we defined in the previous post and turns it into a plain JSON representation, and it can be decoded by the same `bookDecoder` we generated into Elm.
 
 The `/Books` endpoint will now serve you HTML by default. But if you set the header `Accept: application/json`, it will display the JSON version instead. You can test it with curl:
 
@@ -74,11 +78,9 @@ The `/Books` endpoint will now serve you HTML by default. But if you set the hea
 curl -H "Accept: application/json" http://localhost:8000/Books
 ```
 
-So, to over-explain it: Remove that header from the curl, and you'll of course get the HTML back. 
-
 ## Add a case for the Widget type
 
-In `Application/Helper/View.hs`, all we need is adding another case in the data type. This widget won't have any data, but will be passed as a flag to tell Elm which widget to load.
+In `Application/Helper/View.hs`, all we need is adding another case to the `Widget` type. This widget won't have any data, but will be passed as a flag to tell Elm which widget to load.
 
 ```hs
 data Widget
@@ -118,11 +120,11 @@ By updating the Widget type, we can auto-generate the types:
 npm start gen-types
 ```
 
-Elm complain a bit not, so let's do some stuff to fix that.
+The Elm code will not compile now, because we need to handle the updated Widget type.
 
 ## Add widget to 
 
-Let's first create the file `/elm/Api/Http.elm`.
+Let's first create the file `/elm/Api/Http.elm` for a place to make http requests.
 
 ```bash
 touch elm/Api/Http.elm
@@ -130,7 +132,7 @@ touch elm/Api/Http.elm
 
 To make sure we remember to set the `Accept: application/json` header, let's define a wrapper around Elm's `Http.request` and call it `ihpRequest`.
 
-The `getBooksAction` function will take in a string and a generic `msg` type taking in a `Result`. [RemoteData](https://package.elm-lang.org/packages/krisajenkins/remotedata/latest/RemoteData) is of probably a better data model, but let's not cram in to many things in this lesson.
+The `getBooksAction` function will take in a string and a generic `msg` type taking in a `Result`. You could use [RemoteData](https://package.elm-lang.org/packages/krisajenkins/remotedata/latest/RemoteData)of course, but we'll skip it for this tutorial.
 
 ```elm
 module Api.Http exposing (..)
@@ -171,14 +173,56 @@ ihpRequest { method, headers, url, body, expect } =
 
 ```
 
-Then we will have to handle
+## Make an ErrorView module
+
+It can be nice to display some Http errors of various sorts in a standardised way. I like to make a view function for this.
+
+Let's create a new Elm module at `/elm/ErrorView.elm`
+
+```bash
+touch elm/ErrorView.elm
+```
+
+Let write this little snippet:
+
+```elm
+module ErrorView exposing (..)
+
+import Http
+import Html exposing (Html, pre, text)
+
+httpErrorView : Http.Error -> Html msg
+httpErrorView error =
+    case error of
+        Http.BadUrl info ->
+            pre [] [ text "BadUrl: ", text info ]
+
+        Http.NetworkError ->
+            pre [] [ text "Network Error" ]
+
+        Http.Timeout ->
+            pre [] [ text "Timeout" ]
+
+        Http.BadStatus code ->
+            pre [] [ text ("BadStatus: " ++ String.fromInt code) ]
+
+        Http.BadBody info ->
+            pre [] [ text info ]
+```
+
+## Updating Main.elm
+
+To get the compiler to stop complaining after the code generation, lets' add the final logic to fix this in `Main.elm`.
+
+I'm just pasting the 
 
 ```elm
 module Main exposing (main)
 
-import Api.Http exposing (getBooksAction)
 import Api.Generated exposing (Book, Widget(..), widgetDecoder)
+import Api.Http exposing (getBooksAction)
 import Browser
+import ErrorView exposing (httpErrorView)
 import Html exposing (..)
 import Html.Attributes exposing (href, placeholder, type_)
 import Html.Events exposing (onInput)
@@ -198,6 +242,8 @@ main =
         , subscriptions = subscriptions
         , view = view
         }
+
+
 
 -- INIT
 
@@ -267,30 +313,9 @@ update msg model =
             ( model, Cmd.none )
 
 
-httpErrorView : Http.Error -> Html msg
-httpErrorView error =
-    case error of
-        Http.BadUrl info ->
-            pre [] [ text "BadUrl: ", text info ]
-
-        Http.NetworkError ->
-            pre [] [ text "Network Error" ]
-
-        Http.Timeout ->
-            pre [] [ text "Timeout" ]
-
-        Http.BadStatus code ->
-            pre [] [ text ("BadStatus: " ++ String.fromInt code) ]
-
-        Http.BadBody info ->
-            pre [] [ text info ]
-
-
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
-
-
 
 
 
@@ -324,6 +349,8 @@ errorView errorMsg =
     pre [] [ text "Widget Error: ", text errorMsg ]
 
 
+-- BookWidget
+
 bookView : Book -> Html msg
 bookView book =
     div []
@@ -344,6 +371,16 @@ bookView book =
         , p [] [ showReview book.review ]
         ]
 
+showReview : Maybe String -> Html msg
+showReview maybeReview =
+    case maybeReview of
+        Just review ->
+            text ("Your book review: " ++ review)
+
+        Nothing ->
+            text "You have not reviewed this book"
+
+-- BookSearchWidget
 
 bookSearchView : Result Http.Error (List Book) -> String -> Html Msg
 bookSearchView books searchTerm =
@@ -384,16 +421,6 @@ bookSearchResult book =
             "/ShowBook?bookId=" ++ book.id
     in
     p [] [ a [ href bookLink ] [ text book.title ] ]
-
-
-showReview : Maybe String -> Html msg
-showReview maybeReview =
-    case maybeReview of
-        Just review ->
-            text ("Your book review: " ++ review)
-
-        Nothing ->
-            text "You have not reviewed this book"
 
 ```
 

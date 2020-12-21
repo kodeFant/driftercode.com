@@ -666,6 +666,4 @@ To get a complete overview of the changes, see the [diff compared what we did in
 
 ## Next up
 
-We have created only one widget, but in the next post we will add another one. It will not use flags, but querying IHP through HTTP is. Cool thing is, there is very little work to it now that we have auto-generated decoders.
-
-Most of the groundwork is done, so the following posts will be a bit simpler. We will create another widget for searching through the complete list of books.
+We have created only one widget, but in the next post we will add another one and structure then into separate modules, inpired by [Richard Feldman's RealWorld SPA archtecture](https://github.com/rtfeldman/elm-spa-example), only simpler as it's widgets and not pages 😊
