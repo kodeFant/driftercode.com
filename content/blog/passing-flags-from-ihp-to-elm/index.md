@@ -354,7 +354,6 @@ module Application.Helper.View (
     -- To use the built in login:
     -- module IHP.LoginSupport.Helper.View
     bookWidget,
-    bookSearchWidget,
     Widget(..),
 ) where
 
@@ -404,14 +403,6 @@ bookWidget book = [hsx|
 |]
     where
         bookData :: Widget  = BookWidget $ bookToJSON book
-
-
-bookSearchWidget :: [Book] -> Html
-bookSearchWidget books = [hsx|
-    <div  data-flags={encode bookData} class="elm"></div>
-|]
-    where
-        bookData :: Widget  = BookSearchWidget $ books |> map bookToJSON
 
 ```
 
