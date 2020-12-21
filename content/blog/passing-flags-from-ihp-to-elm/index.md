@@ -417,18 +417,27 @@ bookSearchWidget books = [hsx|
 
 `bookWidget` takes in the IHP `Book` type as an argument, converts to the `BookJSON` type and wraps it inside a `Widget`.
 
-Now we need to jump to the `elm/index.js` file and pass in the `data-flags` attribute from the widget.
+Now we need to jump to the `elm/index.js` file and pass in the `data-flags` attribute from the widget. While we are at it we are also enabling the possibility to have several elm widgets present at one single page.
 
 ```tsx
 import { Elm } from "./Main.elm";
 
-const node = document.querySelector(".elm");
-const flags = node.dataset.flags ? JSON.parse(node.dataset.flags) : null;
+// Get all elm nodes
+const elmNodes = document.querySelectorAll(".elm");
 
-Elm.Main.init({
-  node,
-  flags,
+// Initialize Elm on each elmNode
+elmNodes.forEach((node) => {
+  Elm.Main.init({
+    node,
+    flags: getFlags(node.dataset.flags),
+  });
 });
+
+
+// Parse the JSON from IHP or return null if there is none
+function getFlags(data) {
+  return data ? JSON.parse(data) : null;
+}
 ```
 
 The value passed into the `data-flags` attribute is serialized and ready to be sent right through JavaScript and directly into Elm.
@@ -657,6 +666,6 @@ To get a complete overview of the changes, see the [diff compared what we did in
 
 ## Next up
 
-We have created only one widget, but in the next post I will show you how to support an unlimited amount of widgets that will operate separately.
+We have created only one widget, but in the next post we will add another one. It will not use flags, but querying IHP through HTTP is. Cool thing is, there is very little work to it now that we have auto-generated decoders.
 
-Most of the groundwork is done, so the following posts will be a bit simpler. We will create another widget for searching a list of books.
+Most of the groundwork is done, so the following posts will be a bit simpler. We will create another widget for searching through the complete list of books.
