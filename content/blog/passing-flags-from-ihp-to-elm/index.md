@@ -205,57 +205,81 @@ newtype ElmType (name :: Symbol) a
   = ElmType a
 
 instance
-  (Generic a, Aeson.GToJSON Aeson.Zero (Rep a)) =>
+  (Generic a, 
+  Aeson.GToJSON Aeson.Zero (Rep a)) =>
   Aeson.ToJSON (ElmType name a)
   where
   toJSON (ElmType a) =
-    Aeson.genericToJSON Aeson.defaultOptions {Aeson.fieldLabelModifier = dropWhile (== '_')} a
+    Aeson.genericToJSON Aeson.defaultOptions 
+      {Aeson.fieldLabelModifier = dropWhile (== '_')} a
 
 instance
   (Generic a, Aeson.GFromJSON Aeson.Zero (Rep a)) =>
   Aeson.FromJSON (ElmType name a)
   where
   parseJSON =
-    fmap ElmType . Aeson.genericParseJSON Aeson.defaultOptions {Aeson.fieldLabelModifier = dropWhile (== '_')}
+    fmap ElmType . Aeson.genericParseJSON Aeson.defaultOptions 
+      {Aeson.fieldLabelModifier = dropWhile (== '_')}
 
 instance
-  (SOP.HasDatatypeInfo a, SOP.All2 HasElmType (SOP.Code a), KnownSymbol name) =>
+  (SOP.HasDatatypeInfo a,
+  SOP.All2 HasElmType (SOP.Code a),
+  KnownSymbol name) =>
   HasElmType (ElmType name a)
   where
   elmDefinition =
     Just
-      $ deriveElmTypeDefinition @a defaultOptions {fieldLabelModifier = dropWhile (== '_')}
+      $ deriveElmTypeDefinition @a defaultOptions 
+          {fieldLabelModifier = dropWhile (== '_')}
       $ fromString $ symbolVal $ Proxy @name
 
 instance
-  (SOP.HasDatatypeInfo a, HasElmType a, SOP.All2 (HasElmDecoder Aeson.Value) (SOP.Code a), HasElmType (ElmType name a), KnownSymbol name) =>
+  (SOP.HasDatatypeInfo a,
+  HasElmType a,
+  SOP.All2 (HasElmDecoder Aeson.Value) (SOP.Code a),
+  HasElmType (ElmType name a),
+  KnownSymbol name) =>
   HasElmDecoder Aeson.Value (ElmType name a)
   where
   elmDecoderDefinition =
     Just
       $ deriveElmJSONDecoder
         @a
-        defaultOptions {fieldLabelModifier = dropWhile (== '_')}
-        Aeson.defaultOptions {Aeson.fieldLabelModifier = dropWhile (== '_')}
+        defaultOptions {fieldLabelModifier = 
+          dropWhile (== '_')}
+        Aeson.defaultOptions {Aeson.fieldLabelModifier = 
+          dropWhile (== '_')}
       $ Name.Qualified moduleName $ lowerName <> "Decoder"
     where
-      Name.Qualified moduleName name = fromString $ symbolVal $ Proxy @name
-      lowerName = Text.toLower (Text.take 1 name) <> Text.drop 1 name
+      Name.Qualified moduleName name = 
+          fromString $ symbolVal $ Proxy @name
+      lowerName = 
+        Text.toLower (Text.take 1 name) <> Text.drop 1 name
 
 instance
-  (SOP.HasDatatypeInfo a, HasElmType a, SOP.All2 (HasElmEncoder Aeson.Value) (SOP.Code a), HasElmType (ElmType name a), KnownSymbol name) =>
+  (SOP.HasDatatypeInfo a, 
+  HasElmType a, 
+  SOP.All2 (HasElmEncoder Aeson.Value) (SOP.Code a),
+  HasElmType (ElmType name a),
+  KnownSymbol name) =>
   HasElmEncoder Aeson.Value (ElmType name a)
   where
   elmEncoderDefinition =
     Just
       $ deriveElmJSONEncoder
         @a
-        defaultOptions {fieldLabelModifier = dropWhile (== '_')}
-        Aeson.defaultOptions {Aeson.fieldLabelModifier = dropWhile (== '_')}
+        defaultOptions {fieldLabelModifier =
+          dropWhile (== '_')}
+        Aeson.defaultOptions {Aeson.fieldLabelModifier = 
+          dropWhile (== '_')}
       $ Name.Qualified moduleName $ lowerName <> "Encoder"
     where
-      Name.Qualified moduleName name = fromString $ symbolVal $ Proxy @name
-      lowerName = Text.toLower (Text.take 1 name) <> Text.drop 1 name
+      Name.Qualified moduleName name = 
+          fromString 
+            $ symbolVal
+            $ Proxy @name
+      lowerName = 
+        Text.toLower (Text.take 1 name) <> Text.drop 1 name
 ```
 
 You probably won't ever do any changes in this script, but it saves us from lots of boilerplate when creating _Haskell to Elm types_.
@@ -286,18 +310,27 @@ import Application.Lib.DerivingViaElm ( ElmType(..) )
 -- JSON serializable types and functions for exposing IHP data to Elm and JSON responses
 
 data BookJSON = BookJSON
-  { title :: Text
+  { id :: Text 
+  , title :: Text
   , pageCount :: Int
   , hasRead :: Bool
   , review :: Maybe Text
   , publishedAt :: UTCTime
-  } deriving (Generic, SOP.Generic, SOP.HasDatatypeInfo)
-    deriving (Aeson.ToJSON, Aeson.FromJSON, HasElmType, HasElmDecoder Aeson.Value, HasElmEncoder Aeson.Value)
+  } deriving ( Generic 
+             , SOP.Generic 
+             , SOP.HasDatatypeInfo
+             )
+    deriving ( Aeson.ToJSON
+             , Aeson.FromJSON
+             , HasElmType
+             , HasElmDecoder Aeson.Value
+             , HasElmEncoder Aeson.Value)
     via ElmType "Api.Generated.Book" BookJSON
 
 bookToJSON :: (?context :: ControllerContext) => Book -> BookJSON
 bookToJSON book =
     BookJSON {
+        id = show $ get #id book,
         title = get #title book,
         pageCount = get #pageCount book,
         hasRead = get #hasRead book,
@@ -321,8 +354,8 @@ module Application.Helper.View (
     -- To use the built in login:
     -- module IHP.LoginSupport.Helper.View
     bookWidget,
-    Widget(..)
-
+    bookSearchWidget,
+    Widget(..),
 ) where
 
 -- Here you can add functions which are available in all your views
@@ -336,21 +369,31 @@ import Language.Haskell.To.Elm
 
 data Widget
   = BookWidget BookJSON
-  deriving (Generic, Aeson.ToJSON, SOP.Generic, SOP.HasDatatypeInfo)
+  | BookSearchWidget [BookJSON]
+  deriving ( Generic
+           , Aeson.ToJSON
+           , SOP.Generic
+           , SOP.HasDatatypeInfo
+           )
 
 -- haskell-to-elm instances for the Widget type
 
 instance HasElmType Widget where
   elmDefinition =
-    Just $ deriveElmTypeDefinition @Widget Language.Haskell.To.Elm.defaultOptions "Api.Generated.Widget"
+    Just $ "Api.Generated.Widget" 
+              |> deriveElmTypeDefinition @Widget Language.Haskell.To.Elm.defaultOptions 
 
 instance HasElmDecoder Aeson.Value Widget where
   elmDecoderDefinition =
-    Just $ deriveElmJSONDecoder @Widget Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions "Api.Generated.widgetDecoder"
+    Just $ "Api.Generated.widgetDecoder"
+              |> deriveElmJSONDecoder @Widget Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions 
 
 instance HasElmEncoder Aeson.Value Widget where
   elmEncoderDefinition =
-    Just $ deriveElmJSONEncoder @Widget Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions "Api.Generated.widgetEncoder"
+    Just $ "Api.Generated.widgetEncoder" 
+              |> deriveElmJSONEncoder @Widget Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions 
+
+-- Widgets
 
 bookWidget :: Book -> Html
 bookWidget book = [hsx|
@@ -358,6 +401,14 @@ bookWidget book = [hsx|
 |]
     where
         bookData :: Widget  = BookWidget $ bookToJSON book
+
+
+bookSearchWidget :: [Book] -> Html
+bookSearchWidget books = [hsx|
+    <div  data-flags={encode bookData} class="elm"></div>
+|]
+    where
+        bookData :: Widget  = BookSearchWidget $ books |> map bookToJSON
 
 ```
 
