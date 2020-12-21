@@ -666,4 +666,4 @@ To get a complete overview of the changes, see the [diff compared what we did in
 
 ## Next up
 
-We have created only one widget, but in the next post we will add another one and structure then into separate modules, inpired by [Richard Feldman's RealWorld SPA archtecture](https://github.com/rtfeldman/elm-spa-example), only simpler since Elm isn't doing any routing or link handling.
+We have created only one widget, but in the next post we will add another one and structure them into separate modules, inpired by [Richard Feldman's RealWorld SPA archtecture](https://github.com/rtfeldman/elm-spa-example), only simpler since Elm isn't doing any routing or link handling.
