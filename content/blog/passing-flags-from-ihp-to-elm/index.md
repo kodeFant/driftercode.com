@@ -50,7 +50,6 @@ Run the app with `npm start` and go to [localhost:8001/Tables](http://localhost:
 Select the `Code Edit` toggle in the top left corner and paste this snippet into the code area:
 
 ```bash
--- Your database schema. Use the Schema Designer at http://localhost:8001/ to add some tables.
 CREATE TABLE books (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
@@ -307,7 +306,8 @@ import qualified Generics.SOP as SOP
 import Language.Haskell.To.Elm
 import Application.Lib.DerivingViaElm ( ElmType(..) )
 
--- JSON serializable types and functions for exposing IHP data to Elm and JSON responses
+-- JSON serializable types and functions 
+-- for exposing IHP data to Elm and JSON responses
 
 data BookJSON = BookJSON
   { id :: Text 
