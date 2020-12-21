@@ -14,7 +14,7 @@
 
 _This is **part 2** of the series [IHP with Elm](https://driftercode.com/blog/ihp-with-elm-series)_
 
-When initializing Elm, you can set initial valuesthrough something called [flags](https://guide.elm-lang.org/interop/flags.html).
+When initializing Elm, you can set initial values through something called [flags](https://guide.elm-lang.org/interop/flags.html).
 
 For this part of the series, I want to show you a technique for loading these values called flags directly from IHP into Elm in a type-safe way.
 

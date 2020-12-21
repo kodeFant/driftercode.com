@@ -3,7 +3,7 @@
   "type": "blog",
   "author": Lars Lillo Ulvestad,
   "title": "Structure Elm into a multi-widget app for IHP",
-  "description": "Let's make a good maintainable widget architecture inspired by Richard Feldmans's RealWorld example.",
+  "description": "We are making the widget-based equivalent of Richard Feldmans's RealWorld example.",
   "image": "images/article-covers/haskell-elm.png",
   "published": "2020-12-22",
   "draft": true,
