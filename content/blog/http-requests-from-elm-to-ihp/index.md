@@ -166,3 +166,70 @@ httpErrorView error =
 ```
 
 ## Add interactivity to BookSearch
+
+Let's import the stuff we need `elm/Widget/BookSearch.elm`.
+
+```elm
+import Api.Generated exposing (Book)
+import Api.Http exposing (getBooksAction)
+import ErrorView exposing (httpErrorView)
+import Html exposing (..)
+import Html.Attributes exposing (href, type_)
+import Html.Events exposing (onInput)
+import Http
+```
+
+We should then make the Model inside a bit more complex, so we can turn it into a record to track the search-term and search-result.
+
+```elm
+type alias Model =
+    { searchResult : Result Http.Error (List Book)
+    , searchTerm : String
+    }
+
+
+initialModel : Model
+initialModel =
+    { searchResult = Ok []
+    , searchTerm = ""
+    }
+```
+
+To update the model, we are making two messages and some update logic.
+
+On input Change, we will update the model and at the same time make a query to IHP through the `getBooksAction` function.
+
+```elm
+type Msg
+    = SearchInputChanged String
+    | GotSearchResult (Result Http.Error (List Book))
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        SearchInputChanged text ->
+            ( { model | searchTerm = text }, getBooksAction text GotSearchResult )
+
+        GotSearchResult result ->
+            ( { model | searchResult = result }, Cmd.none )
+```
+
+And the view functionality is getting some more logic.
+
+```elm
+type Msg
+    = SearchInputChanged String
+    | GotSearchResult (Result Http.Error (List Book))
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        SearchInputChanged text ->
+            ( { model | searchTerm = text }, getBooksAction text GotSearchResult )
+
+        GotSearchResult result ->
+            ( { model | searchResult = result }, Cmd.none )
+
+```
