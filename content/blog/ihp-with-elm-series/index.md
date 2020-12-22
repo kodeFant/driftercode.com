@@ -12,11 +12,13 @@
 }
 ---
 
-[IHP](https://ihp.digitallyinduced.com/) is a refreshing Haskell MVC framework and simple to use. It's popularly called "Haskell on Rails". The good old multi page app (MPA) is back and better than ever.
+**[IHP](https://ihp.digitallyinduced.com/) is a refreshing Haskell MVC framework and simple to use, in contrast to how Haskell is perceived.** It's popularly called "Haskell on Rails". The good old multi page app (MPA) is back and better than ever.
 
-Elm is a delightful language for writing web apps. And even if it's most famous for writing single page apps (SPA), it's also great for making widgets for the MPA architecture. And it's especially satisfying to combine with IHP.
+[Elm](https://elm-lang.org/) is a delightful language for writing reliable web apps. And even if it's most famous for writing single page apps (SPA), it's just as great for sprinkling interactivity on the MPA architecture. 
 
-A tutorial series about the "Elm-as-widget" pattern, combines two of the world's sweetest programming languages.
+**Elm and IHP is a satisfying combo to work with for great SSR support, unlimited possibilities for interactivity and the simplicity of pure functions all over.**
+
+A tutorial series about the "Elm-as-widget" pattern, combines two of the world's sweetest programming languages into one great developer experience.
 
 A simplified version of [Richard Feldman's RealWorld SPA archtecture](https://github.com/rtfeldman/elm-spa-example) turns out to be very well suited for a widget-engine in IHP.
 
