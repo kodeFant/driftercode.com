@@ -19,4 +19,4 @@ A series in the making about using making highly interactive widgets in IHP with
 1. [How to setup IHP with Elm](blog/ihp-with-elm)
 2. [How to initialize data from IHP directly to Elm](blog/passing-flags-from-ihp-to-elm)
 3. [Structure Elm into a multi-widget app for IHP](blog/structure-elm-into-a-multi-widget-app-for-ihp)
-4. Make your Elm widgets interact with IHP
+4. Make your Elm widgets interact with IHP (In progress)

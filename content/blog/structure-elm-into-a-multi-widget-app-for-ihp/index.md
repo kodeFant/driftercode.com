@@ -33,8 +33,6 @@ git checkout tags/3-pass-data-from-ihp-to-elm -b structure-elm-into-a-multi-widg
 npm install
 ```
 
-## Install elm
-
 ## Separating the BookWidget module
 
 Inside the `elm` folder, let's create a sub-folder named `Widget`, and a module inside named `Book.elm`
@@ -444,4 +442,4 @@ Going into any book, you should now see a very dumb widget below that is just a 
 
 We will finalize this simple book app by making the new `BookSearch` widget more advanced with basic search functionality.
 
-By doing this, we will walk through the final part of doing IHP interop Elm: **JSON HTTP requests with IHP through Elm**.
+By doing this, we will walk through the final part of doing IHP interop Elm: **JSON HTTP requests with IHP through Elm**. And we'll finally get to update some Elm state 😊

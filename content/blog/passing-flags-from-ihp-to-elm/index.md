@@ -204,12 +204,12 @@ newtype ElmType (name :: Symbol) a
   = ElmType a
 
 instance
-  (Generic a, 
+  (Generic a,
   Aeson.GToJSON Aeson.Zero (Rep a)) =>
   Aeson.ToJSON (ElmType name a)
   where
   toJSON (ElmType a) =
-    Aeson.genericToJSON Aeson.defaultOptions 
+    Aeson.genericToJSON Aeson.defaultOptions
       {Aeson.fieldLabelModifier = dropWhile (== '_')} a
 
 instance
@@ -217,7 +217,7 @@ instance
   Aeson.FromJSON (ElmType name a)
   where
   parseJSON =
-    fmap ElmType . Aeson.genericParseJSON Aeson.defaultOptions 
+    fmap ElmType . Aeson.genericParseJSON Aeson.defaultOptions
       {Aeson.fieldLabelModifier = dropWhile (== '_')}
 
 instance
@@ -228,7 +228,7 @@ instance
   where
   elmDefinition =
     Just
-      $ deriveElmTypeDefinition @a defaultOptions 
+      $ deriveElmTypeDefinition @a defaultOptions
           {fieldLabelModifier = dropWhile (== '_')}
       $ fromString $ symbolVal $ Proxy @name
 
@@ -244,20 +244,20 @@ instance
     Just
       $ deriveElmJSONDecoder
         @a
-        defaultOptions {fieldLabelModifier = 
+        defaultOptions {fieldLabelModifier =
           dropWhile (== '_')}
-        Aeson.defaultOptions {Aeson.fieldLabelModifier = 
+        Aeson.defaultOptions {Aeson.fieldLabelModifier =
           dropWhile (== '_')}
       $ Name.Qualified moduleName $ lowerName <> "Decoder"
     where
-      Name.Qualified moduleName name = 
+      Name.Qualified moduleName name =
           fromString $ symbolVal $ Proxy @name
-      lowerName = 
+      lowerName =
         Text.toLower (Text.take 1 name) <> Text.drop 1 name
 
 instance
-  (SOP.HasDatatypeInfo a, 
-  HasElmType a, 
+  (SOP.HasDatatypeInfo a,
+  HasElmType a,
   SOP.All2 (HasElmEncoder Aeson.Value) (SOP.Code a),
   HasElmType (ElmType name a),
   KnownSymbol name) =>
@@ -269,15 +269,15 @@ instance
         @a
         defaultOptions {fieldLabelModifier =
           dropWhile (== '_')}
-        Aeson.defaultOptions {Aeson.fieldLabelModifier = 
+        Aeson.defaultOptions {Aeson.fieldLabelModifier =
           dropWhile (== '_')}
       $ Name.Qualified moduleName $ lowerName <> "Encoder"
     where
-      Name.Qualified moduleName name = 
-          fromString 
+      Name.Qualified moduleName name =
+          fromString
             $ symbolVal
             $ Proxy @name
-      lowerName = 
+      lowerName =
         Text.toLower (Text.take 1 name) <> Text.drop 1 name
 ```
 
@@ -306,18 +306,18 @@ import qualified Generics.SOP as SOP
 import Language.Haskell.To.Elm
 import Application.Lib.DerivingViaElm ( ElmType(..) )
 
--- JSON serializable types and functions 
+-- JSON serializable types and functions
 -- for exposing IHP data to Elm and JSON responses
 
 data BookJSON = BookJSON
-  { id :: Text 
+  { id :: Text
   , title :: Text
   , pageCount :: Int
   , hasRead :: Bool
   , review :: Maybe Text
   , publishedAt :: UTCTime
-  } deriving ( Generic 
-             , SOP.Generic 
+  } deriving ( Generic
+             , SOP.Generic
              , SOP.HasDatatypeInfo
              )
     deriving ( Aeson.ToJSON
@@ -327,7 +327,7 @@ data BookJSON = BookJSON
              , HasElmEncoder Aeson.Value)
     via ElmType "Api.Generated.Book" BookJSON
 
-bookToJSON :: (?context :: ControllerContext) => Book -> BookJSON
+bookToJSON :: Book -> BookJSON
 bookToJSON book =
     BookJSON {
         id = show $ get #id book,
@@ -378,21 +378,21 @@ data Widget
 
 instance HasElmType Widget where
   elmDefinition =
-    Just $ "Api.Generated.Widget" 
-              |> deriveElmTypeDefinition @Widget 
-                Language.Haskell.To.Elm.defaultOptions 
+    Just $ "Api.Generated.Widget"
+              |> deriveElmTypeDefinition @Widget
+                Language.Haskell.To.Elm.defaultOptions
 
 instance HasElmDecoder Aeson.Value Widget where
   elmDecoderDefinition =
     Just $ "Api.Generated.widgetDecoder"
-              |> deriveElmJSONDecoder @Widget 
-                Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions 
+              |> deriveElmJSONDecoder @Widget
+                Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions
 
 instance HasElmEncoder Aeson.Value Widget where
   elmEncoderDefinition =
-    Just $ "Api.Generated.widgetEncoder" 
-              |> deriveElmJSONEncoder @Widget 
-                Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions 
+    Just $ "Api.Generated.widgetEncoder"
+              |> deriveElmJSONEncoder @Widget
+                Language.Haskell.To.Elm.defaultOptions Aeson.defaultOptions
 
 -- Widgets
 
@@ -421,7 +421,6 @@ elmNodes.forEach((node) => {
     flags: getFlags(node.dataset.flags),
   });
 });
-
 
 // Parse the JSON from IHP or return null if there is none
 function getFlags(data) {
@@ -654,4 +653,6 @@ To get a complete overview of the changes, see the [diff compared what we did in
 
 ## Next up
 
-We have created only one widget, but in the next post we will add another one and structure them into separate modules, inpired by [Richard Feldman's RealWorld SPA archtecture](https://github.com/rtfeldman/elm-spa-example), only simpler since Elm isn't doing any routing or link handling.
+We have created only one widget, but in [the next post](blog/structure-elm-into-a-multi-widget-app-for-ihp) we are adding another one.
+
+We are also structuring the widgets into separate modules, inpired by [Richard Feldman's RealWorld SPA archtecture](https://github.com/rtfeldman/elm-spa-example), but a simpler version.
