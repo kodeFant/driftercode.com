@@ -3,10 +3,10 @@
   "type": "blog",
   "author": Lars Lillo Ulvestad,
   "title": "Structure Elm into a multi-widget app for IHP",
-  "description": "We are making the widget-based equivalent of Richard Feldmans's RealWorld example.",
+  "description": "Making the widget-equivalent of Richard Feldmans's RealWorld SPA.",
   "image": "images/article-covers/haskell-elm.png",
   "published": "2020-12-22",
-  "draft": true,
+  "draft": false,
   "slug": "structure-elm-into-a-multi-widget-app-for-ihp",
   tags: [],
 }
@@ -16,7 +16,7 @@ _This is **part 3** of the series [IHP with Elm](https://driftercode.com/blog/ih
 
 We have set up a single widget and most of our logic lives in a single `Main.elm` file.
 
-Since we are planning on creating an application supporting multiple isolated widgets, we might as well split this application into smaller more maintainable sub-modules with their own seperate models and update functions.
+Since we are planning on creating an application supporting multiple isolated widgets, we might as well split this application into smaller more maintainable sub-modules with their own seperate model, view and update functions.
 
 A simplified version of [Richard Feldmans's RealWord Example app](https://github.com/rtfeldman/elm-spa-example) is a great architecture for this use-case.
 
@@ -33,16 +33,18 @@ git checkout tags/3-pass-data-from-ihp-to-elm -b structure-elm-into-a-multi-widg
 npm install
 ```
 
+## Install elm
+
 ## Separating the BookWidget module
 
 Inside the `elm` folder, let's create a sub-folder named `Widget`, and a module inside named `Book.elm`
 
-```
+```bash
 mkdir elm/Widget
 touch elm/Widget/Book.elm
 ```
 
-Let us extract all the relevant logic from `Main.elm` into this one:
+Let us extract all the relevant logic into `elm/Widget/Book.elm`.
 
 ```elm
 module Widget.Book exposing (..)
@@ -62,7 +64,9 @@ init book =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ = Sub.none
+subscriptions _ =
+    Sub.none
+
 
 type Msg
     = NoOp
@@ -75,7 +79,7 @@ update msg model =
             ( model, Cmd.none )
 
 
-view : Model -> Html msg
+view : Model -> Html Msg
 view book =
     div []
         [ h2 [] [ text book.title ]
@@ -107,19 +111,18 @@ showReview maybeReview =
 
 ```
 
-What's nice about this is that we now can maintain this entire widget inside an isolated module fearlessly. A nice separation in my opionion.
+What's nice about this is that we now can maintain this entire widget inside this isolated module.
 
-Now we need to rewrite `Main.elm` into a central hub for all IHP widgets.
+Now we need to rewrite `Main.elm` into a central hub that can support many different Elm widgets.
 
 ```elm
 module Main exposing (main)
 
 import Api.Generated exposing (Book, bookDecoder, widgetDecoder, Widget(..))
 import Browser
-import Html exposing (Html, div, h1, h2, p, pre, text)
+import Html exposing (..)
 import Json.Decode as D
 import Widget.Book
-import Widget.BookSearch
 
 
 type Model
@@ -170,7 +173,7 @@ view model =
             errorView errorMsg
 
         BookModel book ->
-            Widget.Book.view book
+            Html.map GotBookMsg Widget.Book.view book
 
 
 errorView : String -> Html msg
@@ -209,33 +212,41 @@ widgetFlagToModel : Widget -> Model
 widgetFlagToModel widget =
     case widget of
         BookWidget book ->
-            BookModel book:w
+            BookModel book
 
 ```
 
 ## Add a new widget
 
-Let's add a new widget. The first thing we need to do is to register it into the Widget type in `/Application/Helper/View.hs`:
+Let's start the process of adding a new widget. As you might have guessed, it starts with Haskell.
+
+The first thing we need to do is to add it to the Widget type in `/Application/Helper/View.hs`:
 
 ```hs
 data Widget
   = BookWidget BookJSON
   | BookSearchWidget
-  deriving (Generic, Aeson.ToJSON, SOP.Generic, SOP.HasDatatypeInfo)
+  deriving ( Generic
+           , Aeson.ToJSON
+           , SOP.Generic
+           , SOP.HasDatatypeInfo
+           )
 ```
 
-We can also add another bookSearchWidget. This one won't take in any initial data from IHP. We won't need to pass in any data other than something that instructs Elm in what widget to run.
+We can also add a new widget entrypoint named `bookSearchWidget`.
+
+This one won't use any initial data from IHP. Therefore, we won't need to pass in any data other than the `Widget` type's representation on the `BookSearchWiget`.
 
 ```hs
 bookSearchWidget :: Html
 bookSearchWidget = [hsx|
-    <div  data-flags={encode BookSearchWidget} class="elm"></div>
+    <div data-flags={encode BookSearchWidget} class="elm"></div>
 |]
 ```
 
-Finally, make sure the module can expose the `bookSearchWidget`.
+Make sure the module can expose the `bookSearchWidget` at the module definition.
 
-```
+```hs
 module Application.Helper.View (
     -- To use the built in login:
     -- module IHP.LoginSupport.Helper.View
@@ -265,35 +276,45 @@ instance View ShowView where
     |]
 ```
 
-Let's run `npm start` and see what we get.
+## Break the app
 
-## Make the initial BookSearch widget
+We should now generate the types for the new Elm widgets defined in Haskell.
 
-Let's make the Elm app break.
+Imagine someone saying this for a JavaScript tutorial: **Let's break the app to make it better.**
 
-Close the server **(ctrl+c)**, generate the types and run it again (if you added `gen-types` to the start script, you can run `npm start` only).
+Close the server **(ctrl+c)** and start it again with the npm script which also should generate the new types.
 
 ```bash
-npm run gen-types
 npm start
 ```
 
-Let's start by making the separate `BookSearch` module.
+`Main.elm` should now be complaining. Good! Let's first make the separate `BookSearch` module.
+
+## Make the initial BookSearch widget
+
+First create a new file for the new Widget.
+
+```bash
+touch elm/Widget/BookSearch.elm
+```
+
+Then create a simple module to start with.
 
 ```elm
 module Widget.BookSearch exposing (..)
 
 import Api.Generated exposing (Book)
 import Html exposing (..)
-import Http
 
 
 type alias Model =
-    Result Http.Error (List Book)
+    Result String (List Book)
 
 
 initialModel : Model
-initialModel = Ok []
+initialModel =
+    Ok []
+
 
 init : Model -> ( Model, Cmd msg )
 init model =
@@ -308,6 +329,7 @@ subscriptions _ =
 type Msg
     = NoOp
 
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -315,15 +337,17 @@ update msg model =
             ( model, Cmd.none )
 
 
-
-view : Model -> Html msg
+view : Model -> Html Msg
 view model =
-    h2 [] [ text "Search Books 📚" ]
+    div []
+        [ h2 []
+            [ text "🔎 Search Books 🔎" ]
+        ]
 ```
 
-## Add BookSearch to Main.elm
+## Add the new widget to Main.elm
 
-To get rid of the Elm errors, let's fix `Main.elm` step-by-step.
+To finally get rid of the Elm errors, let's fix `Main.elm` step-by-step.
 
 First, let's import the new widget module into Main.
 
@@ -346,7 +370,7 @@ type Msg
     | WidgetErrorMsg
 ```
 
-The Main `update` function also needs to deal with the sub-module. This looks complicated, but Elm's type system should make it possible to figure this out. Note that this one has a catch-all at the end, so Elm won't crash if you forget to put it in. 
+The Main `update` function also needs to deal with the sub-module. This looks complicated, but it's worth it 😄 Next time you add something, just follow the pattern.
 
 ```elm
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -359,7 +383,7 @@ update msg model =
         ( GotBookSearchMsg subMsg, BookSearchModel subModel) ->
             Widget.BookSearch.update subMsg subModel
                 |> updateWith BookSearchModel GotBookSearchMsg model
-                
+
 
         ( WidgetErrorMsg, ErrorModel _ ) ->
             ( model, Cmd.none )
@@ -370,7 +394,7 @@ update msg model =
 
 ```
 
-The same procedure with `subscriptions` and `view`.
+Keep on just adding to the pattern with `subscriptions` and `view`.
 
 ```elm
 subscriptions : Model -> Sub Msg
@@ -386,20 +410,20 @@ subscriptions parentModel =
             Sub.none
 
 
-view : Model -> Html msg
+view : Model -> Html Msg
 view model =
     case model of
         ErrorModel errorMsg ->
             errorView errorMsg
-        
+
         BookSearchModel subModel ->
-            Widget.BookSearch.view subModel
+            Html.map GotBookSearchMsg (Widget.BookSearch.view subModel)
 
         BookModel book ->
-            Widget.Book.view book
+            Html.map GotBookMsg (Widget.Book.view book)
 ```
 
-The last error is on the `widgetFlagToModel` that decides which widget to display based on the flags from IHP and returns the initial model. For the view.
+The last thing the compiler should complain about is `widgetFlagToModel`. This one decides which widget to display based on the flags from IHP and returns the initial model.
 
 ```elm
 widgetFlagToModel : Widget -> Model
@@ -412,10 +436,12 @@ widgetFlagToModel widget =
             BookSearchModel Widget.BookSearch.initialModel
 ```
 
-You should now see a very dumb widget with a title.
+Going into any book, you should now see a very dumb widget below that is just a title:
+
+![A dumb Elm widget](/images/archive/ihp-with-elm/dumb-widget.png)
 
 ## Next up
 
-We will finalize this simple book app by making the new Book Search widget more dynamic with live search functionality.
+We will finalize this simple book app by making the new `BookSearch` widget more advanced with basic search functionality.
 
-We will also finally walk through the final part of IHP interop: **Http requests with IHP**.
+By doing this, we will walk through the final part of doing IHP interop Elm: **JSON HTTP requests with IHP through Elm**.
