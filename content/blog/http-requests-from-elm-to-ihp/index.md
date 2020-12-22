@@ -3,10 +3,10 @@
   "type": "blog",
   "author": Lars Lillo Ulvestad,
   "title": "Making http requests from Elm to IHP",
-  "description": "Generate types, encoders and decoders for Elm automatically in IHP.",
+  "description": "Communication between Elm and IHP through HTTP JSON requests.",
   "image": "images/article-covers/haskell-elm.png",
   "published": "2020-12-23",
-  "draft": true,
+  "draft": false,
   "slug": "http-requests-from-elm-to-ihp",
   tags: [],
 }
@@ -78,17 +78,17 @@ instance View IndexView where
     json IndexView {..} = toJSON (books |> map bookToJSON)
 ```
 
-It's nice that we can use the same type that we defined for the Elm flags.
+It's nice that we can use the same type for the JSON API that we defined for the Elm flags.
 
-A list of `Book` now maps into a list of the `BookJSON` type we defined in the previous post and turns it into a plain JSON representation, and it can be decoded by the same `bookDecoder` we generated into Elm.
+A list of `Book` now maps into a list of `BookJSON`. In Elm, it  can be decoded by the same `bookDecoder` we generated earlier.
 
-The `/Books` endpoint will now serve you HTML by default. But if you set the header `Accept: application/json`, it will display the JSON version instead. You can test it with curl:
+The `/Books` endpoint will still serve you HTML by default as before. But if you set the header `Accept: application/json`, it will display the JSON version instead. You can test it with curl:
 
 ```bash
 curl -H "Accept: application/json" http://localhost:8000/Books
 ```
 
-## Add widget to
+## Add http action in Elm for fetching books in IHP
 
 Let's first create the file `elm/Api/Http.elm` for a place to make http requests.
 
@@ -229,26 +229,68 @@ update msg model =
 And the view functionality is getting some more logic.
 
 ```elm
-type Msg
-    = SearchInputChanged String
-    | GotSearchResult (Result Http.Error (List Book))
+view : Model -> Html Msg
+view model =
+    div []
+        [ h2 [] [ text "📚 Search Books 📚" ]
+        , input
+            [ type_ "search"
+            , onInput SearchInputChanged
+            ]
+            []
+        , searchResultView model.searchResult
+        ]
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        SearchInputChanged text ->
-            ( { model | searchTerm = text }, getBooksAction text GotSearchResult )
+searchResultView : Result Http.Error (List Book) -> Html msg
+searchResultView searchResult =
+    case searchResult of
+        Err error ->
+            httpErrorView error
 
-        GotSearchResult result ->
-            ( { model | searchResult = result }, Cmd.none )
+        Ok books ->
+            ul [] (List.map bookItem books)
 
+
+bookItem : Book -> Html msg
+bookItem book =
+    let
+        bookLink =
+            "/ShowBook?bookId=" ++ book.id
+    in
+    li [] [ a [ href bookLink ] [ text book.title ] ]
 ```
+
+## Make Books searchable
+
+Only thing left it to adjust the controller to support the `searchTerm` parameter.
+
+This will be done in the `BooksAction` on `Web/Controller/Books.hs`:
+
+```haskell
+    action BooksAction = do
+        let maybeSearchParam :: Maybe Text = paramOrNothing "searchTerm"
+        case maybeSearchParam of
+            Nothing -> do
+                books <- query @Book |> fetch
+                render IndexView { .. }
+            Just searchTerm -> do
+                books <- sqlQuery
+                            "SELECT * FROM books WHERE title ILIKE ?"
+                            (Only ("%" ++ searchTerm ++ "%"))
+                render IndexView { .. }
+```
+
+## Wrapping up
 
 That should be it. You now have a highly interactive book search functionality without leaving the page.
 
-![A dumb Elm widget](/images/archive/ihp-with-elm/smart-widget.gif)
+![A smarter Elm widget](/images/archive/ihp-with-elm/smart-widget.gif)
 
-This should be a fine starting point for making an IHP app with all the Elm widgets you will need.
+This widget has an advantage by not demanding IHP data directly from flags.
+
+You can put it anywhere and it will just query the correct IHP endpoint.
+
+This should be a fine starting point for making an IHP app with all the Elm widgets you will need. Good luck 😊
 
 See the complete code on [Github](https://github.com/kodeFant/ihp-with-elm).

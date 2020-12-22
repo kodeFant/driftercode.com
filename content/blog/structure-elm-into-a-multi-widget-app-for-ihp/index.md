@@ -279,7 +279,7 @@ We should now generate the types for the new Elm widgets defined in Haskell.
 
 Imagine someone saying this for a JavaScript tutorial: **Let's break the app to make it better.**
 
-Close the server **(ctrl+c)** and start it again with the npm script which also should generate the new types.
+Close the server **(ctrl+c)** and start it again with the **start script** that will generate the new Elm types before starting the server.
 
 ```bash
 npm start
