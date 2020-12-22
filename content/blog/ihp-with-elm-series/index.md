@@ -12,7 +12,7 @@
 }
 ---
 
-**[IHP](https://ihp.digitallyinduced.com/) is a refreshing Haskell MVC framework and simple to use, in contrast to how Haskell is perceived.** It's popularly called "Haskell on Rails". The good old multi page app (MPA) is back and better than ever.
+**[IHP](https://ihp.digitallyinduced.com/) is a refreshing modern Haskell MVC framework.** It's simple to get started with, in contrast to how Haskell is often perceived. It's popularly called "Haskell on Rails". The good old multi page app (MPA) is back and better than ever.
 
 [Elm](https://elm-lang.org/) is a delightful language for writing reliable web apps. And even if it's most famous for writing single page apps (SPA), it's just as great for sprinkling interactivity on the MPA architecture. 
 
