@@ -32,7 +32,6 @@ elm-json install elm/http
 
 The `/Books` endpoint currently delivers HTML by default, but we can easily make it return JSON as well.
 
-
 Add this import in the top of `/Application/View/Books/Index.hs`
 
 ```hs
@@ -122,7 +121,7 @@ npm start gen-types
 
 The Elm code will not compile now, because we need to handle the updated Widget type.
 
-## Add widget to 
+## Add widget to
 
 Let's first create the file `/elm/Api/Http.elm` for a place to make http requests.
 
@@ -214,7 +213,7 @@ httpErrorView error =
 
 To get the compiler to stop complaining after the code generation, lets' add the final logic to fix this in `Main.elm`.
 
-I'm just pasting the 
+I'm just pasting the
 
 ```elm
 module Main exposing (main)
