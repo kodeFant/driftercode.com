@@ -211,7 +211,6 @@ There you should have it! Elm in Haskell with hot reloading and the Elm debugger
 
 ![Elm running](/images/archive/ihp-with-elm/elm-loaded.jpg)
 
-
 ## Build for production
 
 When pushing your IHP app to production, you need to make sure that it builds the Elm applications.
@@ -225,7 +224,7 @@ JS_FILES += ${IHP}/static/helpers.js
 JS_FILES += static/elm/index.js
 ```
 
-We're keeping `flatpickr` because we are using the datepicker, but other than that, Turbolinks seems to complicate the Elm loading and jQuery gives us nothing Elm can't give us. 
+We're keeping `flatpickr` because we are using the datepicker, but other than that, Turbolinks seems to complicate the Elm loading and jQuery gives us nothing Elm can't give us.
 
 We're keeping bootstrap css just so we don't need to do any styling for this tutorial.
 
@@ -240,7 +239,6 @@ static/elm/index.js:
 It should now be ready to ship to production for example to IHP Cloud.
 
 For a complete overview of what has been done, see the [diff from a fresh IHP install](https://github.com/kodeFant/ihp-with-elm/compare/1-initial...2-ihp-with-elm).
-
 
 ## Things I don't use Elm for in IHP
 
@@ -259,4 +257,4 @@ So unless you really want to write a full Single Page App, Elm should be used wi
 
 ## Next up
 
-I want to take this application further in future posts showing you how to interact between IHP and Elm, and how use Elm within protected boundaries (requiring authentication). [Read on to part 2 if these are topics that intrigue you 😊](blog/passing-flags-from-ihp-to-elm) 
+I want to take this application further in future posts showing you how to interact between IHP and Elm through flags, http requests and setting up a good widget architecture. [Read on to part 2 if these are topics that intrigue you 😊](blog/passing-flags-from-ihp-to-elm)
