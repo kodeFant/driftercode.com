@@ -2,10 +2,10 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "How to talk with IHP from an Elm widget",
+  "title": "Making http requests from Elm to IHP",
   "description": "Generate types, encoders and decoders for Elm automatically in IHP.",
   "image": "images/article-covers/haskell-elm.png",
-  "published": "2020-12-19",
+  "published": "2020-12-23",
   "draft": true,
   "slug": "http-requests-from-elm-to-ihp",
   tags: [],
@@ -16,9 +16,20 @@ _This is **part 4** of the series [IHP with Elm](https://driftercode.com/blog/ih
 
 We have Elm set up in IHP, initialized values from flags and we are just going through the final part of making our Elm widgets fully interoperable with IHP: **HTTP requests**.
 
-I'm happy to say that most of what we did in the last post also applies for http requests.
+The architecture is pretty much in place now, so this part should be easy 🙂
 
-In `/Application/View/Show.hs`, let's
+## Continue from part three
+
+If you haven't done [part 3](blog/structure-elm-into-a-multi-widget-app-for-ihp) of this series, do so first.
+
+**If you don't want to**, you could [clone the project source](https://github.com/kodeFant/ihp-with-elm) and checkout to this tag to follow along:
+
+```bash
+git clone https://github.com/kodeFant/ihp-with-elm.git
+cd ihp-with-elm
+git checkout tags/4-structure-elm-into-a-multi-widget-app-for-ihp -b http-requests-from-elm-to-ihp
+npm install
+```
 
 ## Install elm/http
 
@@ -32,7 +43,7 @@ elm-json install elm/http
 
 The `/Books` endpoint currently delivers HTML by default, but we can easily make it return JSON as well.
 
-Add this import in the top of `/Application/View/Books/Index.hs`
+Add this import in the top of `Application/View/Books/Index.hs`
 
 ```hs
 import Web.JsonTypes ( bookToJSON )
@@ -79,7 +90,7 @@ curl -H "Accept: application/json" http://localhost:8000/Books
 
 ## Add widget to
 
-Let's first create the file `/elm/Api/Http.elm` for a place to make http requests.
+Let's first create the file `elm/Api/Http.elm` for a place to make http requests.
 
 ```bash
 touch elm/Api/Http.elm
@@ -132,7 +143,7 @@ ihpRequest { method, headers, url, body, expect } =
 
 It can be nice to display some Http errors of various sorts in a standardised way. I like to make a view function for this.
 
-Let's create a new Elm module at `/elm/ErrorView.elm`
+Let's create a new Elm module at `elm/ErrorView.elm`
 
 ```bash
 touch elm/ErrorView.elm
@@ -233,3 +244,11 @@ update msg model =
             ( { model | searchResult = result }, Cmd.none )
 
 ```
+
+That should be it. You now have a highly interactive book search functionality without leaving the page.
+
+![A dumb Elm widget](/images/archive/ihp-with-elm/smart-widget.gif)
+
+This should be a fine starting point for making an IHP app with all the Elm widgets you will need.
+
+See the complete code on [Github](https://github.com/kodeFant/ihp-with-elm).

@@ -20,7 +20,7 @@ Since we are planning on creating an application supporting multiple isolated wi
 
 A simplified version of [Richard Feldmans's RealWord Example app](https://github.com/rtfeldman/elm-spa-example) is a great architecture for this use-case.
 
-## Continue from part one
+## Continue from part two
 
 If you haven't done [part 2](blog/passing-flags-from-ihp-to-elm) of this series, do so first.
 
