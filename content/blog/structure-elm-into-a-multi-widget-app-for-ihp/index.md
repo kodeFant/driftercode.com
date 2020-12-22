@@ -164,14 +164,14 @@ subscriptions parentModel =
             Sub.none
 
 
-view : Model -> Html msg
+view : Model -> Html Msg
 view model =
     case model of
         ErrorModel errorMsg ->
             errorView errorMsg
 
         BookModel book ->
-            Html.map GotBookMsg Widget.Book.view book
+            Html.map GotBookMsg (Widget.Book.view book)
 
 
 errorView : String -> Html msg
@@ -211,7 +211,6 @@ widgetFlagToModel widget =
     case widget of
         BookWidget book ->
             BookModel book
-
 ```
 
 ## Add a new widget
