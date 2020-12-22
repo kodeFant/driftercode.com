@@ -178,7 +178,7 @@ httpErrorView error =
 
 ## Add interactivity to BookSearch
 
-Let's import the stuff we need `elm/Widget/BookSearch.elm`.
+Let's import the stuff we need at the top of `elm/Widget/BookSearch.elm`.
 
 ```elm
 import Api.Generated exposing (Book)
@@ -190,7 +190,7 @@ import Html.Events exposing (onInput)
 import Http
 ```
 
-We should then make the Model inside a bit more complex, so we can turn it into a record to track the search-term and search-result.
+We should then make the Model inside a bit more complex, so we can turn it into a record to track both the search-term and search-result.
 
 ```elm
 type alias Model =
@@ -208,7 +208,7 @@ initialModel =
 
 To update the model, we are making two messages and some update logic.
 
-On input Change, we will update the model and at the same time make a query to IHP through the `getBooksAction` function.
+Whenever the search input changes, we will update the model and at the same time make a query to IHP through the `getBooksAction` function.
 
 ```elm
 type Msg
