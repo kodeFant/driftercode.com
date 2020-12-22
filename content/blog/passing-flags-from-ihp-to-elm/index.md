@@ -2,7 +2,7 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "How to initialize data from IHP directly to Elm",
+  "title": "Part 2: How to initialize data from IHP directly to Elm",
   "description": "Generate types, encoders and decoders for Elm automatically in IHP.",
   "image": "images/article-covers/haskell-elm.png",
   "published": "2020-12-19",
@@ -110,7 +110,7 @@ Then go to [http://localhost:8000/Books](http://localhost:8000/Books) to create 
 
 ## Some small changes in the hsx templates
 
-We are adding the Elm Script globally because we are going to use it as a general purpose widget engine.
+We are adding the Elm widget application globally because we are going to use it as a general purpose widget engine.
 
 Navigate to `Web/View/Layout.hs` and add the elm script `<script src="/elm/index.js"></script>` to the scripts in development and remove the unused scripts for development as well.
 
@@ -129,7 +129,7 @@ scripts = do
     |]
 ```
 
-Note that we are using **defer** on prod.js and the elm file for Elm to load properly.
+Note that we are using **defer** on prod.js and the elm script for Elm to load properly.
 
 Secondly, let's replace what we wrote in the previous part of the series in `/Web/View/Static/Welcome.hs`, just to have a practical link to the Books.
 

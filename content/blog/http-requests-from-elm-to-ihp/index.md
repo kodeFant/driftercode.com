@@ -2,7 +2,7 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "Making http requests from Elm to IHP",
+  "title": "Part 4: Making http requests from Elm to IHP",
   "description": "Communication between Elm and IHP through HTTP JSON requests.",
   "image": "images/article-covers/haskell-elm.png",
   "published": "2020-12-23",

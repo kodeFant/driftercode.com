@@ -2,7 +2,7 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "How to setup IHP with Elm",
+  "title": "Part 1: How to setup IHP with Elm",
   "description": "Get Elm with hot reloading on top of IHP, the new framework that makes Haskell a cool kid in web dev.",
   "image": "images/article-covers/haskell-elm.png",
   "published": "2020-12-13",
@@ -24,13 +24,13 @@ Now I have it all, with SSR included and an amazing developer experience 😍
 
 It even has the pipe operator (`|>`) included making it even more similar to the Elm syntax.
 
-**Disclaimer: This tutorial should work for Mac and Linux. If you develop on Windows, it might not work without some tweaks on your own**
+**Disclaimer: This tutorial should work for Mac and Linux. If you develop on Windows, it might not work without some minor tweaks on your own**
 
 ## Create a new IHP Project
 
 If you haven't installed IHP already, make sure you do. [It's surprisingly easy to get going](https://ihp.digitallyinduced.com/Guide/installation.html).
 
-Start a fresh IHP project for this tutorial. Luckily, it couldn't be easier as soon as IHP is properly installed.
+Start a fresh IHP project for this tutorial.
 
 ```bash
 ihp-new ihp-with-elm
@@ -257,4 +257,6 @@ So unless you really want to write a full Single Page App, Elm should be used wi
 
 ## Next up
 
-I want to take this application further in future posts showing you how to interact between IHP and Elm through flags, http requests and setting up a good widget architecture. [Read on to part 2 if these are topics that intrigue you 😊](blog/passing-flags-from-ihp-to-elm)
+I want to take this application further in future posts showing you how to interact between IHP and Elm through flags, http requests and setting up a good widget architecture. 
+
+- [Read on to part 2 if these are topics that intrigue you 😊](blog/passing-flags-from-ihp-to-elm)

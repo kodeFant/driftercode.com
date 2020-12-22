@@ -2,7 +2,7 @@
 {
   "type": "blog",
   "author": Lars Lillo Ulvestad,
-  "title": "Structure Elm into a multi-widget app for IHP",
+  "title": "Part 3: Structure Elm into a multi-widget app for IHP",
   "description": "Making the widget-equivalent of Richard Feldmans's RealWorld SPA.",
   "image": "images/article-covers/haskell-elm.png",
   "published": "2020-12-22",
