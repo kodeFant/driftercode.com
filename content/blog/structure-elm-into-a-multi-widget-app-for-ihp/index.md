@@ -116,7 +116,13 @@ Now we need to rewrite `Main.elm` into a central hub that can support many diffe
 ```elm
 module Main exposing (main)
 
-import Api.Generated exposing (Book, bookDecoder, widgetDecoder, Widget(..))
+import Api.Generated
+    exposing
+        ( Book
+        , Widget(..)
+        , bookDecoder
+        , widgetDecoder
+        )
 import Browser
 import Html exposing (..)
 import Json.Decode as D
@@ -147,18 +153,22 @@ update msg model =
             ( model, Cmd.none )
 
 
-updateWith : (subModel -> Model) -> (subMsg -> Msg) -> Model -> ( subModel, Cmd subMsg ) -> ( Model, Cmd Msg )
+updateWith :
+    (subModel -> Model)
+    -> (subMsg -> Msg)
+    -> Model
+    -> ( subModel, Cmd subMsg )
+    -> ( Model, Cmd Msg )
 updateWith toModel toMsg model ( subModel, subCmd ) =
-    ( toModel subModel
-    , Cmd.map toMsg subCmd
-    )
+    ( toModel subModel, Cmd.map toMsg subCmd )
 
 
 subscriptions : Model -> Sub Msg
 subscriptions parentModel =
     case parentModel of
         BookModel book ->
-            Sub.map GotBookMsg (Widget.Book.subscriptions book)
+            Sub.map GotBookMsg
+                (Widget.Book.subscriptions book)
 
         ErrorModel err ->
             Sub.none
@@ -398,10 +408,12 @@ subscriptions : Model -> Sub Msg
 subscriptions parentModel =
     case parentModel of
         BookModel book ->
-            Sub.map GotBookMsg (Widget.Book.subscriptions book)
+            Sub.map GotBookMsg 
+                (Widget.Book.subscriptions book)
 
         BookSearchModel subModel ->
-            Sub.map GotBookSearchMsg (Widget.BookSearch.subscriptions subModel)
+            Sub.map GotBookSearchMsg 
+                (Widget.BookSearch.subscriptions subModel)
 
         ErrorModel err ->
             Sub.none

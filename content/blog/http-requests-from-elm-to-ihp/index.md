@@ -56,10 +56,18 @@ instance View IndexView where
     html IndexView { .. } = [hsx|
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href={BooksAction}>Books</a></li>
+                <li class="breadcrumb-item active">
+                    <a href={BooksAction}>Books</a>
+                </li>
             </ol>
         </nav>
-        <h1>Index <a href={pathTo NewBookAction} class="btn btn-primary ml-4">+ New</a></h1>
+        <h1>
+            Index
+            <a href={pathTo NewBookAction} 
+               class="btn btn-primary ml-4">
+                + New
+            </a>
+        </h1>
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -98,7 +106,7 @@ touch elm/Api/Http.elm
 
 To make sure we remember to set the `Accept: application/json` header, let's define a wrapper around Elm's `Http.request` and call it `ihpRequest`.
 
-The `getBooksAction` function will take in a string and a generic `msg` type taking in a `Result`. You could use [RemoteData](https://package.elm-lang.org/packages/krisajenkins/remotedata/latest/RemoteData)of course, but we'll skip it for this tutorial.
+The `getBooksAction` function will take in a string and a generic `msg` type taking in a `Result`. You could use [RemoteData](https://package.elm-lang.org/packages/krisajenkins/remotedata/latest/RemoteData) of course, but we'll skip it for this tutorial.
 
 ```elm
 module Api.Http exposing (..)
@@ -108,7 +116,10 @@ import Http
 import Json.Decode as D
 
 
-getBooksAction : String -> (Result Http.Error (List Book) -> msg) -> Cmd msg
+getBooksAction :
+    String
+    -> (Result Http.Error (List Book) -> msg)
+    -> Cmd msg
 getBooksAction searchTerm msg =
     ihpRequest
         { method = "GET"
@@ -117,6 +128,7 @@ getBooksAction searchTerm msg =
         , body = Http.emptyBody
         , expect = Http.expectJson msg (D.list bookDecoder)
         }
+
 
 ihpRequest :
     { method : String
@@ -129,14 +141,14 @@ ihpRequest :
 ihpRequest { method, headers, url, body, expect } =
     Http.request
         { method = method
-        , headers = [ Http.header "Accept" "application/json" ] ++ headers
+        , headers =
+            [ Http.header "Accept" "application/json" ] ++ headers
         , url = url
         , body = body
         , expect = expect
         , timeout = Nothing
         , tracker = Nothing
         }
-
 ```
 
 ## Make an ErrorView module
@@ -269,15 +281,16 @@ This will be done in the `BooksAction` on `Web/Controller/Books.hs`:
 
 ```haskell
     action BooksAction = do
-        let maybeSearchParam :: Maybe Text = paramOrNothing "searchTerm"
+        let maybeSearchParam :: Maybe Text = 
+                paramOrNothing "searchTerm"
         case maybeSearchParam of
             Nothing -> do
                 books <- query @Book |> fetch
                 render IndexView { .. }
             Just searchTerm -> do
                 books <- sqlQuery
-                            "SELECT * FROM books WHERE title ILIKE ?"
-                            (Only ("%" ++ searchTerm ++ "%"))
+                    "SELECT * FROM books WHERE title ILIKE ?"
+                    (Only ("%" ++ searchTerm ++ "%"))
                 render IndexView { .. }
 ```
 
