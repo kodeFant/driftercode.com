@@ -443,4 +443,4 @@ We will finalize this simple book app by making the new `BookSearch` widget more
 
 By doing this, we will walk through the final part of doing IHP interop Elm: **JSON HTTP requests with IHP through Elm**. And we'll finally get to update some Elm state 😊
 
-- **Read part 4**: [Make your Elm widgets interact with IHP](blog/http-requests-from-elm-to-ihp)
+- **Read part 4**: [Make http requests from Elm to IHP](blog/http-requests-from-elm-to-ihp)
