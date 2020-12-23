@@ -247,7 +247,7 @@ IHP gives you HTML templating (HSX) with pure functions, very similar to Elm. In
 It can be a blurry line for beginners, so here are my recommendations for how to set those lines.
 
 - Use HSX for **basic HTML**, even if it requires a couple of lines of JavaScript. I would for example write a basic hamburger menu in HSX/HTML.
-- Use HSX for **forms**. Forms are pretty much always a bigger pain written in app code. If you have been living in the Single Page App world for a while, you will realize forms written in normal HTML is not that bad. IHP gives you a convenient way of writing forms with server-side validation.
+- Use HSX for **forms**. Forms are pretty much always a bigger pain written in app code. If you have been living in the Single Page App world for a while, you will realize forms written in normal HTML are not that bad. IHP gives you a convenient way of writing forms with server-side validation.
 - Use Elm for the **advanced UI stuff** requiring heavy use of DOM manipulation. Elm shines in writing user interfaces with high complexity. If the lines of JavaScript are getting too many, turn to Elm!
 - Do you want the content to have **SSR** for search engine optimization? Use HSX.
 
