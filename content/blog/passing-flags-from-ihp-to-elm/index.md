@@ -4,7 +4,7 @@
   "author": Lars Lillo Ulvestad,
   "title": "Part 2: How to initialize data from IHP directly to Elm",
   "description": "Generate types, encoders and decoders for Elm automatically in IHP.",
-  "image": "images/article-covers/haskell-elm.png",
+  "image": "images/article-covers/elm-in-ihp-part-2.jpg",
   "published": "2020-12-19",
   "draft": false,
   "slug": "pass-data-from-ihp-to-elm",
