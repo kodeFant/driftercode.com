@@ -18,9 +18,10 @@
 
 **Elm and IHP is a satisfying combo to work with for great SSR support, unlimited possibilities for interactivity and the simplicity of pure functions all over.**
 
-A tutorial series about the "Elm-as-widget" pattern, combines two of the world's sweetest programming languages into one great developer experience.
-
 A simplified version of [Richard Feldman's RealWorld SPA archtecture](https://github.com/rtfeldman/elm-spa-example) turns out to be well suited for a widget-engine in IHP.
+
+This tutorial series about the "Elm-as-widget" pattern, combines two of the world's sweetest programming languages into one great developer experience.
+
 
 ## Table of contents
 
