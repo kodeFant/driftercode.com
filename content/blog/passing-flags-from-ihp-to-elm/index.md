@@ -653,6 +653,8 @@ To get a complete overview of the changes, see the [diff compared what we did in
 
 ## Next up
 
-We have created only one widget, but in [the next post](blog/structure-elm-into-a-multi-widget-app-for-ihp) we are adding another one.
+We have created only one widget, but in the next post we are adding another one.
 
 We are also structuring the widgets into separate modules, inpired by [Richard Feldman's RealWorld SPA archtecture](https://github.com/rtfeldman/elm-spa-example), but a simpler version.
+
+- [Read on to **part 3** to structure your widgets in a nice way](blog/structure-elm-into-a-multi-widget-app-for-ihp)

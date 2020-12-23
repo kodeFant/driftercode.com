@@ -20,7 +20,7 @@
 
 A simplified version of [Richard Feldman's RealWorld SPA archtecture](https://github.com/rtfeldman/elm-spa-example) turns out to be well suited for a widget-engine in IHP.
 
-This tutorial series about the "Elm-as-widget" pattern, combines two of the world's sweetest programming languages into one great developer experience.
+**This tutorial series about the "Elm-as-widget" pattern, combines two of the world's sweetest programming languages into one great developer experience.**
 
 
 ## Table of contents
@@ -31,7 +31,7 @@ This tutorial series about the "Elm-as-widget" pattern, combines two of the worl
 
 [3. Structure Elm into a multi-widget app for IHP](blog/structure-elm-into-a-multi-widget-app-for-ihp)
 
-[4. Make your Elm widgets interact with IHP](blog/http-requests-from-elm-to-ihp)
+[4. Making http requests from Elm to IHP](blog/http-requests-from-elm-to-ihp)
 
 ## Git Repo
 

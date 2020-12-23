@@ -259,4 +259,4 @@ So unless you really want to write a full Single Page App, Elm should be used wi
 
 I want to take this application further in future posts showing you how to interact between IHP and Elm through flags, http requests and setting up a good widget architecture. 
 
-- [Read on to part 2 if these are topics that intrigue you 😊](blog/passing-flags-from-ihp-to-elm)
+- [Read on to **part 2** if these are topics that intrigue you 😊](blog/passing-flags-from-ihp-to-elm)
