@@ -46,7 +46,7 @@ So unless you really want to write a full Single Page App, Elm should be used wi
 
 If you haven't installed IHP already, make sure you do. [It's surprisingly easy to get going](https://ihp.digitallyinduced.com/Guide/installation.html).
 
-**BIG NOTE: IHP has added support for initializing Elm that is pretty much identical to part 1 of this series. 😀**
+**BIG NOTE: IHP has added support for initializing Elm that is pretty much identical to part 1 of this series. 😀** The only thing to note is that it doesn't remove dependencies you might not use like for example **jQuery**.
 
 You can now simply run this command:
 
