@@ -14,6 +14,8 @@
 
 _This is **part 1** of the series [IHP with Elm](https://driftercode.com/blog/ihp-with-elm-series)_
 
+
+
 [Elm](https://elm-lang.org/) was my gateway drug into type-safe functional programming. It's such a good tool for making robust frontends. Writing big projects in React and TypeScript honestly bums me out because of it.
 
 I have always wanted have to have the equivalent type-safe joy on the backend like I have with Elm.
@@ -23,8 +25,6 @@ Now I have it all, with SSR included and an amazing developer experience 😍
 **[IHP](https://ihp.digitallyinduced.com/) is a new web framework that has opened a wide door for the web development community to get into Haskell.** Like Rails and Laravel, it's great for quick prototyping, well documented and easy to use.
 
 It even has the pipe operator (`|>`) included making it even more similar to the Elm syntax.
-
-**Disclaimer: This tutorial should work for Mac and Linux. If you develop on Windows, it might not work without some minor tweaks on your own**
 
 ## Create a new IHP Project
 
@@ -37,6 +37,20 @@ ihp-new ihp-with-elm
 ```
 
 To verify the app is working, cd into the `ihp-with-elm` folder and run `./start`.
+
+## Use the Elm boilerplate
+
+**BIG NOTE: IHP has added support for initializing Elm that is pretty much identical to part 1 of this series. 😀**
+
+You can now simply run this command:
+
+```bash
+ihp-new --elm my-ihp-elm-project
+```
+
+And skip to right to [part 2](blog/passing-flags-from-ihp-to-elm) if you are interested in how to make☺️ 
+
+**The below part is from now on just documentation on how to do this manually.**
 
 ## Update .gitignore
 
@@ -127,13 +141,31 @@ Create `index.js` and `Main.elm` in the elm folder:
 touch elm/index.js elm/Main.elm
 ```
 
-The `elm/index.js` should look like this to initialize the Elm file.
+The `elm/index.js` should look like this to initialize the Elm file. This snippet takes in account inserting flags from IHP and it lets you instantiate several Elm applications at the same time.
 
 ```javascript
+"use strict";
 import { Elm } from "./Main.elm";
 
-Elm.Main.init({
-  node: document.querySelector(".elm"),
+// Run Elm on all elm Nodes
+function initializeWidgets() {
+  const elmNodes = document.querySelectorAll(".elm");
+  elmNodes.forEach((node) => {
+    const app = Elm.Main.init({
+      node
+    });
+    // Initialize ports below this line
+  });
+}
+
+// Initialize Elm on page load
+window.addEventListener("load", (event) => {
+  initializeWidgets();
+});
+
+// Initialize Elm on Turbolinks transition
+document.addEventListener("turbolinks:load", (e) => {
+  initializeWidgets();
 });
 ```
 
@@ -190,22 +222,20 @@ init _ =
 
 Add the scripts for building the app both in production and development into `package.json`:
 
-Then replace the `start` script in `package.json` and add accordingly:
-
 ```json
   "scripts": {
     "run-dev-elm": "parcel watch elm/index.js --out-dir static/elm",
-    "run-dev-ihp": "./start",
-    "start": "concurrently --raw \"npm:run-dev-*\"",
     "build": "parcel build elm/index.js --out-dir static/elm"
   },
 ```
 
-With that you can now run both the IHP app and the JavaScript simultaneously with this single command in development.
+In the `start` script at the root folder,  replace the `RunDevServer` line with the following line:
 
 ```bash
-npm start
+npx concurrently --raw "RunDevServer" "npm run run-dev-elm"
 ```
+
+With that you can now run both the IHP app and the JavaScript simultaneously with `./start`
 
 There you should have it! Elm in Haskell with hot reloading and the Elm debugger is ready for you in the bottom right corner. Beautiful!
 
@@ -215,16 +245,19 @@ There you should have it! Elm in Haskell with hot reloading and the Elm debugger
 
 When pushing your IHP app to production, you need to make sure that it builds the Elm applications.
 
-Go to the `Makefile` in the project root and remove all unused JavaScript files until these are your only `JS_FILES`:
+Go to the `Makefile` in the project root. If you wish, you can remove jQuery and other packages you won't need. I usually keep the following `JS_FILES`, and in any case **remember to add the `static/elm/index.js` at the bottom**.
 
 ```makefile
 JS_FILES += ${IHP}/static/vendor/flatpickr.js
-JS_FILES += ${IHP}/static/vendor/morphdom-umd.min.js
 JS_FILES += ${IHP}/static/helpers.js
+JS_FILES += ${IHP}/static/vendor/morphdom-umd.min.js
+JS_FILES += ${IHP}/static/vendor/turbolinks.js
+JS_FILES += ${IHP}/static/vendor/turbolinksInstantClick.js
+JS_FILES += ${IHP}/static/vendor/turbolinksMorphdom.js
 JS_FILES += static/elm/index.js
 ```
 
-We're keeping `flatpickr` because we are using the datepicker, but other than that, Turbolinks seems to complicate the Elm loading and jQuery gives us nothing Elm can't give us.
+We're keeping `flatpickr` because we are using the datepicker, but other than that we probably won't need jQuery for example, but your mileage may vary.
 
 We're keeping bootstrap css just so we don't need to do any styling for this tutorial.
 

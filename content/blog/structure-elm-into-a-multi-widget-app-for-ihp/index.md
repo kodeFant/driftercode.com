@@ -292,7 +292,7 @@ Imagine someone saying this for a JavaScript tutorial: **Let's break the app to 
 Close the server **(ctrl+c)** and start it again with the **start script** that will generate the new Elm types before starting the server.
 
 ```bash
-npm start
+./start
 ```
 
 `Main.elm` should now be complaining. Good! Let's first make the separate `BookSearch` module.
