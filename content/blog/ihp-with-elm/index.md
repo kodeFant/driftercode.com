@@ -26,19 +26,25 @@ Now I have it all, with SSR included and an amazing developer experience 😍
 
 It even has the pipe operator (`|>`) included making it even more similar to the Elm syntax.
 
+## Things I don't use Elm for in IHP
+
+IHP gives you HTML templating (HSX) with pure functions, very similar to Elm. In that regard it's partially overlapping with Elm.
+
+It can be a blurry line for beginners, so here are my recommendations for how to set those lines.
+
+- Use HSX for **basic HTML**, even if it requires a couple of lines of JavaScript. I would for example write a basic hamburger menu in HSX/HTML.
+- Use HSX for **forms**. Forms are pretty much always a bigger pain written in app code. If you have been living in the Single Page App world for a while, you will realize forms written in normal HTML are not that bad. IHP gives you a convenient way of writing forms with server-side validation.
+- Elm is great for making **advanced custom form fields**
+- Use Elm for the **advanced UI stuff** requiring heavy use of DOM manipulation. Elm shines in writing user interfaces with high complexity. If the lines of JavaScript are getting too many, turn to Elm!
+- Do you want the content to have **SSR** for search engine optimization? Use HSX.
+
+So unless you really want to write a full Single Page App, Elm should be used with restraint in IHP, for only specific supercharged parts of the site.
+
+**Most sites are actually better off outputting just HTML and CSS.**
+
 ## Create a new IHP Project
 
 If you haven't installed IHP already, make sure you do. [It's surprisingly easy to get going](https://ihp.digitallyinduced.com/Guide/installation.html).
-
-Start a fresh IHP project for this tutorial.
-
-```bash
-ihp-new ihp-with-elm
-```
-
-To verify the app is working, cd into the `ihp-with-elm` folder and run `./start`.
-
-## Use the Elm boilerplate
 
 **BIG NOTE: IHP has added support for initializing Elm that is pretty much identical to part 1 of this series. 😀**
 
@@ -48,7 +54,9 @@ You can now simply run this command:
 ihp-new --elm my-ihp-elm-project
 ```
 
-And skip to right to [part 2](blog/passing-flags-from-ihp-to-elm) if you are interested in how to make☺️ 
+To verify the app is working, cd into the `ihp-with-elm` folder and run `./start`.
+
+And skip to right to [part 2](blog/passing-flags-from-ihp-to-elm) if you are interested in how to let IHP talk to Elm through type-safe flags☺️ 
 
 **The below part is from now on just documentation on how to do this manually.**
 
@@ -273,21 +281,7 @@ It should now be ready to ship to production for example to IHP Cloud.
 
 For a complete overview of what has been done, see the [diff from a fresh IHP install](https://github.com/kodeFant/ihp-with-elm/compare/1-initial...2-ihp-with-elm).
 
-## Things I don't use Elm for in IHP
 
-IHP gives you HTML templating (HSX) with pure functions, very similar to Elm. In that regard it's partially overlapping with Elm.
-
-It can be a blurry line for beginners, so here are my recommendations for how to set those lines.
-
-- Use HSX for **basic HTML**, even if it requires a couple of lines of JavaScript. I would for example write a basic hamburger menu in HSX/HTML.
-- Use HSX for **forms**. Forms are pretty much always a bigger pain written in app code. If you have been living in the Single Page App world for a while, you will realize forms written in normal HTML are not that bad. IHP gives you a convenient way of writing forms with server-side validation.
-- Elm is great for making **advanced custom form fields**
-- Use Elm for the **advanced UI stuff** requiring heavy use of DOM manipulation. Elm shines in writing user interfaces with high complexity. If the lines of JavaScript are getting too many, turn to Elm!
-- Do you want the content to have **SSR** for search engine optimization? Use HSX.
-
-So unless you really want to write a full Single Page App, Elm should be used with restraint in IHP, for only specific supercharged parts of the site.
-
-**Most sites are actually better off outputting just HTML and CSS.**
 
 ## Next up
 
