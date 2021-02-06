@@ -51,7 +51,7 @@ If you haven't installed IHP already, make sure you do. [It's surprisingly easy 
 You can now simply run this command:
 
 ```bash
-ihp-new --elm my-ihp-elm-project
+ihp-new --elm ihp-with-elm
 ```
 
 To verify the app is working, cd into the `ihp-with-elm` folder and run `./start`.
