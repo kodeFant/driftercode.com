@@ -28,19 +28,6 @@ IHP is a full-stack web framework, and Elm should as mentioned in the previous p
 
 All this being said, the examples in this tutorial are made extremely simple to make the process easier to follow.
 
-## Continue from part one
-
-If you haven't done [part 1](blog/ihp-with-elm) of this series, do so first.
-
-**If you don't want to**, you could [clone the project source](https://github.com/kodeFant/ihp-with-elm) and checkout to this tag to follow along:
-
-```bash
-git clone https://github.com/kodeFant/ihp-with-elm.git
-cd ihp-with-elm
-git checkout tags/2-ihp-with-elm -b pass-data-from-ihp-to-elm
-npm install
-```
-
 ## Create an IHP database type
 
 To demonstrate how we can insert different datatypes into Elm, let's create a relatively complex database table.
