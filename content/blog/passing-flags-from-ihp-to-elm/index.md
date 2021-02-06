@@ -406,26 +406,38 @@ bookWidget book = [hsx|
 
 `bookWidget` takes in the IHP `Book` type as an argument, converts to the `BookJSON` type and wraps it inside a `Widget`.
 
-Now we need to jump to the `elm/index.js` file and pass in the `data-flags` attribute from the widget. While we are at it we are also enabling the possibility to have several elm widgets present at one single page.
+Now we need to jump to the `elm/index.js` file and pass in the `data-flags` attribute from the widget. We make `getFlags` utility that takes in all `data-flags-*` attributes and inserts them into Elm as flags.
 
 ```tsx
+"use strict";
 import { Elm } from "./Main.elm";
 
-// Get all elm nodes
-const elmNodes = document.querySelectorAll(".elm");
-
-// Initialize Elm on each elmNode
-elmNodes.forEach((node) => {
-  Elm.Main.init({
-    node,
-    flags: getFlags(node.dataset.flags),
+// Run Elm on all elm Nodes
+function initializeWidgets() {
+  const elmNodes = document.querySelectorAll(".elm");
+  elmNodes.forEach((node) => {
+    const app = Elm.Main.init({
+      node,
+      flags: getFlags(node.dataset.flags),
+    });
+    // Initialize ports below this line
   });
-});
+}
 
-// Parse the JSON from IHP or return null if there is none
+// Parse the JSON from IHP or just pass null if there is no flags data
 function getFlags(data) {
   return data ? JSON.parse(data) : null;
 }
+
+// Initialize Elm on page load
+window.addEventListener("load", (event) => {
+  initializeWidgets();
+});
+
+// Initialize Elm on Turbolinks transition
+document.addEventListener("turbolinks:load", (e) => {
+  initializeWidgets();
+});
 ```
 
 The value passed into the `data-flags` attribute is serialized and ready to be sent right through JavaScript and directly into Elm.
@@ -507,15 +519,13 @@ Voila! If everything has gone well so far, you should have a file named `elm/Api
 
 ![Generated Elm types](/images/archive/ihp-with-elm/generated-code.gif)
 
-Let's make a `npm run gen-types` script for it in `package.json` and we might as well run it at the `npm start` command to update it regularly.
+Let's make a `npm run gen-types` script for it in `package.json` and we might as well run it at the `run-dev-elm` command to make sure we update it frequently.
 
 ```json
   "scripts": {
-    "run-dev-elm": "parcel watch elm/index.js --out-dir static/elm",
-    "run-dev-ihp": "./start",
-    "gen-types": "nix-shell --run './Application/Script/GenerateElmTypes.hs'",
-    "start": "npm run gen-types && concurrently --raw \"npm:run-dev-*\"",
-    "build": "parcel build elm/index.js --out-dir static/elm"
+    "run-dev-elm": "npm run gen-types && parcel watch elm/index.js --out-dir static/elm",
+    "build": "parcel build elm/index.js --out-dir static/elm",
+    "gen-types": "nix-shell --run './Application/Script/GenerateElmTypes.hs'"
   },
 ```
 
