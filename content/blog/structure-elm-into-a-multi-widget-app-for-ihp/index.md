@@ -24,12 +24,12 @@ A simplified version of [Richard Feldmans's RealWord Example app](https://github
 
 If you haven't done [part 2](blog/passing-flags-from-ihp-to-elm) of this series, do so first.
 
-**If you don't want to**, you could [clone the project source](https://github.com/kodeFant/ihp-with-elm) and checkout to this tag to follow along:
+**If you don't want to**, you could [clone the project source](https://github.com/kodeFant/ihp-with-generated-elm) and checkout to this tag to follow along:
 
 ```bash
 git clone https://github.com/kodeFant/ihp-with-elm.git
 cd ihp-with-elm
-git checkout tags/3-pass-data-from-ihp-to-elm -b structure-elm-into-a-multi-widget-app
+git checkout tags/2-pass-data-from-ihp-to-elm -b structure-elm-into-a-multi-widget-app
 npm install
 ```
 

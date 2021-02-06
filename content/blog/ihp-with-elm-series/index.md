@@ -37,4 +37,4 @@ A simplified version of [Richard Feldman's RealWorld SPA archtecture](https://gi
 
 The complete code is available on Github:
 
-[https://github.com/kodeFant/ihp-with-elm](https://github.com/kodeFant/ihp-with-elm)
+https://github.com/kodeFant/ihp-with-generated-elm

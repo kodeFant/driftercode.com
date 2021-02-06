@@ -22,12 +22,12 @@ The architecture is pretty much in place now, so this part should be easy 🙂
 
 If you haven't done [part 3](blog/structure-elm-into-a-multi-widget-app-for-ihp) of this series, do so first.
 
-**If you don't want to**, you could [clone the project source](https://github.com/kodeFant/ihp-with-elm) and checkout to this tag to follow along:
+**If you don't want to**, you could [clone the project source](https://github.com/kodeFant/ihp-with-generated-elm) and checkout to this tag to follow along:
 
 ```bash
 git clone https://github.com/kodeFant/ihp-with-elm.git
 cd ihp-with-elm
-git checkout tags/4-structure-elm-into-a-multi-widget-app-for-ihp -b http-requests-from-elm-to-ihp
+git checkout tags/3-structure-elm-into-a-multi-widget-app -b http-requests-from-elm-to-ihp
 npm install
 ```
 
@@ -306,4 +306,4 @@ You can put it anywhere and it will just query the correct IHP endpoint.
 
 This should be a fine starting point for making an IHP app with all the Elm widgets you will need. Good luck 😊
 
-See the complete code on [Github](https://github.com/kodeFant/ihp-with-elm).
+See the complete code on [Github](https://github.com/kodeFant/ihp-with-generated-elm).

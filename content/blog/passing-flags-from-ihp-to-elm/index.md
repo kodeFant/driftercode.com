@@ -32,7 +32,7 @@ All this being said, the examples in this tutorial are made extremely simple to 
 
 To demonstrate how we can insert different datatypes into Elm, let's create a relatively complex database table.
 
-Run the app with `npm start` and go to [localhost:8001/Tables](http://localhost:8001/Tables).
+Run the app with `./start` and go to [localhost:8001/Tables](http://localhost:8001/Tables).
 
 Select the `Code Edit` toggle in the top left corner and paste this snippet into the code area:
 
@@ -112,8 +112,6 @@ scripts = [hsx|
         <script src="/elm/index.js"></script>
     |]
 ```
-
-Note that we are using **defer** on prod.js and the elm script for Elm to load properly.
 
 Next, let's replace the HTML contents of `/Web/View/Static/Welcome.hs`, just to have a practical link to the Books.
 
