@@ -21,11 +21,10 @@ view :
     Model
     -> Int
     -> ArticleMetadata
-    -> List Comment
     -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
     -> List (Html Msg)
     -> Html Msg
-view model count metadata comments page viewForPage =
+view model count metadata page viewForPage =
     Layout.Scaffold.view page.path
         (Styled.mainContainer [ paddingTop (rem 5) ]
             [ styledContentContainer
@@ -41,7 +40,7 @@ view model count metadata comments page viewForPage =
                     ]
                 , articleImageView metadata.image
                 , article [] viewForPage
-                , p[][text "Got a comment? ", a [href "https://twitter.com/larsparsfromage"][text "Drop me a tweet"]]
+                , p [] [ text "Got a comment? ", a [ href "https://twitter.com/larsparsfromage" ] [ text "Drop me a tweet" ] ]
 
                 -- , Comment.view
                 --     { commentInfoToggle = CommentInfo

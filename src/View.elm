@@ -30,44 +30,28 @@ view :
             , head : List (Head.Tag Pages.PathKey)
             }
 view siteMetadata page =
-    StaticHttp.map
-        (\comments ->
-            { view =
-                \model viewForPage ->
-                    let
-                        { title, body } =
-                            pageView model comments siteMetadata page viewForPage
-                    in
-                    { title = title ++ " | DrifterCode"
-                    , body =
-                        toUnstyled body
-                    }
-            , head = head page.frontmatter
-            }
-        )
-        (StaticHttp.request
-            (Secrets.succeed
-                (\functionUrl ->
-                    { url = functionUrl
-                    , method = "GET"
-                    , headers = []
-                    , body = StaticHttp.emptyBody
-                    }
-                )
-                |> Secrets.with "FUNCTIONS_URL"
-            )
-            commentsDecoder
-        )
+    StaticHttp.succeed
+        { view =
+            \model viewForPage ->
+                let
+                    { title, body } =
+                        pageView model siteMetadata page viewForPage
+                in
+                { title = title ++ " | DrifterCode"
+                , body =
+                    toUnstyled body
+                }
+        , head = head page.frontmatter
+        }
 
 
 pageView :
     Model
-    -> List Comment
     -> List ( PagePath Pages.PathKey, Metadata )
     -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
     -> Rendered Msg
     -> { title : String, body : Html Msg }
-pageView model comments siteMetadata page ( count, viewForPage ) =
+pageView model siteMetadata page ( count, viewForPage ) =
     case page.frontmatter of
         Head.Metadata.Page metadata ->
             { title = metadata.title
@@ -76,14 +60,8 @@ pageView model comments siteMetadata page ( count, viewForPage ) =
             }
 
         Head.Metadata.Article metadata ->
-            let
-                filteredComments =
-                    comments
-                        |> List.filter (\comment -> comment.path == metadata.slug)
-                        |> List.reverse
-            in
             { title = metadata.title
-            , body = View.Article.view model count metadata filteredComments page viewForPage
+            , body = View.Article.view model count metadata page viewForPage
             }
 
         Head.Metadata.SiteIndex indexMeta ->
