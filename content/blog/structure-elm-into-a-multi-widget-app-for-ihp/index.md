@@ -49,7 +49,6 @@ module Widget.Book exposing (..)
 
 import Api.Generated exposing (Book)
 import Html exposing (..)
-import Json.Decode as D
 
 
 type alias Model =
@@ -60,6 +59,8 @@ init : Book -> ( Model, Cmd msg )
 init book =
     ( book, Cmd.none )
 
+initialCmd : Cmd Msg
+initialCmd = Cmd.none
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
@@ -201,19 +202,23 @@ main =
 
 init : D.Value -> ( Model, Cmd Msg )
 init flags =
-    ( initialModel flags
-    , Cmd.none
-    )
+    initiate flags
 
 
-initialModel : D.Value -> Model
-initialModel flags =
+initiate : D.Value -> (Model, Cmd Msg)
+initiate flags =
     case D.decodeValue widgetDecoder flags of
         Ok widget ->
-            widgetFlagToModel widget
+            (widgetFlagToModel widget, widgetFlagToCmd widget)
 
         Err error ->
-            ErrorModel (D.errorToString error)
+            (ErrorModel (D.errorToString error), Cmd.none)
+
+widgetFlagToCmd : Widget -> Cmd Msg
+widgetFlagToCmd widget =
+    case widget of
+        BookWidget _ ->
+            Cmd.map GotBookMsg Widget.Book.initialCmd
 
 
 widgetFlagToModel : Widget -> Model
@@ -251,7 +256,7 @@ bookSearchWidget = [hsx|
 |]
 ```
 
-Make sure the module can expose the `bookSearchWidget` at the module definition.
+Make sure the module exposes the `bookSearchWidget` at the module definition.
 
 ```hs
 module Application.Helper.View (
@@ -322,6 +327,8 @@ initialModel : Model
 initialModel =
     Ok []
 
+initialCmd : Cmd Msg
+initialCmd = Cmd.none
 
 init : Model -> ( Model, Cmd msg )
 init model =
@@ -432,9 +439,19 @@ view model =
             Html.map GotBookMsg (Widget.Book.view book)
 ```
 
-The last thing the compiler should complain about is `widgetFlagToModel`. This one decides which widget to display based on the flags from IHP and returns the initial model.
+The last thing the compiler should complain about is `widgetFlagToModel` and `widgetFlagToCmd`. These ones decides the initial state and commands (actions) upon startup of the widget.
 
 ```elm
+widgetFlagToCmd : Widget -> Cmd Msg
+widgetFlagToCmd widget =
+    case widget of
+        BookWidget _ ->
+            Cmd.map GotBookMsg Widget.Book.initialCmd
+
+        BookSearchWidget ->
+            Cmd.map GotBookSearchMsg Widget.BookSearch.initialCmd
+
+
 widgetFlagToModel : Widget -> Model
 widgetFlagToModel widget =
     case widget of

@@ -56,8 +56,8 @@ To verify the app is working, cd into the `ihp-with-elm` folder and run `./start
 
 - **Read on to [part 2](blog/passing-flags-from-ihp-to-elm)** if you are interested in how you can send initial data from IHP and directly to Elm by writing as little JavaScript as possible.
 
-## Archived deprecated content
+## _Archived deprecated content_
 
-**NOTE:** This part of the series was formerly longer, but IHP has added official support for initializing Elm that is pretty much identical to part 1 of this series. 😀 I have archived the former content of this part into [this gist](https://gist.github.com/kodeFant/919f032de75c5bad40aa709183754a74). The gist can be useful if you want to implement Elm into an existing project.
+_**NOTE:** This part of the series was formerly longer, but IHP has added official support for initializing Elm that is pretty much identical to part 1 of this series. 😀 I have archived the former content of this part into [this gist](https://gist.github.com/kodeFant/919f032de75c5bad40aa709183754a74). The gist can be useful if you want to implement Elm into an existing project._
 
-The only thing to note is that it doesn't remove dependencies you might not use like for example **jQuery**.
+_The only thing to note is that it doesn't remove dependencies you might not use like for example **jQuery**._

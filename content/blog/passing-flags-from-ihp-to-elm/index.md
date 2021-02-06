@@ -103,22 +103,19 @@ Navigate to `Web/View/Layout.hs` and add the elm script `<script src="/elm/index
 
 ```hs
 scripts :: Html
-scripts = do
-    when isDevelopment [hsx|
+scripts = [hsx|
         <script id="livereload-script" src="/livereload.js"></script>
         <script src="/vendor/flatpickr.js"></script>
         <script src="/helpers.js"></script>
         <script src="/vendor/morphdom-umd.min.js"></script>
-        <script defer src="/elm/index.js"></script>
-    |]
-    when isProduction [hsx|
-        <script defer src="/prod.js"></script>
+        <script src="/ihp-auto-refresh.js"></script>
+        <script src="/elm/index.js"></script>
     |]
 ```
 
 Note that we are using **defer** on prod.js and the elm script for Elm to load properly.
 
-Secondly, let's replace what we wrote in the previous part of the series in `/Web/View/Static/Welcome.hs`, just to have a practical link to the Books.
+Next, let's replace the HTML contents of `/Web/View/Static/Welcome.hs`, just to have a practical link to the Books.
 
 ```hs
 module Web.View.Static.Welcome where
