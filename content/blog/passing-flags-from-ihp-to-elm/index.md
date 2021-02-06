@@ -641,7 +641,7 @@ Go to [localhost:8000/Books](http://localhost:8000/Books) and press `Show` on an
 
 The Elm logic is handling every type as it was defined in Haskell, from `Bool` to even `Maybe String`.
 
-To get a complete overview of the changes, see the [diff compared what we did in the previous post](https://github.com/kodeFant/ihp-with-elm/compare/2-ihp-with-elm...3-pass-data-from-ihp-to-elm)
+To get a complete overview of the changes, see the [diff compared what we did in the previous post](https://github.com/kodeFant/ihp-with-generated-elm/compare/2-pass-data-from-ihp-to-elm...3-structure-elm-into-a-multi-widget-app)
 
 ## Next up
 
