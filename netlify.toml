@@ -1,3 +1,9 @@
 [build]
   publish = "./dist/"
   command = "export ELM_HOME=\"$NETLIFY_BUILD_BASE/cache/elm\" && npm run build"
+
+[[redirects]]
+  from = "/blog/ihp-with-elm-series"
+  to = "https://lillo.dev/series/ihp-with-elm/"
+  status = 301
+  force = true
