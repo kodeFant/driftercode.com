@@ -3,32 +3,45 @@
   command = "export ELM_HOME=\"$NETLIFY_BUILD_BASE/cache/elm\" && npm run build"
 
 [[redirects]]
+  from = "/"
+  to = "https://www.haskellpreneur.com/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog"
+  to = "https://www.haskellpreneur.com/"
+  status = 301
+  force = true
+
+
+[[redirects]]
   from = "/blog/ihp-with-elm-series"
-  to = "https://lillo.dev/series/ihp-with-elm/"
+  to = "https://www.haskellpreneur.com/series/ihp-with-elm/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/blog/ihp-with-elm"
-  to = "https://lillo.dev/articles/ihp-with-elm/1-get-elm-working-with-ihp/"
+  to = "https://www.haskellpreneur.com/articles/ihp-with-elm/1-get-elm-working-with-ihp/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/blog/passing-flags-from-ihp-to-elm"
-  to = "https://lillo.dev/articles/ihp-with-elm/2-passing-flags-from-ihp-to-elm/"
+  to = "https://www.haskellpreneur.com/articles/ihp-with-elm/3-structure-elm-into-a-multi-widget-app-for-ihp/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/blog/structure-elm-into-a-multi-widget-app-for-ihp"
-  to = "https://lillo.dev/articles/ihp-with-elm/4-structure-elm-into-a-multi-widget-app-for-ihp/"
+  to = "https://www.haskellpreneur.com/articles/ihp-with-elm/3-structure-elm-into-a-multi-widget-app-for-ihp/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/blog/http-requests-from-elm-to-ihp"
-  to = "https://lillo.dev/articles/ihp-with-elm/3-http-requests-from-elm-to-ihp/"
+  to = "https://www.haskellpreneur.com/articles/ihp-with-elm/4-http-requests-from-elm-to-ihp/"
   status = 301
   force = true
 
@@ -41,37 +54,37 @@
 
 [[redirects]]
   from = "/blog/my-first-steps-into-functional-programming"
-  to = "https://lillo.dev/articles/my-first-steps-into-functional-programming/"
+  to = "https://www.haskellpreneur.com/articles/my-first-steps-into-functional-programming/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/blog/slaying-a-ui-antipattern-with-typescript"
-  to = "https://lillo.dev/articles/slaying-a-ui-antipattern/1-fetch-data-with-elm-pattern/"
+  to = "https://www.haskellpreneur.com/articles/slaying-a-ui-antipattern/1-fetch-data-with-elm-pattern/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/blog/slaying-a-ui-antipattern-with-typescript-part-2"
-  to = "https://lillo.dev/articles/slaying-a-ui-antipattern/2-fold-external-data/"
+  to = "https://www.haskellpreneur.com/articles/slaying-a-ui-antipattern/2-fold-external-data/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/blog/slaying-a-ui-antipattern-with-typescript-part-3"
-  to = "https://lillo.dev/articles/slaying-a-ui-antipattern/3-type-check-external-data/"
+  to = "https://www.haskellpreneur.com/articles/slaying-a-ui-antipattern/3-type-check-external-data/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/blog/elm-in-react-with-parcel"
-  to = "https://lillo.dev/articles/elm-in-react-with-parcel/"
+  to = "https://www.haskellpreneur.com/articles/elm-in-react-with-parcel/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/blog/hundred-days-of-haskell-day-one"
-  to = "https://lillo.dev/articles/hundred-days-of-haskell-day-one/"
+  to = "https://www.haskellpreneur.com/articles/hundred-days-of-haskell-day-one/"
   status = 301
   force = true
 
